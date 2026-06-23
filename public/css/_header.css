@@ -1,0 +1,123 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+header {
+    padding: 10px 20px;
+    margin: 0;
+    max-width: 100%;
+    box-sizing: border-box; /* Prevents padding from breaking the width */
+}
+
+.nav_container {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Vertically centers the logo, nav, and account */
+    flex-wrap: wrap; /* Allows elements to wrap on smaller screens */
+}
+
+#logo {
+    width: 200px;
+    max-width: 100%;
+    height: auto; /* Maintains aspect ratio */
+}
+
+/* --- THE DROPDOWN FIX --- */
+.account_container {
+    position: relative; /* Anchor point for the absolute dropdown */
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#account {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out;
+}
+
+#account:hover {
+    transform: scale(1.07);
+}
+
+#logoption {
+    display: none;
+    position: absolute; /* Takes the menu out of the document flow */
+    top: 100%; /* Positions it directly below the account image */
+    right: 0; /* Aligns it to the right edge */
+    background-color: whitesmoke;
+    border: gray 2px solid;
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 1000; /* Ensures it floats above page content */
+    min-width: 100px;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+
+#logoption > a {
+    display: block;
+    text-decoration: none;
+    font-size: 18px; /* Added px */
+    color: black;
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+#logoption > a:hover {
+    background-color: gray;
+    color: white;
+}
+
+/* --- NAVIGATION BAR --- */
+.nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.nav_a {
+    font-weight: bolder;
+    border-radius: 10px;
+    margin: 5px 15px;
+    transition: 0.3s ease-in-out;
+}
+
+.nav_a:hover {
+    transform: scale(1.08);
+    background-color: #f1f1f1;
+}
+
+.nav_a > a {
+    text-decoration: none;
+    font-size: 24px; /* Added px */
+    color: black;
+    padding: 5px;
+    display: block;
+}
+
+/* --- RESPONSIVE MEDIA QUERY --- */
+@media screen and (max-width: 850px) {
+    .nav_container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .nav {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .nav_a {
+        margin: 5px 0;
+        width: 100%;
+        text-align: center;
+    }
+}
