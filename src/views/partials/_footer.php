@@ -7,7 +7,7 @@
                 <a href="#">Home</a><br>
                 <a href="#">My Blog</a><br>
                 <a href="#">About me</a><br>
-                <a href="#">Contract</a>
+                <a href="#" id="contact-footer-btn">Contact</a>
             </div>
             <div id="thongtinlienhe">
                 <a href="#">3636 363 363</a><br>
@@ -31,3 +31,4 @@
         </div>
     </div>
 </footer>
+<?php if (file_exists(__DIR__ . '/_modals.php')) { include __DIR__ . '/_modals.php'; } ?>

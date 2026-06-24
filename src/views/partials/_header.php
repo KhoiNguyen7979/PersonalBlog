@@ -8,7 +8,7 @@
             <div class="nav_a"><a href="#">Home</a></div>
             <div class="nav_a"><a href="#">About Us</a></div>
             <div class="nav_a"><a href="#">About</a></div>
-            <div class="nav_a"><a href="#">Contact</a></div>
+            <div class="nav_a"><a href="#" id="contact-nav-btn">Contact</a></div>
         </div>
         <div class="account_container" id="account_container_2">
             <img id="account" src="/public/images/account.jpg" alt="taikhoan">
