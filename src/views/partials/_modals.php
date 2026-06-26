@@ -1,5 +1,5 @@
 <!-- CSS for Modals -->
-<link rel="stylesheet" href="/public/css/_modals.css">
+<link rel="stylesheet" href="public/css/_modals.css">
 
 <!-- Contact Modal -->
 <div id="contact-modal" class="modal-overlay">
@@ -61,4 +61,4 @@
 </div>
 
 <!-- JS for Modals -->
-<script src="/public/js/_modals.js"></script>
+<script src="public/js/_modals.js"></script>

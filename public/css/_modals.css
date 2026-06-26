@@ -40,12 +40,12 @@
 
 /* Background */
 .contact-container {
-    background: url('/public/images/clock.png') no-repeat center/cover;
+    background: url('../images/clock.png') no-repeat center/cover;
     border: 3px solid #8fc99a;
 }
 
 .subscribe-container {
-    background: url('/public/images/charge.png') no-repeat center/cover;
+    background: url('../images/charge.png') no-repeat center/cover;
     border: 3px solid #8fc99a;
 }
 

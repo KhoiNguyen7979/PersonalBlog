@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/public/css/_footer.css">
+<link rel="stylesheet" href="public/css/_footer.css">
 <footer>
     <div class="footer_container">
         <div class="top_footer">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="bottom_footer">
-            <img src="/public/images/logo.png" id="logo" alt="logo">
+            <img src="public/images/logo.png" id="logo" alt="logo">
             <div id="mucluc">
                 <a href="#">Privacy Policy</a><br>
                 <a href="#">Accessibility Statement</a>
