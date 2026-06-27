@@ -6,7 +6,7 @@
         </div>
         <div class="nav">
             <div class="nav_a"><a href="#">Home</a></div>
-            <div class="nav_a"><a href="#">About Us</a></div>
+            <div class="nav_a"><a href="#">My Blog</a></div>
             <div class="nav_a"><a href="#">About</a></div>
             <div class="nav_a"><a href="#" id="contact-nav-btn">Contact</a></div>
         </div>

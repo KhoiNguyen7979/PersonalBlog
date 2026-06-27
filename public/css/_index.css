@@ -1,0 +1,75 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+/* --- SIDENAV (social icons) --- */
+.sidenav a > img {
+    width: 50px;
+    height: auto;
+}
+
+.sidenav {
+    height: auto;
+    width: 50px;
+    position: fixed;
+    border: black 3px solid;
+    border-radius: 20px;
+    background-color: white;
+    overflow-x: hidden;
+    padding: 2px;
+    margin: 0;
+    left: 0;
+
+    /* Vertical centering */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+}
+
+.sidenav a {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: block;
+}
+
+/* --- MAIN CONTENT --- */
+.main_content {
+    background-image: url('../images/background-home.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 100vh;
+    padding: 0px;
+    margin: 0px;
+}
+
+#mylife {
+    color: aliceblue;
+    transform: translateY(340px);
+    margin-left: 100px;
+    font-size: 50px;
+    margin-bottom: 0px;
+    padding: 0px;
+}
+
+#sub, #read {
+    margin-left: 80px;
+    transform: translateY(480%);
+    font-size: 45px;
+    border-radius: 20px;
+    border: 3px solid black;
+    margin-top: 5px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    padding: 3px;
+    cursor: pointer;
+    background-color: white;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#sub:hover, #read:hover {
+    background-color: #f1f1f1;
+}
