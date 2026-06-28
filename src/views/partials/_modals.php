@@ -1,7 +1,7 @@
-<!-- CSS for Modals -->
+
 <link rel="stylesheet" href="public/css/_modals.css">
 
-<!-- Contact Modal -->
+
 <div id="contact-modal" class="modal-overlay">
     <div class="modal-container contact-container">
         <button class="modal-close-btn" id="close-contact-modal" aria-label="Close modal">&times;</button>
@@ -38,7 +38,7 @@
     </div>
 </div>
 
-<!-- Subscribe Modal -->
+
 <div id="subscribe-modal" class="modal-overlay">
     <div class="modal-container subscribe-container">
         <button class="modal-close-btn" id="close-subscribe-modal" aria-label="Close modal">&times;</button>
@@ -60,5 +60,5 @@
     </div>
 </div>
 
-<!-- JS for Modals -->
+
 <script src="public/js/_modals.js"></script>

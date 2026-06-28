@@ -20,7 +20,9 @@ html, body {
     overflow-x: hidden;
     padding: 2px;
     margin: 0;
-    left: 0;
+    
+    /* Căn giữa lằn ranh 40px của background (40 - 25 = 15) */
+    left: 15px; 
 
     /* Vertical centering */
     top: 50%;
@@ -40,36 +42,108 @@ html, body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    width: 100%;
-    min-height: 100vh;
-    padding: 0px;
-    margin: 0px;
-}
-
-#mylife {
-    color: aliceblue;
-    transform: translateY(340px);
-    margin-left: 100px;
-    font-size: 50px;
-    margin-bottom: 0px;
+    
+    /* Tạo khoảng trắng 2 bên hông 40px */
+    width: calc(100% - 80px); 
+    margin: 0 auto; 
+    
+    /* Ensure it fills screen minus header height */
+    height: calc(100vh - 80px);
+    position: relative;
     padding: 0px;
 }
 
-#sub, #read {
-    margin-left: 80px;
-    transform: translateY(480%);
-    font-size: 45px;
-    border-radius: 20px;
-    border: 3px solid black;
-    margin-top: 5px;
-    font-family: 'Times New Roman', Times, serif;
-    font-weight: bold;
-    padding: 3px;
-    cursor: pointer;
+/* --- HERO CONTENT (Text & Buttons) --- */
+.hero_content {
+    position: absolute;
+    bottom: 120px;
+    left: 100px; /* Thụt vào một chút để né sidenav */
+    z-index: 10;
+}
+
+#mylife h1 {
+    color: white;
+    font-size: 100px;
+    line-height: 1.1;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    font-weight: 800; /* Extra bold */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* subtle shadow for readability */
+}
+
+.hero_line {
+    border: none;
+    height: 4px;
     background-color: white;
-    transition: background-color 0.2s, transform 0.2s;
+    margin: 20px 0;
+    width: 100%;
 }
 
-#sub:hover, #read:hover {
+.hero_buttons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+#read, #sub {
+    font-size: 24px;
+    font-weight: 800;
+    font-family: Arial, sans-serif;
+    border: 3px solid black;
+    border-radius: 50px; /* Pill shape */
+    padding: 15px 40px;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+#read:hover, #sub:hover {
     background-color: #f1f1f1;
+    transform: scale(1.05);
+}
+
+/* --- RESPONSIVE MEDIA QUERIES --- */
+@media screen and (max-width: 850px) {
+    .main_content {
+        height: auto;
+        min-height: calc(100vh - 80px);
+        width: 100%;
+        margin: 0;
+    }
+    
+    .sidenav {
+        left: 0;
+    }
+    
+    .hero_content {
+        position: relative;
+        bottom: 0;
+        left: 0;
+        padding: 50px 20px 50px 70px;
+    }
+
+    #mylife h1 {
+        font-size: 60px;
+    }
+
+    .hero_buttons {
+        flex-direction: column;
+    }
+    
+    #read, #sub {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .hero_content {
+        padding-left: 60px;
+    }
+    #mylife h1 {
+        font-size: 40px;
+    }
 }

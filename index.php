@@ -32,11 +32,16 @@ $title = $titles[$page] ?? 'BloggerZ';
     <main>
     <?php if ($page === 'home'): ?>
         <div class="main_content">
-            <div id="mylife">
-                <h1>My Life<br>My Blog</h1>
+            <div class="hero_content">
+                <div id="mylife">
+                    <h1>My Life<br>My Blog</h1>
+                </div>
+                <hr class="hero_line">
+                <div class="hero_buttons">
+                    <button id="read">Read the Blog</button>
+                    <button id="sub">Subscribe</button>
+                </div>
             </div>
-            <button id="read">Read the Blog</button>
-            <button id="sub">Subscribe</button>
         </div>
         <div class="sidenav">
             <a href="#"><img src="public/images/insta.jpg" alt="Instagram"></a>

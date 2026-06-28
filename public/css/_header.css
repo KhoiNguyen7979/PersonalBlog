@@ -8,7 +8,7 @@ header {
     position: sticky; /* Makes it stick to the screen */
     top: 0;           /* Tells it to stick at the very top */
     z-index: 9999;    /* Ensures it stays above all other scrolling content */
-    padding: 10px 20px;
+    padding: 10px 40px; /* Align edge with background whitespace! */
     margin: 0;
     width: 100%;
     box-sizing: border-box;
@@ -19,8 +19,8 @@ header {
     background-color: white;
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Vertically centers the logo, nav, and account */
-    flex-wrap: wrap; /* Allows elements to wrap on smaller screens */
+    align-items: center; 
+    position: relative; 
 }
 
 #logo {
@@ -31,7 +31,7 @@ header {
 
 /* --- THE DROPDOWN FIX --- */
 .account_container {
-    position: relative; /* Anchor point for the absolute dropdown */
+    position: relative; 
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -50,14 +50,14 @@ header {
 
 #logoption {
     display: none;
-    position: absolute; /* Takes the menu out of the document flow */
-    top: 100%; /* Positions it directly below the account image */
-    right: 0; /* Aligns it to the right edge */
+    position: absolute; 
+    top: 100%; 
+    right: 0; 
     background-color: whitesmoke;
     border: gray 2px solid;
     border-radius: 10px;
     padding: 10px;
-    z-index: 1000; /* Ensures it floats above page content */
+    z-index: 1000; 
     min-width: 100px;
     text-align: center;
     box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
@@ -66,7 +66,7 @@ header {
 #logoption > a {
     display: block;
     text-decoration: none;
-    font-size: 18px; /* Added px */
+    font-size: 18px; 
     color: black;
     margin: 8px 0;
     padding: 8px;
@@ -83,7 +83,9 @@ header {
 .nav {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
+    position: absolute; /* Force absolute center */
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .nav_a {
@@ -108,12 +110,18 @@ header {
 
 /* --- RESPONSIVE MEDIA QUERY --- */
 @media screen and (max-width: 850px) {
+    header {
+        padding: 10px 20px;
+    }
+    
     .nav_container {
         flex-direction: column;
         gap: 15px;
     }
     
     .nav {
+        position: static; /* Remove absolute on small screen */
+        transform: none;
         flex-direction: column;
         align-items: center;
         width: 100%;
