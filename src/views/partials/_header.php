@@ -2,19 +2,19 @@
 <header>
     <div class="nav_container">
         <div class="logo_container">
-            <img id="logo" src="public/images/logo.png" alt="logo">
+            <a href="index.php"><img id="logo" src="public/images/logo.png" alt="logo"></a>
         </div>
         <div class="nav">
-            <div class="nav_a"><a href="#">Home</a></div>
+            <div class="nav_a"><a href="index.php">Home</a></div>
             <div class="nav_a"><a href="#">My Blog</a></div>
-            <div class="nav_a"><a href="#">About</a></div>
+            <div class="nav_a"><a href="?page=about">About</a></div>
             <div class="nav_a"><a href="#" id="contact-nav-btn">Contact</a></div>
         </div>
         <div class="account_container" id="account_container_2">
             <img id="account" src="public/images/account.jpg" alt="taikhoan">
             <div id="logoption">
-                <a href="#">Sign Up</a>
-                <a href="#">Sign In</a>
+                <a href="?page=signup">Sign Up</a>
+                <a href="?page=signin">Sign In</a>
             </div>
         </div>
     </div>

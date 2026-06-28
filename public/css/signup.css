@@ -1,0 +1,149 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    height: 100vh;
+}
+
+.container{
+    display: flex;
+    height: 100vh;
+}
+
+/* LEFT */
+
+.left-panel{
+    width: 68%;
+    position: relative;
+    background-image: url('../images/arrow.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.left-panel h1{
+    position: absolute;
+    top: 40px;
+    left: 30px;
+    color: white;
+    font-size: 80px;
+    font-weight: bold;
+    text-shadow: 4px 4px 6px rgba(0,0,0,0.3);
+}
+
+.logo{
+    position: absolute;
+    bottom: 35px;
+    right: 40px;
+    width: 480px;
+}
+
+/* RIGHT */
+
+.right-panel{
+    width: 32%;
+    background: #f3f3f3;
+    padding: 50px;
+}
+
+.right-panel h2{
+    text-align: center;
+    font-size: 60px;
+    margin-bottom: 50px;
+}
+
+/* FORM */
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+input[type=text],
+input[type=email],
+input[type=password]{
+    border: none;
+    border-bottom: 3px solid black;
+    background: transparent;
+    font-size: 18px;
+    padding: 15px 5px;
+    margin-bottom: 25px;
+    outline: none;
+}
+
+/* CHECKBOX */
+
+.agree{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 40px;
+}
+
+.agree input{
+    width: 22px;
+    height: 22px;
+    margin-right: 15px;
+}
+
+.agree span{
+    font-size: 18px;
+}
+
+.agree a{
+    font-weight: bold;
+    font-style: italic;
+    color: black;
+}
+
+.agree a:hover{
+    color: blue;
+}
+
+/* BUTTONS */
+
+.buttons{
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.signup-btn{
+    width: 220px;
+    height: 60px;
+    border: none;
+    border-radius: 35px;
+    background: black;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.signup-btn:hover{
+    transform: scale(1.05);
+}
+
+.signin{
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.buttons a{
+    font-size: 28px;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.signin:hover{
+    transform: scale(1.05);
+}
+
+.signin:active{
+    transform: scale(0.95);
+}

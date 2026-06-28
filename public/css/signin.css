@@ -1,0 +1,146 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    height: 100vh;
+}
+
+.container{
+    display: flex;
+    height: 100vh;
+}
+
+.left-panel{
+    width: 68%;
+    position: relative;
+    background-image: url('../images/arrow.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.left-panel h1{
+    position: absolute;
+    top: 40px;
+    left: 30px;
+    color: white;
+    font-size: 80px;
+    font-weight: bold;
+    text-shadow: 4px 4px 6px rgba(0,0,0,0.3);
+}
+
+.logo{
+    position: absolute;
+    bottom: 35px;
+    right: 40px;
+    width: 480px;
+}
+
+.right-panel{
+    width: 32%;
+    background: #f3f3f3;
+    padding: 50px;
+}
+
+.right-panel h2{
+    text-align: center;
+    font-size: 60px;
+    margin-top: 90px;
+    margin-bottom: 60px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+input[type=text], input[type=password]{
+    border: none;
+    border-bottom: 3px solid black;
+    background: transparent;
+    font-size: 18px;
+    padding: 15px 5px;
+    margin-bottom: 25px;
+    outline: none;
+}
+
+.remember{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 40px;
+}
+
+.remember input{
+    width: 22px;
+    height: 22px;
+    margin-right: 15px;
+}
+
+.button{
+    display: flex;
+    gap: 45px;
+    align-items: center;
+}
+
+.signin-btn{
+    width: 200px;
+    height: 60px;
+    border: none;
+    border-radius: 35px;
+    background-color: black;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.signin-btn:hover{
+    transform: scale(1.05);
+}
+
+.signin-btn:active{
+    transform: scale(0.95);
+}
+
+.signup{
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.button a{
+    font-size: 28px;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.signup:hover{
+    transform: scale(1.05);
+}
+
+.signup:active{
+    transform: scale(0.95);
+}
+
+.forgot-password{
+    text-align: right;
+    position: relative;
+    left: 20px;
+    top: 130px;
+}
+
+.forgot-password a{
+    font-size: 20px;
+    color: black;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.forgot-password a:hover{
+    color: blue;
+}

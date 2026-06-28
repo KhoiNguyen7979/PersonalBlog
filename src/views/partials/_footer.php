@@ -2,9 +2,9 @@
 <footer>
     <div class="footer_container">
         <div class="top_footer">
-            <div id="linktrangchu"><a>BloggerZ</a></div>
+            <div id="linktrangchu"><a href="index.php">BloggerZ</a></div>
             <div id="thanhdieuhuong">
-                <a href="#">Home</a><br>
+                <a href="index.php">Home</a><br>
                 <a href="#">My Blog</a><br>
                 <a href="#">About me</a><br>
                 <a href="#" id="contact-footer-btn">Contact</a>
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="bottom_footer">
-            <img src="public/images/logo.png" id="logo" alt="logo">
+            <a href="index.php"><img src="public/images/logo.png" id="logo" alt="logo"></a>
             <div id="mucluc">
                 <a href="#">Privacy Policy</a><br>
                 <a href="#">Accessibility Statement</a>
