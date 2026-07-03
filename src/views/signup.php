@@ -1,3 +1,45 @@
+<?php 
+    require_once("mySQLconnect.php");
+    $show_modal = false;
+    $modal_title = "";
+    $modal_message = "";
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])){
+        $ho_ten = $_POST['fullname'];
+        $email = $_POST['email'];
+        $user_name = $_POST['username'];
+        $matkhau = $_POST['password'];
+        $xac_nhan_mat_khau = $_POST['confirm_password'];
+        
+
+        $matkhau_dabam = sha1($xac_nhan_mat_khau);
+        $sql_command = "INSERT INTO nguoidung (Email, HoTenNguoiDung, TenDangNhap, MatKhau) VALUES (?, ?, ?, ?)";
+        $stmt = $connect->prepare($sql_command);
+        
+        if ($stmt) {
+            $stmt->bind_param("ssss", $email, $ho_ten, $user_name, $matkhau_dabam);
+            
+            // Wrap execution in try...catch to intercept the duplicate entry exception
+            try {
+                if ($stmt->execute()) {
+                    $show_modal = true;
+                        $modal_title = "Đăng ký thành công!";
+                        $modal_message = "Tài khoản " . htmlspecialchars($email) . " đã được tạo. Bạn có thể đăng nhập ngay bây giờ.";
+                }
+            } catch (mysqli_sql_exception $e) {
+                // Check if the error code is 1062 (MySQL's code for Duplicate Entry)
+                if ($e->getCode() === 1062) {
+                    $show_modal = true;
+                        $modal_title = "Oops! Lỗi đăng ký";
+                        $modal_message = "Email này đã tồn tại trong hệ thống. Vui lòng dùng email khác!";
+
+                }
+            }
+            $stmt->close();
+        }
+    }
+    $connect->close();
+?>
+
 <link rel="stylesheet" href="public/css/signup.css">
 
 <div class="container">
@@ -11,9 +53,13 @@
     <!-- RIGHT -->
     <div class="right-panel">
 
-        <h2>Sign Up</h2>
-
-        <form action="php/register.php" method="POST">
+        <h3>Sign Up</h3>
+        <?php 
+                if(!empty($thong_bao)) {
+                    echo $thong_bao;
+                }
+        ?>
+        <form action="" method="POST">
 
             <input type="text" name="fullname" placeholder="Full name" required>
 
@@ -32,14 +78,26 @@
                     <a href="#">Terms of Use</a>
                 </span>
             </div>
-
             <div class="buttons">
-                <button type="submit" class="signup-btn">Sign Up</button>
-                <a href="?page=signin" class="signin">Sign In →</a>
+                <button type="submit" class="signup-btn" name="signup">Sign Up</button>
+                <a href="?page=signin" class="signin">Sign In→</a>
             </div>
-
         </form>
 
     </div>
 
 </div>
+<?php if($show_modal): ?>
+<div class="modal-overlay" id="resultModal">
+    <div class="modal-box">
+        <span class="close-btn" onclick="document.getElementById('resultModal').style.display='none'"> &times; </span>
+        
+        <h2><?= $modal_title ?></h2>
+        <p><?= $modal_message ?></p>
+        
+        <button class="ok-btn" onclick="document.getElementById('resultModal').style.display='none'">OK</button><br><br>
+        <a href="?page=signin" id=signin_direct>Chuyển đến trang đăng nhập</a>
+    </div>
+</div>
+<?php endif; ?>
+<script src="public/js/signup.js"></script>

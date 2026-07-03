@@ -2,22 +2,12 @@
 $pageTitle = "About - BloggerZ";
 ?>
 <link rel="stylesheet" href="public/css/about.css">
-
-<div class="social_media">
-    <a href="#">
-        <img src="public/images/Instagram.png" alt="Instagram">
-    </a>
-    <a href="#">
-        <img src="public/images/x.png" alt="X">
-    </a>
-    <a href="#">
-        <img src="public/images/facebook.png" alt="Facebook">
-    </a>
-    <a href="#">
-        <img src="public/images/youtube.png" alt="Youtube">
-    </a>
+<div class="sidenav">
+            <a href="#"><img src="public/images/Instagram.png" alt="Instagram"></a>
+            <a href="#"><img src="public/images/x.png" alt="X"></a>
+            <a href="#"><img src="public/images/facebook.png" alt="Facebook"></a>
+            <a href="#"><img src="public/images/youtube.png" alt="YouTube"></a>
 </div>
-
 <main>
 
     <section class="hero_about">

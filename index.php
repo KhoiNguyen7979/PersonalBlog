@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 // Tiêu đề trang theo từng page
@@ -8,6 +10,7 @@ $titles = [
     'about'  => 'About - BloggerZ',
     'signin' => 'Sign In - BloggerZ',
     'signup' => 'Sign Up - BloggerZ',
+    'signout' => 'Sign Out - BloggerZ',
 ];
 $title = $titles[$page] ?? 'BloggerZ';
 ?>
@@ -21,8 +24,10 @@ $title = $titles[$page] ?? 'BloggerZ';
 </head>
 <body>
 
-<?php if ($page === 'signin' || $page === 'signup'): ?>
+<?php if ($page === 'signin' || $page === 'signup' || $page === 'signout'): ?>
+
     <!-- Sign In / Sign Up không có header & footer -->
+     <?php if ($page === 'signout'): include 'src/views/signout.php'; endif; ?>
     <?php if ($page === 'signin'): include 'src/views/signin.php'; endif; ?>
     <?php if ($page === 'signup'): include 'src/views/signup.php'; endif; ?>
 
@@ -44,10 +49,10 @@ $title = $titles[$page] ?? 'BloggerZ';
             </div>
         </div>
         <div class="sidenav">
-            <a href="#"><img src="public/images/insta.jpg" alt="Instagram"></a>
+            <a href="#"><img src="public/images/Instagram.png" alt="Instagram"></a>
             <a href="#"><img src="public/images/x.png" alt="X"></a>
-            <a href="#"><img src="public/images/fb.jpg" alt="Facebook"></a>
-            <a href="#"><img src="public/images/yt.png" alt="YouTube"></a>
+            <a href="#"><img src="public/images/facebook.png" alt="Facebook"></a>
+            <a href="#"><img src="public/images/youtube.png" alt="YouTube"></a>
         </div>
 
     <?php elseif ($page === 'blog'): ?>

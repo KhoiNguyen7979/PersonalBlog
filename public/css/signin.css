@@ -129,11 +129,10 @@ input[type=text], input[type=password]{
 
 .forgot-password{
     text-align: right;
-    position: relative;
-    left: 20px;
-    top: 130px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
 }
-
 .forgot-password a{
     font-size: 20px;
     color: black;
@@ -142,8 +141,80 @@ input[type=text], input[type=password]{
 }
 
 .forgot-password a:hover{
-    color: blue;
+    color: rgb(255, 0, 0);
 }
+
+/*pop up đăng nhập tài khoản thành công*/
+/* Lớp nền mờ bao phủ toàn màn hình */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8); /* Nền đen mờ 60% */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Đảm bảo nó đè lên mọi thứ khác */
+}
+
+/* Hộp nội dung Pop-up */
+.modal-box {
+    background: whitesmoke;
+    padding: 40px;
+    border-radius: 20px; /* Bo góc giống ảnh của bạn */
+    width: 600px;
+    height: 400px;
+    max-width: 90%;
+    text-align: center;
+    position: relative;
+    font-size: 25px;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
+    animation: popIn 0.3s ease-out; /* Hiệu ứng nảy nhẹ khi hiện lên */
+}
+
+/* Nút X góc trên phải */
+.close-btn{
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-btn:hover{
+    color: red;
+    border-radius: 10px;
+    background-color: black;
+}
+
+/* Nút OK */
+.ok-btn,#signup_direct{
+    margin-top: 30px;
+    padding: 10px 25px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+.ok-btn:hover,#signup_direct:hover{
+    background: lightgray;
+    color: black;
+}
+
+/* Hiệu ứng nảy lúc xuất hiện */
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
 
 /* --- RESPONSIVE MEDIA QUERIES --- */
 @media screen and (max-width: 850px) {
