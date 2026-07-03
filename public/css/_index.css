@@ -20,10 +20,10 @@ html, body {
     border-radius: 20px;
     background-color: white;
     overflow-x: hidden;
-    padding: 2px;
+    padding: 8px;
     margin: 0;
     /* Căn giữa lằn ranh 40px của background (40 - 25 = 15) */
-    left: 5px; 
+    left: 11px; 
     /* Vertical centering */
     top: 50%;
     transform: translateY(-50%);
