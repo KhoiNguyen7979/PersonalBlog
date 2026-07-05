@@ -6,7 +6,7 @@
         </div>
         <div class="nav">
             <div class="nav_a"><a href="index.php">Home</a></div>
-            <div class="nav_a"><a href="#">My Blog</a></div>
+            <div class="nav_a"><a href="?page=blog">My Blog</a></div>
             <div class="nav_a"><a href="?page=about">About</a></div>
             <div class="nav_a"><a href="#" id="contact-nav-btn">Contact</a></div>
         </div>
@@ -24,7 +24,7 @@
                 </div>
                 <!-- Menu dropdown (Hồ sơ & Đăng xuất) -->
                 <div id="logoption">
-                    <a href="#">Hồ sơ</a>
+                    <a href="?page=profile">Hồ sơ</a>
                     <a href="?page=signout">Đăng xuất</a>
                 </div>
 

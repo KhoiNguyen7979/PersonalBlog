@@ -54,7 +54,7 @@ $connect->close();
 
     <!-- LEFT -->
     <div class="left-panel">
-        <h1>Welcome to</h1>
+        <h1>Welcome back to</h1>
         <a href="index.php"><img src="public/images/bloggerZ.png" class="logo" alt="BloggerZ Logo"></a>
     </div>
 

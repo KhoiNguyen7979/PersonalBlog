@@ -1,0 +1,218 @@
+/* ========================================================
+   profile.css - Trang hồ sơ cá nhân
+   ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.profile-page {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 24px 80px;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+/* ── Card tổng ──────────────────────────────────────────────────────────────── */
+.profile-card {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+}
+
+/* ── Bên trái: Avatar ───────────────────────────────────────────────────────── */
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 180px;
+}
+
+.avatar-wrapper {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    overflow: hidden;
+    margin-bottom: 14px;
+    background: #f0f0f0;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.profile-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    text-align: center;
+}
+
+.profile-email {
+    font-size: 13px;
+    color: #888;
+    margin: 0 0 20px;
+    text-align: center;
+}
+
+.choose-avatar-btn {
+    display: inline-block;
+    border: 2px solid #222;
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-family: inherit;
+    text-align: center;
+}
+
+.choose-avatar-btn:hover {
+    background: #222;
+    color: white;
+}
+
+/* ── Bên phải: Stats + Bio ──────────────────────────────────────────────────── */
+.profile-right {
+    flex: 1;
+}
+
+/* Stats */
+.profile-stats {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 28px;
+    padding-bottom: 0;
+}
+
+.stat-item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.stat-label {
+    font-size: 15px;
+    color: #555;
+}
+
+/* Bio */
+.profile-bio p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+    margin: 0 0 16px;
+}
+
+/* Bio edit */
+.profile-bio-edit textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.profile-bio-edit textarea:focus {
+    border-color: #222;
+}
+
+.bio-edit-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-save {
+    background: #222;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.btn-save:hover { background: #000; }
+
+.btn-cancel {
+    background: transparent;
+    color: #666;
+    border: 1px solid #ccc;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-cancel:hover { background: #f5f5f5; }
+
+/* Edit describe link */
+.edit-describe-link {
+    display: block;
+    text-align: right;
+    font-size: 14px;
+    font-style: italic;
+    color: #555;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.edit-describe-link:hover { color: #000; }
+
+/* ── Toast thông báo ─────────────────────────────────────────────────────────── */
+.profile-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #222;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Inter', Arial, sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 9999;
+}
+
+.profile-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media screen and (max-width: 620px) {
+    .profile-card {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+    }
+    .profile-left {
+        width: 100%;
+    }
+    .profile-right {
+        width: 100%;
+    }
+    .edit-describe-link {
+        text-align: left;
+    }
+}

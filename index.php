@@ -11,6 +11,8 @@ $titles = [
     'signin' => 'Sign In - BloggerZ',
     'signup' => 'Sign Up - BloggerZ',
     'signout' => 'Sign Out - BloggerZ',
+    'profile' => 'Hồ Sơ - BloggerZ',
+    'create_blog' => 'Write a Blog - BloggerZ',
 ];
 $title = $titles[$page] ?? 'BloggerZ';
 ?>
@@ -43,8 +45,8 @@ $title = $titles[$page] ?? 'BloggerZ';
                 </div>
                 <hr class="hero_line">
                 <div class="hero_buttons">
-                    <button id="read">Read the Blog</button>
-                    <button id="sub">Subscribe</button>
+                    <button id="read">Read the Blog ⚫</button>
+                    <button id="sub">Subscribe ⚫</button>
                 </div>
             </div>
         </div>
@@ -54,12 +56,21 @@ $title = $titles[$page] ?? 'BloggerZ';
             <a href="#"><img src="public/images/facebook.png" alt="Facebook"></a>
             <a href="#"><img src="public/images/youtube.png" alt="YouTube"></a>
         </div>
+        <!-- Anchor để scroll xuống blog -->
+        <div id="blog-anchor"></div>
+        <?php include 'src/views/myBlog.php'; ?>
 
     <?php elseif ($page === 'blog'): ?>
         <?php include 'src/views/myBlog.php'; ?>
 
     <?php elseif ($page === 'about'): ?>
         <?php include 'src/views/about.php'; ?>
+
+    <?php elseif ($page === 'profile'): ?>
+        <?php include 'src/views/profile.php'; ?>
+
+    <?php elseif ($page === 'create_blog'): ?>
+        <?php include 'src/views/create_blog.php'; ?>
 
     <?php endif; ?>
     </main>
