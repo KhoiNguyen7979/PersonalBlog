@@ -19,7 +19,9 @@
 
         <div class="blog-controls">
             <div class="category-tabs" data-target="my">
-                <button class="cat-btn active" data-cat="all">Technology</button>
+                <button class="cat-btn active" data-cat="all">All</button>
+                <span class="cat-sep">|</span>
+                <button class="cat-btn" data-cat="technology">Technology</button>
                 <span class="cat-sep">|</span>
                 <button class="cat-btn" data-cat="skill">Skill</button>
                 <span class="cat-sep">|</span>
@@ -60,7 +62,9 @@
 
         <div class="blog-controls">
             <div class="category-tabs" data-target="other">
-                <button class="cat-btn active" data-cat="all">Technology</button>
+                <button class="cat-btn active" data-cat="all">All</button>
+                <span class="cat-sep">|</span>
+                <button class="cat-btn" data-cat="technology">Technology</button>
                 <span class="cat-sep">|</span>
                 <button class="cat-btn" data-cat="skill">Skill</button>
                 <span class="cat-sep">|</span>
