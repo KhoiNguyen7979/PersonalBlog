@@ -14,6 +14,7 @@ $email = $_SESSION['email'];
 $username = $_POST['username'] ?? '';
 $fullname = $_POST['fullname'] ?? '';
 $password = $_POST['password'] ?? '';
+$mota     = $_POST['mota'] ?? ''; // Nhận thêm dữ liệu mô tả
 
 // Validate cơ bản
 if (empty($username) || empty($fullname)) {
@@ -23,16 +24,16 @@ if (empty($username) || empty($fullname)) {
 
 try {
     if (!empty($password)) {
-        // Cập nhật cả thông tin và mật khẩu
-        // Lưu ý: Tùy vào hệ thống của bạn, có thể cần đổi md5() thành password_hash() nếu bạn dùng chuẩn mã hóa mới
+        // Cập nhật thông tin, mô tả và mật khẩu
         $hashed_password = password_hash($password, PASSWORD_DEFAULT); 
         
-        $stmt = $connect->prepare("UPDATE NguoiDung SET HoTenNguoiDung = ?, TenDangNhap = ?, MatKhau = ? WHERE Email = ?");
-        $stmt->bind_param("ssss", $fullname, $username, $hashed_password, $email);
+        // Thêm trường MoTa vào câu lệnh SQL
+        $stmt = $connect->prepare("UPDATE NguoiDung SET HoTenNguoiDung = ?, TenDangNhap = ?, MoTa = ?, MatKhau = ? WHERE Email = ?");
+        $stmt->bind_param("sssss", $fullname, $username, $mota, $hashed_password, $email);
     } else {
-        // Chỉ cập nhật thông tin, không đổi mật khẩu
-        $stmt = $connect->prepare("UPDATE NguoiDung SET HoTenNguoiDung = ?, TenDangNhap = ? WHERE Email = ?");
-        $stmt->bind_param("sss", $fullname, $username, $email);
+        // Chỉ cập nhật thông tin và mô tả, không đổi mật khẩu
+        $stmt = $connect->prepare("UPDATE NguoiDung SET HoTenNguoiDung = ?, TenDangNhap = ?, MoTa = ? WHERE Email = ?");
+        $stmt->bind_param("ssss", $fullname, $username, $mota, $email);
     }
 
     if ($stmt->execute()) {

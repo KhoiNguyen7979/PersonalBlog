@@ -1,6 +1,6 @@
 /**
  * public/js/profile.js
- * Xử lý đổi avatar và sửa mô tả cá nhân.
+ * Xử lý đổi avatar và cập nhật thông tin cá nhân (bao gồm mô tả).
  */
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -29,56 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(r => r.json())
                 .then(data => {
                     showToast(data.success ? '✅ Đã cập nhật ảnh đại diện!' : '❌ ' + data.message);
-                })
-                .catch(() => showToast('❌ Lỗi kết nối server.'));
-        });
-    }
-
-    // ── Edit Bio ──────────────────────────────────────────────────────────────
-    const editBioBtn   = document.getElementById('edit-bio-btn');
-    const bioDisplay   = document.getElementById('bio-display');
-    const bioEdit      = document.getElementById('bio-edit');
-    const bioText      = document.getElementById('bio-text');
-    const bioTextarea  = document.getElementById('bio-textarea');
-    const saveBioBtn   = document.getElementById('save-bio-btn');
-    const cancelBioBtn = document.getElementById('cancel-bio-btn');
-
-    if (editBioBtn) {
-        editBioBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            bioDisplay.style.display = 'none';
-            bioEdit.style.display    = 'block';
-            bioTextarea.focus();
-        });
-    }
-
-    if (cancelBioBtn) {
-        cancelBioBtn.addEventListener('click', () => {
-            bioDisplay.style.display = 'block';
-            bioEdit.style.display    = 'none';
-        });
-    }
-
-    if (saveBioBtn) {
-        saveBioBtn.addEventListener('click', () => {
-            const newBio = bioTextarea.value.trim();
-
-            const formData = new FormData();
-            formData.append('action', 'update_bio');
-            formData.append('mota', newBio);
-
-            fetch('api/update_profile.php', { method: 'POST', body: formData })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.success) {
-                        // Cập nhật giao diện
-                        bioText.innerHTML = newBio.replace(/\n/g, '<br>') || '<em>Chưa có mô tả.</em>';
-                        bioDisplay.style.display = 'block';
-                        bioEdit.style.display    = 'none';
-                        showToast('✅ Đã cập nhật mô tả!');
-                    } else {
-                        showToast('❌ ' + data.message);
-                    }
                 })
                 .catch(() => showToast('❌ Lỗi kết nối server.'));
         });
@@ -130,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
             
             const username = document.getElementById("edit-username").value.trim();
             const fullname = document.getElementById("edit-fullname").value.trim();
+            const mota = document.getElementById("edit-mota").value.trim(); // Lấy giá trị mô tả
             const newPassword = document.getElementById("edit-new-password").value;
             const confirmPassword = document.getElementById("edit-confirm-password").value;
 
@@ -144,6 +95,8 @@ document.addEventListener("DOMContentLoaded", function() {
             const formData = new FormData();
             formData.append('username', username);
             formData.append('fullname', fullname);
+            formData.append('mota', mota); // Gửi thêm mô tả vào form data
+            
             if (newPassword !== "") {
                 formData.append('password', newPassword);
             }

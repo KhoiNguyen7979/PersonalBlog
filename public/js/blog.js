@@ -179,9 +179,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 // Remove card từ DOM
                                 const card = btn.closest('.post-card');
                                 if (card) card.remove();
+                                alert('✅ Đã xóa bài viết thành công!'); // THÊM DÒNG NÀY
                             } else {
-                                alert('Lỗi xoá bài viết.');
+                                // SỬA LẠI DÒNG NÀY ĐỂ HIỂN THỊ CHI TIẾT LỖI TỪ PHP
+                                alert('❌ Lỗi xoá bài viết: ' + (data.message || 'Không rõ nguyên nhân. Hãy kiểm tra CSDL.'));
                             }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('❌ Lỗi kết nối đến server khi xóa bài viết.');
                         });
                 }
             });

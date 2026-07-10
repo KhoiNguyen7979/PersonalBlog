@@ -65,19 +65,11 @@ $stats = $stmtStats->get_result()->fetch_assoc();
             <!-- Mô tả -->
             <div class="profile-bio" id="bio-display">
                 <p id="bio-text">
-                    <?= nl2br(htmlspecialchars($user['MoTa'] ?? 'Chưa có mô tả. Nhấn Edit describe để thêm.')) ?>
+                    <?= nl2br(htmlspecialchars($user['MoTa'] ?? 'Chưa có mô tả.')) ?>
                 </p>
             </div>
 
-            <!-- Form sửa mô tả (ẩn mặc định) -->
-            <div class="profile-bio-edit" id="bio-edit" style="display:none;">
-                <textarea id="bio-textarea" rows="5"><?= htmlspecialchars($user['MoTa'] ?? '') ?></textarea>
-                <div class="bio-edit-actions">
-                    <button id="save-bio-btn" class="btn-save">Lưu</button>
-                    <button id="cancel-bio-btn" class="btn-cancel">Hủy</button>
-                </div>
-            </div>
-            <a href="#" class="edit-describe-link" id="edit-bio-btn">Edit describe</a>
+            <!-- ĐÃ XÓA: profile-bio-edit và nút edit-bio-btn -->
 
             <button id="edit-info-btn" class="btn-edit-info">Cập nhật thông tin cá nhân</button>
 
@@ -97,6 +89,12 @@ $stats = $stmtStats->get_result()->fetch_assoc();
                     <div class="form-group">
                         <label>Họ và tên:</label>
                         <input type="text" id="edit-fullname" value="<?= htmlspecialchars($user['HoTenNguoiDung']) ?>" required style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                    </div>
+
+                    <!-- THÊM MỚI: Form nhập mô tả -->
+                    <div class="form-group">
+                        <label>Mô tả bản thân:</label>
+                        <textarea id="edit-mota" rows="4" style="width: 100%; padding: 8px; margin-bottom: 10px; resize: vertical;"><?= htmlspecialchars($user['MoTa'] ?? '') ?></textarea>
                     </div>
                     
                     <hr style="margin: 15px 0;">
@@ -121,7 +119,6 @@ $stats = $stmtStats->get_result()->fetch_assoc();
                 </form>
             </div>
         </div>
-    </div>
 
 </div>
 

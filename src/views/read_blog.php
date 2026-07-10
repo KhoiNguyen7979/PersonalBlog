@@ -110,7 +110,7 @@ document.getElementById('like-btn').addEventListener('click', function() {
 /* Khung bọc ảnh bìa */
 .read-thumbnail-wrap {
     width: 100%;
-    max-height: 450px;
+    max-height: 1000px;
     overflow: hidden;
     border-radius: 8px;
     margin-bottom: 25px;
