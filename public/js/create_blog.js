@@ -1,17 +1,17 @@
 /**
  * public/js/create_blog.js
- * Xử lý giao diện tạo bài viết (preview ảnh) và gửi dữ liệu qua API.
+ * Xử lý giao diện tạo bài viết: preview ảnh bìa và submit form.
  */
 document.addEventListener('DOMContentLoaded', () => {
 
-    const form = document.getElementById('create-blog-form');
-    const fileInput = document.getElementById('thumbnail');
-    const previewImg = document.getElementById('thumbnail-preview');
+    const form        = document.getElementById('create-blog-form');
+    const fileInput   = document.getElementById('thumbnail');
+    const previewImg  = document.getElementById('thumbnail-preview');
     const placeholder = document.getElementById('upload-placeholder');
-    const publishBtn = document.getElementById('publish-btn');
-    const toast = document.getElementById('create-toast');
+    const publishBtn  = document.getElementById('publish-btn');
+    const toast       = document.getElementById('create-toast');
 
-    // ── 1. Preview Ảnh ────────────────────────────────────────────────────────
+    // ── 1. Preview ảnh ────────────────────────────────────────────────────────
     fileInput.addEventListener('change', () => {
         const file = fileInput.files[0];
         if (file) {
@@ -29,19 +29,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ── 2. Xử lý Submit Form ──────────────────────────────────────────────────
+    // ── 2. Submit form ────────────────────────────────────────────────────────
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        // Validate
         if (!fileInput.files[0]) {
             showToast('❌ Vui lòng chọn ảnh bìa (Thumbnail) cho bài viết.');
             return;
         }
 
-        const formData = new FormData(form);
+        const formData = new FormData();
+        formData.append('title',     document.getElementById('title').value);
+        formData.append('summary',   document.getElementById('summary').value);
+        formData.append('category',  document.getElementById('category').value);
+        formData.append('content',   document.getElementById('content').value);
+        formData.append('thumbnail', fileInput.files[0]);
 
-        // Hiệu ứng loading nút
         const originalText = publishBtn.innerText;
         publishBtn.innerText = 'Đang đăng...';
         publishBtn.classList.add('loading');
@@ -51,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
             if (data.success) {
                 showToast('✅ Đăng bài thành công! Đang chuyển hướng...');
@@ -63,8 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetButton();
             }
         })
-        .catch(error => {
-            console.error(error);
+        .catch(err => {
+            console.error(err);
             showToast('❌ Đã xảy ra lỗi kết nối với máy chủ.');
             resetButton();
         });
@@ -76,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ── 3. Toast Helper ───────────────────────────────────────────────────────
+    // ── 3. Toast ──────────────────────────────────────────────────────────────
     function showToast(message) {
         toast.textContent = message;
         toast.classList.add('show');

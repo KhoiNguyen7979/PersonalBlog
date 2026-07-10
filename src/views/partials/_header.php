@@ -16,7 +16,7 @@
             <div class="nav_a"><a href="index.php">Home</a></div>
             <div class="nav_a"><a href="?page=blog">My Blog</a></div>
             <div class="nav_a"><a href="?page=about">About</a></div>
-            <div class="nav_a"><a href="#" id="contact-nav-btn">Contact</a></div>
+            <div class="nav_a"><a href="#" id="contact-nav-btn">Review</a></div>
         </div>
         
         <div class="account_container" id="account_container_2">

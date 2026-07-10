@@ -169,6 +169,43 @@ ALTER TABLE `Pics`
 ALTER TABLE `Videos`
   ADD CONSTRAINT `Videos_ibfk_1` FOREIGN KEY (`ID_BaiViet`) REFERENCES `BaiViet` (`ID_BaiViet`) ON DELETE CASCADE;
 
+--
+-- Cấu trúc bảng cho bảng `ThichBaiViet`
+--
+CREATE TABLE `ThichBaiViet` (
+  `ID_Thich` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_BaiViet` int(11) NOT NULL,
+  `Email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `NgayThich` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID_Thich`),
+  UNIQUE KEY `unique_like` (`ID_BaiViet`, `Email`),
+  KEY `ID_BaiViet` (`ID_BaiViet`),
+  KEY `Email` (`Email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `ThichBaiViet`
+  ADD CONSTRAINT `ThichBaiViet_ibfk_1` FOREIGN KEY (`ID_BaiViet`) REFERENCES `BaiViet` (`ID_BaiViet`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ThichBaiViet_ibfk_2` FOREIGN KEY (`Email`) REFERENCES `NguoiDung` (`Email`) ON DELETE CASCADE;
+
+--
+-- Cấu trúc bảng cho bảng `Reviews`
+--
+CREATE TABLE `Reviews` (
+  `ID_Review` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `HoTen` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `NoiDung` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `NgayTao` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `Reviews`
+--
+INSERT INTO `Reviews` (`HoTen`, `Email`, `NoiDung`) VALUES
+('Vinh Phan', 'vinh@gmail.com', 'Blog rất tuyệt vời, giao diện đẹp và hiện đại!'),
+('Lan Anh', 'lananh@gmail.com', 'Rất thích những bài viết chia sẻ về công nghệ của bạn. Keep it up!'),
+('Đức Minh', 'minh@example.com', 'Thiết kế đẹp mắt, trải nghiệm người dùng tốt.');
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

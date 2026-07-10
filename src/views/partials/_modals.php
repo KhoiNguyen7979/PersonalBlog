@@ -2,37 +2,30 @@
 <link rel="stylesheet" href="public/css/_modals.css">
 
 
-<div id="contact-modal" class="modal-overlay">
-    <div class="modal-container contact-container">
-        <button class="modal-close-btn" id="close-contact-modal" aria-label="Close modal">&times;</button>
+<div id="review-modal" class="modal-overlay">
+    <div class="modal-container review-container">
+        <button class="modal-close-btn" id="close-review-modal" aria-label="Close modal">&times;</button>
         <div class="modal-card">
-            <h2 class="modal-title">Contact</h2>
-            <form id="contact-form" class="modal-form">
+            <h2 class="modal-title">Leave a Review</h2>
+            <p class="modal-subtitle" style="text-align: center; color: #666; margin-bottom: 20px;">We'd love to hear your thoughts!</p>
+            <form id="review-form" class="modal-form">
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="contact-first-name">First name <span class="required">*</span></label>
-                        <input type="text" id="contact-first-name" name="first_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="contact-last-name">Last name <span class="required">*</span></label>
-                        <input type="text" id="contact-last-name" name="last_name" required>
+                    <div class="form-group full-width">
+                        <label for="review-name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="review-name" name="full_name" required>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="contact-email">Email <span class="required">*</span></label>
-                        <input type="email" id="contact-email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="contact-subject">Subject</label>
-                        <input type="text" id="contact-subject" name="subject">
+                    <div class="form-group full-width">
+                        <label for="review-email">Email <span class="required">*</span></label>
+                        <input type="email" id="review-email" name="email" required>
                     </div>
                 </div>
                 <div class="form-group full-width">
-                    <label for="contact-message">Leave me a message...</label>
-                    <textarea id="contact-message" name="message" rows="3"></textarea>
+                    <label for="review-message">Your Review <span class="required">*</span></label>
+                    <textarea id="review-message" name="message" rows="4" required></textarea>
                 </div>
-                <button type="submit" class="modal-submit-btn">Submit</button>
+                <button type="submit" class="modal-submit-btn" id="submit-review-btn">Submit Review</button>
             </form>
         </div>
     </div>

@@ -1,16 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
    
-    const contactModal = document.getElementById('contact-modal');
+    const reviewModal = document.getElementById('review-modal');
     const subscribeModal = document.getElementById('subscribe-modal');
     
-    const contactNavBtn = document.getElementById('contact-nav-btn');
-    const contactFooterBtn = document.getElementById('contact-footer-btn');
+    const reviewNavBtn = document.getElementById('contact-nav-btn');
+    const reviewFooterBtn = document.getElementById('contact-footer-btn');
     const subscribeBtn = document.getElementById('subscribe');
+    const footerSubscribeBtn = document.getElementById('footer-subscribe-btn');
     
-    const closeContactBtn = document.getElementById('close-contact-modal');
+    const closeReviewBtn = document.getElementById('close-review-modal');
     const closeSubscribeBtn = document.getElementById('close-subscribe-modal');
     
-    const contactForm = document.getElementById('contact-form');
+    const reviewForm = document.getElementById('review-form');
     const subscribeForm = document.getElementById('subscribe-form');
 
   
@@ -31,18 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //------------Event Listeners------------
     
-    // Open Contact Modal
-    if (contactNavBtn) {
-        contactNavBtn.addEventListener('click', (e) => {
+    // Open Review Modal
+    if (reviewNavBtn) {
+        reviewNavBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            openModal(contactModal);
+            openModal(reviewModal);
         });
     }
     
-    if (contactFooterBtn) {
-        contactFooterBtn.addEventListener('click', (e) => {
+    if (reviewFooterBtn) {
+        reviewFooterBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            openModal(contactModal);
+            openModal(reviewModal);
         });
     }
 
@@ -53,11 +54,17 @@ document.addEventListener('DOMContentLoaded', () => {
             openModal(subscribeModal);
         });
     }
+    if (footerSubscribeBtn) {
+        footerSubscribeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(subscribeModal);
+        });
+    }
 
-    // Close Contact Modal
-    if (closeContactBtn) {
-        closeContactBtn.addEventListener('click', () => {
-            closeModal(contactModal);
+    // Close Review Modal
+    if (closeReviewBtn) {
+        closeReviewBtn.addEventListener('click', () => {
+            closeModal(reviewModal);
         });
     }
 
@@ -70,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close on clicking outside modal content
     window.addEventListener('click', (e) => {
-        if (e.target === contactModal) {
-            closeModal(contactModal);
+        if (e.target === reviewModal) {
+            closeModal(reviewModal);
         }
         if (e.target === subscribeModal) {
             closeModal(subscribeModal);
@@ -81,27 +88,49 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close on pressing Escape key
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            closeModal(contactModal);
+            closeModal(reviewModal);
             closeModal(subscribeModal);
         }
     });
 
-    // --- Submitt form ---
+    // --- Submit form ---
     
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // Get form values
-            const firstName = document.getElementById('contact-first-name').value;
-            const lastName = document.getElementById('contact-last-name').value;
-            
-            // Show premium success feedback
-            alert(`Cảm ơn ${firstName} ${lastName}! Tin nhắn của bạn đã được gửi thành công. Chúng tôi sẽ liên hệ lại sớm nhất có thể.`);
-            
-            // Reset and close
-            contactForm.reset();
-            closeModal(contactModal);
+            const submitBtn = document.getElementById('submit-review-btn');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = 'Đang gửi...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(reviewForm);
+
+            fetch('api/submit_review.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Cảm ơn bạn đã để lại đánh giá! Đánh giá của bạn sẽ hiển thị ở trang About.');
+                    reviewForm.reset();
+                    closeModal(reviewModal);
+                    // Reload trang nếu đang ở trang about
+                    if (window.location.search.includes('page=about')) {
+                        window.location.reload();
+                    }
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(err => {
+                alert('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
+            })
+            .finally(() => {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            });
         });
     }
 

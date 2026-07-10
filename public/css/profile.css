@@ -1,39 +1,38 @@
 /* ========================================================
-   profile.css - Trang hồ sơ cá nhân
+   profile.css - Trang hồ sơ cá nhân (redesign đơn giản)
    ======================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 .profile-page {
-    max-width: 800px;
-    margin: 60px auto;
-    padding: 0 24px 80px;
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 0 20px 80px;
     font-family: 'Inter', Arial, sans-serif;
 }
 
-/* ── Card tổng ──────────────────────────────────────────────────────────────── */
-.profile-card {
+/* ── Profile Header Card ─────────────────────────────────────────────────── */
+.profile-header-card {
     display: flex;
-    gap: 48px;
-    align-items: flex-start;
-}
-
-/* ── Bên trái: Avatar ───────────────────────────────────────────────────────── */
-.profile-left {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    min-width: 180px;
+    gap: 30px;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    margin-bottom: 24px;
 }
 
+/* Avatar */
 .avatar-wrapper {
-    width: 150px;
-    height: 150px;
+    position: relative;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    border: 2px solid #ddd;
     overflow: hidden;
-    margin-bottom: 14px;
-    background: #f0f0f0;
+    flex-shrink: 0;
+    border: 3px solid #eee;
 }
 
 .profile-avatar {
@@ -43,80 +42,126 @@
     display: block;
 }
 
-.profile-name {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0 0 4px;
-    text-align: center;
-}
-
-.profile-email {
-    font-size: 13px;
-    color: #888;
-    margin: 0 0 20px;
-    text-align: center;
-}
-
-.choose-avatar-btn,  #edit-info-btn{
-    display: inline-block;
-    border: 2px solid #222;
-    border-radius: 50px;
-    padding: 8px 20px;
-    font-size: 14px;
-    font-weight: 600;
+.avatar-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 36px;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    font-family: inherit;
-    text-align: center;
+    opacity: 0;
+    transition: opacity 0.2s;
 }
 
-.choose-avatar-btn:hover, #edit-info-btn:hover{
-    background: #222;
-    color: white;
+.avatar-wrapper:hover .avatar-overlay {
+    opacity: 1;
 }
 
-/* ── Bên phải: Stats + Bio ──────────────────────────────────────────────────── */
-.profile-right {
-    flex: 1;
+.avatar-overlay span {
+    font-size: 16px;
+    filter: grayscale(0);
+}
+
+/* Info */
+.profile-display-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 2px;
+    color: #111;
+}
+
+.profile-username {
+    font-size: 14px;
+    color: #999;
+    margin: 0 0 4px;
+}
+
+.profile-email-text {
+    font-size: 13px;
+    color: #bbb;
+    margin: 0 0 12px;
 }
 
 /* Stats */
-.profile-stats {
+.profile-stats-row {
     display: flex;
-    gap: 40px;
-    margin-bottom: 28px;
-    padding-bottom: 0;
+    gap: 20px;
 }
 
-.stat-item {
+.stat-badge {
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: 6px;
 }
 
-.stat-number {
-    font-size: 24px;
+.stat-num {
+    font-size: 20px;
     font-weight: 700;
+    color: #111;
 }
 
-.stat-label {
-    font-size: 15px;
-    color: #555;
+.stat-txt {
+    font-size: 14px;
+    color: #777;
+}
+
+/* ── Profile Sections ────────────────────────────────────────────────────── */
+.profile-section {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-header h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #111;
+    margin: 0;
+}
+
+.edit-link {
+    font-size: 14px;
+    color: #4CAF50;
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.edit-link:hover {
+    color: #388E3C;
 }
 
 /* Bio */
 .profile-bio p {
     font-size: 15px;
     line-height: 1.7;
-    color: #333;
-    margin: 0 0 16px;
+    color: #555;
+    margin: 0;
 }
 
-/* Bio edit */
+/* Bio Edit */
 .profile-bio-edit textarea {
     width: 100%;
     padding: 12px;
-    border: 2px solid #ddd;
+    border: 2px solid #eee;
     border-radius: 8px;
     font-size: 14px;
     font-family: inherit;
@@ -124,60 +169,129 @@
     outline: none;
     box-sizing: border-box;
     transition: border-color 0.2s;
+    background: #fafafa;
 }
 
 .profile-bio-edit textarea:focus {
-    border-color: #222;
+    border-color: #4CAF50;
+    background: #fff;
 }
 
-.bio-edit-actions {
+/* Info Display */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: 14px;
+    color: #999;
+}
+
+.info-value {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Form Fields */
+.form-field {
+    margin-bottom: 14px;
+}
+
+.form-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+.form-field input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    background: #fafafa;
+}
+
+.form-field input:focus {
+    border-color: #4CAF50;
+    background: #fff;
+    outline: none;
+}
+
+.form-field input:disabled {
+    background: #f0f0f0;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.password-section {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+}
+
+.password-section h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 14px;
+}
+
+.update-msg {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Action Buttons */
+.edit-actions {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 14px;
 }
 
 .btn-save {
     background: #222;
     color: white;
     border: none;
-    padding: 8px 20px;
-    border-radius: 6px;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-save:hover { background: #000; }
+
+.btn-cancel-sm {
+    background: transparent;
+    color: #777;
+    border: 1px solid #ddd;
+    padding: 10px 24px;
+    border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
     font-family: inherit;
     transition: background 0.2s;
 }
 
-.btn-save:hover { background: #000; }
+.btn-cancel-sm:hover { background: #f5f5f5; }
 
-.btn-cancel {
-    background: transparent;
-    color: #666;
-    border: 1px solid #ccc;
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    font-family: inherit;
-}
-
-.btn-cancel:hover { background: #f5f5f5; }
-
-/* Edit describe link */
-.edit-describe-link {
-    display: block;
-    text-align: right;
-    font-size: 14px;
-    font-style: italic;
-    color: #555;
-    text-decoration: underline;
-    cursor: pointer;
-    margin-top: 8px;
-}
-
-.edit-describe-link:hover { color: #000; }
-
-/* ── Toast thông báo ─────────────────────────────────────────────────────────── */
+/* ── Toast thông báo ─────────────────────────────────────────────────────── */
 .profile-toast {
     position: fixed;
     bottom: 30px;
@@ -199,20 +313,151 @@
     transform: translateX(-50%) translateY(0);
 }
 
-/* ── Responsive ─────────────────────────────────────────────────────────────── */
-@media screen and (max-width: 620px) {
-    .profile-card {
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media screen and (max-width: 600px) {
+    .profile-header-card {
         flex-direction: column;
-        align-items: center;
-        gap: 24px;
+        text-align: center;
+        gap: 16px;
     }
-    .profile-left {
-        width: 100%;
+    .profile-stats-row {
+        justify-content: center;
     }
-    .profile-right {
-        width: 100%;
+    .info-row {
+        flex-direction: column;
+        gap: 4px;
     }
-    .edit-describe-link {
-        text-align: left;
-    }
+}
+
+/* ── Avatar Crop Modal ───────────────────────────────────────────────────── */
+.av-crop-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.av-crop-box {
+    background: #fff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.av-crop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+}
+
+.av-crop-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+}
+
+.av-crop-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #888;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1;
+}
+.av-crop-close:hover {
+    background: #f0f0f0;
+    color: #111;
+}
+
+.av-crop-body {
+    flex: 1;
+    overflow: hidden;
+    background: #1a1a1a;
+    min-height: 280px;
+}
+
+.av-crop-canvas-wrapper {
+    width: 100%;
+    height: 340px;
+}
+
+.av-crop-canvas-wrapper img {
+    display: block;
+    max-width: 100%;
+}
+
+/* Hiển thị vùng crop hình tròn */
+.av-crop-canvas-wrapper .cropper-view-box,
+.av-crop-canvas-wrapper .cropper-face {
+    border-radius: 50%;
+}
+
+.av-crop-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    border-top: 1px solid #eee;
+    flex-shrink: 0;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.av-crop-hint {
+    font-size: 12px;
+    color: #999;
+}
+
+.av-crop-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-av-cancel {
+    padding: 8px 18px;
+    border: 1px solid #ddd;
+    background: transparent;
+    border-radius: 7px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    color: #555;
+    transition: background 0.15s;
+}
+.btn-av-cancel:hover { background: #f5f5f5; }
+
+.btn-av-confirm {
+    padding: 8px 20px;
+    background: #222;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.btn-av-confirm:hover { background: #000; }
+.btn-av-confirm:disabled { opacity: 0.6; cursor: wait; }
+
+@media screen and (max-width: 600px) {
+    .av-crop-canvas-wrapper { height: 240px; }
+    .av-crop-footer { flex-direction: column; align-items: flex-end; }
 }
