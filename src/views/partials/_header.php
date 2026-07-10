@@ -1,3 +1,11 @@
+<?php
+    // nếu người dùng đã đăng nhập, tạo 1 biến email để lấy email của người dùng đã đăng nhập
+    require_once 'src/views/mySQLconnect.php';
+    if(isset($_SESSION['email'])){
+        $email = $_SESSION['email'];
+    }
+?>
+
 <link rel="stylesheet" href="public/css/_header.css">
 <header>
     <div class="nav_container">
@@ -19,8 +27,14 @@
                     <span style="font-weight: 500; font-size: 20px;">
                         <?php echo htmlspecialchars($_SESSION['hoten']); ?>
                     </span>
-                    <!-- Ảnh tài khoản -->
-                    <img id="account" src="public/images/account.jpg" alt="taikhoan">
+                    <!--  Hiển thị ảnh tài khoản -->
+                    <img
+                    id="account"
+
+                    src="get_image.php?email=<?= urlencode($email) ?>&v=<?= time() ?>"
+                    alt="account"
+                    onerror="this.src='public/images/account.jpg'"
+                >
                 </div>
                 <!-- Menu dropdown (Hồ sơ & Đăng xuất) -->
                 <div id="logoption">
@@ -29,7 +43,7 @@
                 </div>
 
             <?php else: ?>
-                <!-- Giao diện khi CHƯA ĐĂNG NHẬP (Giữ nguyên như cũ) -->
+                <!-- Giao diện khi CHƯA ĐĂNG NHẬP -->
                 <img id="account" src="public/images/account.jpg" alt="taikhoan">
                 <div id="logoption">
                     <a href="?page=signup">Sign Up</a>

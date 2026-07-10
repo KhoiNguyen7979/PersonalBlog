@@ -1,6 +1,3 @@
-<?php
-$pageTitle = "About - BloggerZ";
-?>
 <link rel="stylesheet" href="public/css/about.css">
 <div class="sidenav">
             <a href="#"><img src="public/images/Instagram.png" alt="Instagram"></a>
@@ -9,7 +6,6 @@ $pageTitle = "About - BloggerZ";
             <a href="#"><img src="public/images/youtube.png" alt="YouTube"></a>
 </div>
 <main>
-
     <section class="hero_about">
         <h1>Welcome to bloggerZ</h1>
         <hr>

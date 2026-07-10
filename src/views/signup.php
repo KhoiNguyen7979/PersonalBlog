@@ -23,14 +23,14 @@
                 if ($stmt->execute()) {
                     $show_modal = true;
                         $modal_title = "Đăng ký thành công!";
-                        $modal_message = "Tài khoản " . htmlspecialchars($email) . " đã được tạo. Bạn có thể đăng nhập ngay bây giờ.";
+                        $modal_message = "Tài khoản " . htmlspecialchars($user_name) . " đã được tạo. Bạn có thể đăng nhập ngay bây giờ.";
                 }
             } catch (mysqli_sql_exception $e) {
                 // Check if the error code is 1062 (MySQL's code for Duplicate Entry)
                 if ($e->getCode() === 1062) {
                     $show_modal = true;
                         $modal_title = "Oops! Lỗi đăng ký";
-                        $modal_message = "Email này đã tồn tại trong hệ thống. Vui lòng dùng email khác!";
+                        $modal_message = "Email hoặc tên đăng nhập này đã tồn tại trong hệ thống. Vui lòng dùng email/ tên đăng nhập khác!";
 
                 }
             }
@@ -54,11 +54,6 @@
     <div class="right-panel">
 
         <h3>Sign Up</h3>
-        <?php 
-                if(!empty($thong_bao)) {
-                    echo $thong_bao;
-                }
-        ?>
         <form action="" method="POST">
 
             <input type="text" name="fullname" placeholder="Full name" required>
@@ -94,8 +89,16 @@
         
         <h2><?= $modal_title ?></h2>
         <p><?= $modal_message ?></p>
-        
-        <button class="ok-btn" onclick="document.getElementById('resultModal').style.display='none'">OK</button><br><br>
+        <?php if($modal_title != "Đăng ký thành công!"):?>
+            <button class="ok-btn" onclick="document.getElementById('resultModal').style.display='none'">OK</button><br><br>
+        <?php else: ?>
+        <style>
+            .modal-box{
+                height: 280px;
+            }
+        </style>
+        <br><br>
+        <?php endif; ?>
         <a href="?page=signin" id=signin_direct>Chuyển đến trang đăng nhập</a>
     </div>
 </div>

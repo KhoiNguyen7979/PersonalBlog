@@ -12,7 +12,7 @@ require_once 'src/views/mySQLconnect.php';
 if (isset($_GET['id'])) {
     // Lấy ảnh thumbnail của bài viết
     $id = intval($_GET['id']);
-    $stmt = $connect->prepare("SELECT Du_Lieu_Anh, Duoi_File_Anh FROM Pics WHERE ID_BaiViet = ? AND IsThumb = 1 LIMIT 1");
+    $stmt = $connect->prepare("SELECT Du_Lieu_Anh, Duoi_File_Anh FROM Pics WHERE ID_BaiViet = ? LIMIT 1");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $stmt->store_result();
@@ -31,7 +31,7 @@ if (isset($_GET['id'])) {
     $stmt->fetch();
 
     $mimeMap = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'gif' => 'image/gif', 'webp' => 'image/webp'];
-    $mime = $mimeMap[strtolower($ext)] ?? 'image/jpeg';
+    $mime = $mimeMap[$ext] ?? 'image/jpeg';
 
     header("Content-Type: $mime");
     header("Cache-Control: public, max-age=86400");
@@ -45,7 +45,7 @@ if (isset($_GET['id'])) {
     $stmt->execute();
     $stmt->store_result();
 
-    if ($stmt->num_rows === 0 || !$stmt->fetch()) {
+    if ($stmt->num_rows === 0) {
         // Placeholder avatar
         header("Content-Type: image/svg+xml");
         echo '<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150">
@@ -68,7 +68,6 @@ if (isset($_GET['id'])) {
     $mime = $mimeMap[strtolower($ext ?? 'jpg')] ?? 'image/jpeg';
 
     header("Content-Type: $mime");
-    header("Cache-Control: public, max-age=86400");
     echo $data;
 
 } else {

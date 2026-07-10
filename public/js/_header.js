@@ -1,4 +1,4 @@
-//Cài đặt cho sign-up, sign-in xuất hiện khi hover qua image tài khoản
+//Cài đặt cho sign-up, sign-in xuất hiện khi hover qua logo tài khoản
 const accountContainer = document.getElementById('account_container_2');
 const dropbox_log = document.getElementById('logoption');
 let closeTimer_too;

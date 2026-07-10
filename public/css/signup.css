@@ -169,7 +169,7 @@ input[type=password]{
     padding: 40px;
     border-radius: 20px; /* Bo góc giống ảnh của bạn */
     width: 600px;
-    height: 400px;
+    height: 350px;
     max-width: 90%;
     text-align: center;
     position: relative;
@@ -196,7 +196,7 @@ input[type=password]{
 }
 
 /* Nút OK */
-.ok-btn,#signin_direct{
+.ok-btn, #signin_direct{
     margin-top: 30px;
     padding: 10px 25px;
     background: black;
@@ -208,7 +208,7 @@ input[type=password]{
     font-weight: bold;
     text-decoration: none;
 }
-.ok-btn:hover,#signin_direct:hover{
+.ok-btn:hover, #signin_direct:hover{
     background: lightgray;
     color: black;
 }

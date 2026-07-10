@@ -71,9 +71,10 @@ $totalPages = ceil($total / $perPage);
 $sql = "
     SELECT
         b.ID_BaiViet, b.TieuDe, b.TomTat, b.NgayDang,
-        b.ThoiGianDoc, b.LuotXem, b.ID_NguoiDung, b.ID_The_Loai,
+        b.ThoiGianDoc, b.ID_NguoiDung, b.ID_The_Loai,
         n.HoTenNguoiDung,
-        (SELECT COUNT(*) FROM Pics p WHERE p.ID_BaiViet = b.ID_BaiViet AND p.IsThumb = 1) AS HasThumb
+        (SELECT COUNT(*) FROM Pics p WHERE p.ID_BaiViet = b.ID_BaiViet AND p.IsThumb = 1) AS HasThumb,
+        (SELECT COUNT(*) FROM ThichBaiViet t WHERE t.ID_BaiViet = b.ID_BaiViet) AS LuotThich
     FROM BaiViet b
     JOIN NguoiDung n ON b.ID_NguoiDung = n.Email
     $where
@@ -146,13 +147,15 @@ function renderPostCard($post, $canEdit) {
     $summary = htmlspecialchars($post['TomTat']);
     $date    = formatDate($post['NgayDang']);
     $time    = $post['ThoiGianDoc'];
-    $views   = $post['LuotXem'];
+    $likes   = $post['LuotThich']; // Đổi views thành likes
     $imgSrc  = $post['HasThumb'] ? "get_image.php?id=$id" : "public/images/account.jpg";
     ?>
     <div class="post-card" data-id="<?= $id ?>">
-        <div class="post-img-wrap">
-            <img src="<?= $imgSrc ?>" alt="<?= $title ?>" loading="lazy">
-        </div>
+        <a href="?page=read_blog&id=<?= $id ?>" style="text-decoration: none; color: inherit;">
+            <div class="post-img-wrap">
+                <img src="<?= $imgSrc ?>" alt="<?= $title ?>" loading="lazy">
+            </div>
+        </a>
         <div class="post-meta">
             <span class="post-date"><?= $date ?> · <?= $time ?> min read</span>
             <?php if ($canEdit): ?>
@@ -165,10 +168,12 @@ function renderPostCard($post, $canEdit) {
                 </div>
             <?php endif; ?>
         </div>
-        <h3 class="post-title"><?= $title ?></h3>
-        <p class="post-summary"><?= $summary ?></p>
+        <a href="?page=read_blog&id=<?= $id ?>" style="text-decoration: none; color: inherit;">
+            <h3 class="post-title"><?= $title ?></h3>
+            <p class="post-summary"><?= $summary ?></p>
+        </a>
         <hr class="post-divider">
-        <span class="post-views"><?= $views ?> views</span>
+        <span class="post-likes">❤️ <?= $likes ?> Likes</span>
     </div>
     <?php
 }

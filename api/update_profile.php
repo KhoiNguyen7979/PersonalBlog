@@ -55,8 +55,16 @@ if ($action === 'update_bio') {
     $ext    = $extMap[$mime];
     $data   = file_get_contents($file['tmp_name']);
 
-    $stmt = $connect->prepare("UPDATE NguoiDung SET Avatar = ?, DuoiAnhAvatar = ? WHERE Email = ?");
-    $stmt->bind_param("sss", $data, $ext, $email);
+   $stmt = $connect->prepare("UPDATE NguoiDung SET Avatar = ?, DuoiAnhAvatar = ? WHERE Email = ?");
+    
+    $null = NULL; // Bắt buộc phải có một biến trống đại diện cho cột BLOB
+    
+    // Đổi "sss" thành "bss" (b = blob, s = string)
+    $stmt->bind_param("bss", $null, $ext, $email);
+    
+    // Gửi dữ liệu ảnh vào tham số thứ 0 (tức là dấu ? đầu tiên - Avatar)
+    $stmt->send_long_data(0, $data); 
+    
     if ($stmt->execute()) {
         echo json_encode(['success' => true, 'message' => 'Đã cập nhật ảnh đại diện.']);
     } else {

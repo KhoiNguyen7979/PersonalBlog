@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
     $email = $_POST['email'];
     $matkhau_dabam = sha1($_POST['password']); 
 
-    $sql = "SELECT Email, HoTenNguoiDung FROM nguoidung WHERE Email = ? AND MatKhau = ?";
+    $sql = "SELECT Email, TenDangNhap FROM nguoidung WHERE Email = ? AND MatKhau = ?";
     $stmt = $connect->prepare($sql);
     
     if ($stmt) {
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
             
             // Lưu trạng thái vào biến session
             $_SESSION['email'] = $user['Email'];
-            $_SESSION['hoten'] = $user['HoTenNguoiDung'];
+            $_SESSION['hoten'] = $user['TenDangNhap'];
             
             header("Location: index.php");
             exit();
