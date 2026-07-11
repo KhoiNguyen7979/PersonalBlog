@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
         my:    { page: 1, category: 'all', sort: 'newest', totalPages: 1 },
         other: { page: 1, category: 'all', sort: 'newest', totalPages: 1 },
     };
+    // Ensure menu click handlers are initialized only once to avoid duplicate bindings when content reloads
+    let postMenuInit = false;
 
     // ── Load bài viết qua AJAX ────────────────────────────────────────────────
     function loadPosts(type) {
@@ -165,11 +167,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Post menu 3 chấm ──────────────────────────────────────────────────────
+    // ── Post menu 3 chấm (click-to-toggle, robust against hover gaps) ─────────────────
     function bindPostMenus() {
+        // Attach delete handlers to delete buttons (idempotent: mark buttons once bound)
         document.querySelectorAll('.delete-post-btn').forEach(btn => {
+            if (btn.dataset.bound === '1') return;
+            btn.dataset.bound = '1';
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 if (confirm('Bạn có chắc muốn xoá bài viết này không?')) {
                     const id = btn.dataset.id;
                     fetch(`api/delete_post.php?id=${id}`, { method: 'POST' })
@@ -186,6 +192,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+
+        // Initialize menu toggle behavior once (delegated)
+        if (!postMenuInit) {
+            postMenuInit = true;
+
+            // Toggle menu when clicking the ⋮ button
+            document.addEventListener('click', (ev) => {
+                const btn = ev.target.closest('.post-menu-btn');
+                if (btn) {
+                    ev.stopPropagation();
+                    // Toggle open on the parent .post-menu
+                    const menu = btn.closest('.post-menu');
+                    if (menu) {
+                        // Close any other open menus first
+                        document.querySelectorAll('.post-menu.open').forEach(m => {
+                            if (m !== menu) m.classList.remove('open');
+                        });
+                        menu.classList.toggle('open');
+                    }
+                    return;
+                }
+
+                // Clicking outside closes any open menus
+                if (!ev.target.closest('.post-menu')) {
+                    document.querySelectorAll('.post-menu.open').forEach(m => m.classList.remove('open'));
+                }
+            });
+
+            // Also close menus on Escape key
+            document.addEventListener('keydown', (ev) => {
+                if (ev.key === 'Escape') {
+                    document.querySelectorAll('.post-menu.open').forEach(m => m.classList.remove('open'));
+                }
+            });
+        }
     }
 
     // ── Smooth Scroll: "Read the Blog" button ────────────────────────────────

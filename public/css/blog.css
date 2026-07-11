@@ -207,7 +207,7 @@
     display: none;
     position: absolute;
     right: 0;
-    top: 28px;
+top: calc(100% + 6px); /* show just below the button to avoid hover gaps */
     background: white;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -217,9 +217,11 @@
     overflow: hidden;
 }
 
+/* Prefer explicit "open" class controlled by JS to avoid hover flicker; keep hover as fallback */
+.post-menu.open .post-menu-dropdown,
 .post-menu:hover .post-menu-dropdown,
 .post-menu-dropdown:hover {
-    display: block;
+display: block;
 }
 
 .post-menu-dropdown a {

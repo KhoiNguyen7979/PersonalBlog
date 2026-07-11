@@ -37,13 +37,22 @@ if (!$user) {
 }
 
 // Thống kê
-$stmtStats = $connect->prepare("
-    SELECT COUNT(*) as total_posts
-    FROM BaiViet WHERE ID_NguoiDung = ?
-");
+$stmtStats = $connect->prepare("SELECT COUNT(*) as total_posts FROM BaiViet WHERE ID_NguoiDung = ?");
 $stmtStats->bind_param("s", $email);
 $stmtStats->execute();
 $stats = $stmtStats->get_result()->fetch_assoc();
+
+// Tổng lượt likes cho tất cả bài viết của user
+$stmtLikes = $connect->prepare(
+    "SELECT COUNT(*) AS total_likes
+     FROM ThichBaiViet t
+     JOIN BaiViet b ON t.ID_BaiViet = b.ID_BaiViet
+     WHERE b.ID_NguoiDung = ?"
+);
+$stmtLikes->bind_param("s", $email);
+$stmtLikes->execute();
+$likesStat = $stmtLikes->get_result()->fetch_assoc();
+$totalLikes = intval($likesStat['total_likes'] ?? 0);
 ?>
 <link rel="stylesheet" href="public/css/profile.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
@@ -77,6 +86,10 @@ $stats = $stmtStats->get_result()->fetch_assoc();
                 <div class="stat-badge">
                     <span class="stat-num"><?= $stats['total_posts'] ?></span>
                     <span class="stat-txt">Bài viết</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="stat-num"><?= $totalLikes ?></span>
+                    <span class="stat-txt">Lượt like</span>
                 </div>
             </div>
         </div>
