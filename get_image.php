@@ -4,21 +4,23 @@
  * Serve ảnh bài viết hoặc avatar người dùng trực tiếp từ database.
  * 
  * Cách dùng:
- *   Ảnh bài viết : get_image.php?id=1
+ *   Ảnh bài viết : get_image.php?id=1        (ảnh đầu tiên / thumb)
+ *                   get_image.php?id=1&idx=0  (ảnh đầu tiên)
+ *                   get_image.php?id=1&idx=1  (ảnh thứ hai)
  *   Avatar user  : get_image.php?email=domixi@gmail.com
  */
 require_once 'src/views/mySQLconnect.php';
 
 if (isset($_GET['id'])) {
-    // Lấy ảnh thumbnail của bài viết
-    $id = intval($_GET['id']);
-    $stmt = $connect->prepare("SELECT Du_Lieu_Anh, Duoi_File_Anh FROM Pics WHERE ID_BaiViet = ? LIMIT 1");
-    $stmt->bind_param("i", $id);
+    $id  = intval($_GET['id']);
+    $idx = max(0, intval($_GET['idx'] ?? 0));
+
+    $stmt = $connect->prepare("SELECT Du_Lieu_Anh, Duoi_File_Anh FROM Pics WHERE ID_BaiViet = ? ORDER BY ID_Anh ASC LIMIT ?, 1");
+    $stmt->bind_param("ii", $id, $idx);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows === 0) {
-        // Placeholder xám nếu không có ảnh
         header("Content-Type: image/svg+xml");
         echo '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250">
                 <rect width="400" height="250" fill="#ddd"/>
@@ -38,7 +40,6 @@ if (isset($_GET['id'])) {
     echo $data;
 
 } elseif (isset($_GET['email'])) {
-    // Lấy avatar của người dùng
     $email = $_GET['email'];
     $stmt = $connect->prepare("SELECT Avatar, DuoiAnhAvatar FROM NguoiDung WHERE Email = ? LIMIT 1");
     $stmt->bind_param("s", $email);
@@ -46,7 +47,6 @@ if (isset($_GET['id'])) {
     $stmt->store_result();
 
     if ($stmt->num_rows === 0) {
-        // Placeholder avatar
         header("Content-Type: image/svg+xml");
         echo '<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150">
                 <circle cx="75" cy="75" r="75" fill="#ccc"/>

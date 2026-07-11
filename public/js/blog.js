@@ -46,8 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                // Gắn event cho nút menu 3 chấm
+                // ── Gắn event cho nút menu 3 chấm
                 bindPostMenus();
+                initCarousels();
             })
             .catch(() => {
                 container.innerHTML = '<div class="no-posts">Lỗi tải bài viết. Vui lòng thử lại.</div>';
@@ -139,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         myReadMore.style.display = 'none';
                     }
                     bindPostMenus();
+                    initCarousels();
                 });
         });
     }
@@ -307,6 +309,95 @@ document.addEventListener('DOMContentLoaded', () => {
                 subscribeModal.classList.add('active');
                 document.body.style.overflow = 'hidden';
             }
+        });
+    }
+
+    // ── Carousel cho blog cards ──────────────────────────────────────────────────
+    function initCarousels() {
+        document.querySelectorAll('.post-img-wrap[data-total]').forEach(wrap => {
+            if (wrap.dataset.carouselInit === '1') return;
+            const total = parseInt(wrap.dataset.total) || 0;
+            if (total <= 1) return;
+            wrap.dataset.carouselInit = '1';
+
+            const imgs = wrap.querySelectorAll('.post-carousel-img');
+            const dots = wrap.querySelectorAll('.carousel-dot');
+            const prevBtn = wrap.querySelector('.carousel-prev');
+            const nextBtn = wrap.querySelector('.carousel-next');
+            const link = wrap.querySelector('.post-carousel-link');
+            let current = 0;
+            let autoTimer = null;
+            let transitioning = false;
+
+            function updateHeight() {
+                const h = imgs[current].naturalHeight || imgs[current].offsetHeight;
+                if (h > 0) link.style.height = h + 'px';
+            }
+
+            imgs[0].addEventListener('load', updateHeight);
+            updateHeight();
+
+            function goTo(idx) {
+                if (transitioning) return;
+                if (idx < 0) idx = total - 1;
+                if (idx >= total) idx = 0;
+                if (idx === current) return;
+                transitioning = true;
+
+                var nextImg = imgs[idx];
+
+                function doFade() {
+                    nextImg.style.opacity = '0';
+                    nextImg.classList.add('active');
+
+                    var h = nextImg.naturalHeight || nextImg.offsetHeight;
+                    if (h > 0) link.style.height = h + 'px';
+
+                    nextImg.offsetHeight;
+                    nextImg.style.opacity = '1';
+
+                    setTimeout(function() {
+                        imgs[current].classList.remove('active');
+                        imgs[current].style.opacity = '';
+                        current = idx;
+                        transitioning = false;
+                    }, 500);
+                }
+
+                if (nextImg.complete) {
+                    doFade();
+                } else {
+                    nextImg.onload = doFade;
+                    nextImg.src = nextImg.src;
+                }
+
+                dots.forEach(function(d, i) {
+                    d.classList.toggle('active', i === idx);
+                });
+            }
+
+            if (prevBtn) prevBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(current - 1); resetAuto(); });
+            if (nextBtn) nextBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(current + 1); resetAuto(); });
+
+            dots.forEach(function(dot) {
+                dot.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(parseInt(dot.dataset.idx)); resetAuto(); });
+            });
+
+            function startAuto() {
+                stopAuto();
+                autoTimer = setInterval(function() { goTo(current + 1); }, 2000);
+            }
+
+            function stopAuto() {
+                if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+            }
+
+            function resetAuto() {
+                startAuto();
+            }
+
+            wrap.addEventListener('mouseenter', startAuto);
+            wrap.addEventListener('mouseleave', stopAuto);
         });
     }
 

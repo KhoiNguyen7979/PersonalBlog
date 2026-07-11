@@ -20,7 +20,7 @@ if (!isset($_SESSION['email'])) {
         
         <!-- Ảnh bìa -->
         <div class="form-group">
-            <label>Thumbnail</label>
+            <label>Thumbnail*</label>
             <div class="thumbnail-upload" id="thumbnail-upload-box">
                 <input type="file" id="thumbnail" name="thumbnail" accept="image/*" required>
                 <div class="upload-placeholder" id="upload-placeholder">
@@ -29,6 +29,19 @@ if (!isset($_SESSION['email'])) {
                 </div>
                 <img id="thumbnail-preview" src="" alt="Preview">
             </div>
+        </div>
+
+        <!-- Ảnh bổ sung -->
+        <div class="form-group">
+            <label>Ảnh bổ sung (tùy chọn)</label>
+            <div class="extra-images-upload" id="extra-images-upload">
+                <input type="file" id="extra-images" name="extra_images[]" accept="image/*" multiple>
+                <div class="upload-placeholder" id="extra-placeholder">
+                    <span class="icon">🖼️</span>
+                    <span class="text">Chọn thêm ảnh (giữ Ctrl để chọn nhiều)</span>
+                </div>
+            </div>
+            <div id="extra-preview-list" class="extra-preview-list"></div>
         </div>
 
         <!-- Tiêu đề -->

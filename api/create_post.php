@@ -1,7 +1,7 @@
 <?php
 /**
  * api/create_post.php
- * API xử lý lưu bài viết mới và ảnh bìa vào Database
+ * API xử lý lưu bài viết mới và nhiều ảnh vào Database
  */
 session_start();
 require_once '../src/views/mySQLconnect.php';
@@ -15,49 +15,68 @@ if (!isset($_SESSION['email'])) {
 
 $email = $_SESSION['email'];
 
-// Nhận dữ liệu text
 $title    = trim($_POST['title']    ?? '');
 $summary  = trim($_POST['summary']  ?? '');
 $category = trim($_POST['category'] ?? '');
 $content  = trim($_POST['content']  ?? '');
 
-// Validate
 if (empty($title) || empty($summary) || empty($category) || empty($content)) {
     echo json_encode(['success' => false, 'message' => 'Vui lòng điền đầy đủ các trường thông tin.']);
     exit;
 }
 
-// Xử lý ảnh Thumbnail
-if (!isset($_FILES['thumbnail']) || $_FILES['thumbnail']['error'] !== UPLOAD_ERR_OK) {
-    $errCode = $_FILES['thumbnail']['error'] ?? 'không có file';
-    echo json_encode(['success' => false, 'message' => 'Lỗi tải ảnh bìa. Mã lỗi: ' . $errCode]);
+// Xử lý nhiều ảnh
+$files = [];
+if (isset($_FILES['images']) && $_FILES['images']['error'] !== UPLOAD_ERR_NO_FILE) {
+    // Có thể là 1 file hoặc nhiều files
+    if (is_array($_FILES['images']['name'])) {
+        $count = count($_FILES['images']['name']);
+        for ($i = 0; $i < $count; $i++) {
+            if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
+                $files[] = [
+                    'name' => $_FILES['images']['name'][$i],
+                    'tmp'  => $_FILES['images']['tmp_name'][$i],
+                    'size' => $_FILES['images']['size'][$i],
+                ];
+            }
+        }
+    } elseif ($_FILES['images']['error'] === UPLOAD_ERR_OK) {
+        $files[] = [
+            'name' => $_FILES['images']['name'],
+            'tmp'  => $_FILES['images']['tmp_name'],
+            'size' => $_FILES['images']['size'],
+        ];
+    }
+}
+
+if (empty($files)) {
+    echo json_encode(['success' => false, 'message' => 'Vui lòng chọn ít nhất 1 ảnh.']);
     exit;
 }
 
-$file         = $_FILES['thumbnail'];
 $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-
 $finfo = finfo_open(FILEINFO_MIME_TYPE);
-$mime  = finfo_file($finfo, $file['tmp_name']);
+$extMap = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif', 'image/webp' => 'webp'];
+
+$validFiles = [];
+foreach ($files as $f) {
+    $mime = finfo_file($finfo, $f['tmp']);
+    if (!in_array($mime, $allowedTypes)) continue;
+    if ($f['size'] > 5 * 1024 * 1024) continue;
+    $validFiles[] = [
+        'name' => $f['name'],
+        'ext'  => $extMap[$mime],
+        'size' => $f['size'],
+        'data' => file_get_contents($f['tmp']),
+    ];
+}
 finfo_close($finfo);
 
-if (!in_array($mime, $allowedTypes)) {
-    echo json_encode(['success' => false, 'message' => 'Chỉ hỗ trợ file ảnh (jpg, png, gif, webp). Mime nhận được: ' . $mime]);
+if (empty($validFiles)) {
+    echo json_encode(['success' => false, 'message' => 'Không có ảnh hợp lệ.']);
     exit;
 }
 
-if ($file['size'] > 5 * 1024 * 1024) {
-    echo json_encode(['success' => false, 'message' => 'Kích thước ảnh vượt quá 5MB.']);
-    exit;
-}
-
-$extMap  = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif', 'image/webp' => 'webp'];
-$ext     = $extMap[$mime];
-$imgSize = $file['size'];
-$imgName = $file['name'];
-$imgData = file_get_contents($file['tmp_name']);
-
-// Tính thời gian đọc (200 từ/phút)
 $wordCount = str_word_count(strip_tags($content));
 $readTime  = max(1, ceil($wordCount / 200));
 
@@ -66,10 +85,6 @@ $stmt = $connect->prepare("
     INSERT INTO BaiViet (TieuDe, NoiDung, TomTat, ThoiGianDoc, ID_NguoiDung, ID_The_Loai)
     VALUES (?, ?, ?, ?, ?, ?)
 ");
-if (!$stmt) {
-    echo json_encode(['success' => false, 'message' => 'Lỗi prepare BaiViet: ' . $connect->error]);
-    exit;
-}
 $stmt->bind_param("sssiss", $title, $content, $summary, $readTime, $email, $category);
 if (!$stmt->execute()) {
     echo json_encode(['success' => false, 'message' => 'Lỗi insert BaiViet: ' . $stmt->error]);
@@ -78,22 +93,21 @@ if (!$stmt->execute()) {
 $post_id = $connect->insert_id;
 $stmt->close();
 
-// Insert Pics (thumbnail)
+// Insert Pics
 $stmtPic = $connect->prepare("
     INSERT INTO Pics (Ten_File_Anh, Duoi_File_Anh, Kich_Co_Anh, Du_Lieu_Anh, ID_BaiViet, IsThumb)
-    VALUES (?, ?, ?, ?, ?, 1)
+    VALUES (?, ?, ?, ?, ?, ?)
 ");
-if (!$stmtPic) {
-    echo json_encode(['success' => false, 'message' => 'Lỗi prepare Pics: ' . $connect->error]);
-    exit;
-}
-$stmtPic->bind_param("ssiss", $imgName, $ext, $imgSize, $imgData, $post_id);
-if (!$stmtPic->execute()) {
-    echo json_encode(['success' => false, 'message' => 'Lỗi insert Pics: ' . $stmtPic->error]);
-    exit;
+
+foreach ($validFiles as $i => $img) {
+    $isThumb = ($i === 0) ? 1 : 0;
+    $stmtPic->bind_param("ssissi", $img['name'], $img['ext'], $img['size'], $img['data'], $post_id, $isThumb);
+    if (!$stmtPic->execute()) {
+        echo json_encode(['success' => false, 'message' => 'Lỗi insert ảnh: ' . $stmtPic->error]);
+        exit;
+    }
 }
 $stmtPic->close();
-
 $connect->close();
 
 echo json_encode(['success' => true, 'message' => 'Tạo bài viết thành công.']);

@@ -8,12 +8,11 @@ require_once 'mySQLconnect.php';
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $email = $_SESSION['email'] ?? null;
 
-// Lấy thông tin bài viết, số lượt thích, trạng thái đã thích và kiểm tra xem có ảnh bìa không
+// Lấy thông tin bài viết, số lượt thích, trạng thái đã thích
 $stmt = $connect->prepare("
     SELECT b.*, n.HoTenNguoiDung, 
            (SELECT COUNT(*) FROM ThichBaiViet WHERE ID_BaiViet = b.ID_BaiViet) as TotalLikes,
-           (SELECT COUNT(*) FROM ThichBaiViet WHERE ID_BaiViet = b.ID_BaiViet AND Email = ?) as IsLiked,
-           (SELECT COUNT(*) FROM Pics p WHERE p.ID_BaiViet = b.ID_BaiViet AND p.IsThumb = 1) AS HasThumb
+           (SELECT COUNT(*) FROM ThichBaiViet WHERE ID_BaiViet = b.ID_BaiViet AND Email = ?) as IsLiked
     FROM BaiViet b
     JOIN NguoiDung n ON b.ID_NguoiDung = n.Email
     WHERE b.ID_BaiViet = ?
@@ -29,8 +28,21 @@ if (!$post) {
 
 $isLikedClass = $post['IsLiked'] > 0 ? 'liked' : '';
 
-// Xác định đường dẫn ảnh bìa (Nếu có ảnh thì gọi get_image.php, ngược lại dùng ảnh mặc định)
-$imgSrc = $post['HasThumb'] ? "get_image.php?id=$id" : "public/images/account.jpg";
+// Lấy tất cả ảnh của bài viết
+$imgStmt = $connect->prepare("SELECT ID_Anh FROM Pics WHERE ID_BaiViet = ? ORDER BY IsThumb DESC, ID_Anh ASC");
+$imgStmt->bind_param("i", $id);
+$imgStmt->execute();
+$imgRows = $imgStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$imgStmt->close();
+
+$images = [];
+foreach ($imgRows as $i => $row) {
+    $images[] = "get_image.php?id=$id&idx=$i";
+}
+$imgCount = count($images);
+$hasMultiple = $imgCount > 1;
+
+$connect->close();
 ?>
 <link rel="stylesheet" href="public/css/read_blog.css">
 <link rel="stylesheet" href="public/css/blog.css">
@@ -40,10 +52,35 @@ $imgSrc = $post['HasThumb'] ? "get_image.php?id=$id" : "public/images/account.jp
     
     <div class="read-meta">
         Bởi <strong><?= htmlspecialchars($post['HoTenNguoiDung']) ?></strong> | 
-        Đăng ngày: <?= date('d/m/Y', strtotime($post['NgayDang'])) ?> |
-        ⏱️ <?= $post['ThoiGianDoc'] ?> phút đọc
+        Đăng ngày: <?= date('d/m/Y', strtotime($post['NgayDang'])) ?>
+    </div>
+    
+    <div class="read-thumbnail-area">
+        <?php if ($hasMultiple): ?>
+        <div class="carousel-wrap">
+            <div class="carousel-track" id="carousel-track">
+                <?php foreach ($images as $i => $src): ?>
+                    <div class="carousel-slide <?= $i === 0 ? 'active' : '' ?>">
+                        <img src="<?= $src ?>" alt="<?= htmlspecialchars($post['TieuDe']) ?> - Ảnh <?= $i+1 ?>">
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <button class="carousel-btn carousel-prev" id="carousel-prev">&#10094;</button>
+            <button class="carousel-btn carousel-next" id="carousel-next">&#10095;</button>
+            <div class="carousel-dots" id="carousel-dots">
+                <?php foreach ($images as $i => $src): ?>
+                    <span class="carousel-dot <?= $i === 0 ? 'active' : '' ?>" data-idx="<?= $i ?>"></span>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php else: ?>
+        <div class="read-thumbnail-wrap">
+            <img src="<?= !empty($images) ? $images[0] : 'public/images/account.jpg' ?>" alt="<?= htmlspecialchars($post['TieuDe']) ?>" class="read-thumbnail">
+        </div>
+        <?php endif; ?>
+
         <?php if (isset($email) && $email === $post['ID_NguoiDung']): ?>
-            <div class="post-menu" style="display:inline-block; margin-left:12px; vertical-align:middle;">
+            <div class="post-menu">
                 <button class="post-menu-btn" title="Tuỳ chọn">⋮</button>
                 <div class="post-menu-dropdown">
                     <a href="?page=edit_post&id=<?= $id ?>">✏️ Chỉnh sửa</a>
@@ -51,10 +88,6 @@ $imgSrc = $post['HasThumb'] ? "get_image.php?id=$id" : "public/images/account.jp
                 </div>
             </div>
         <?php endif; ?>
-    </div>
-    
-    <div class="read-thumbnail-wrap">
-        <img src="<?= $imgSrc ?>" alt="<?= htmlspecialchars($post['TieuDe']) ?>" class="read-thumbnail">
     </div>
     
     <p class="read-summary"><i><?= htmlspecialchars($post['TomTat']) ?></i></p>
@@ -73,6 +106,114 @@ $imgSrc = $post['HasThumb'] ? "get_image.php?id=$id" : "public/images/account.jp
 </div>
 
 <script>
+// ── Carousel ────────────────────────────────────────────────────────────────
+(function() {
+    const track = document.getElementById('carousel-track');
+    if (!track) return;
+    const slides = track.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('#carousel-dots .carousel-dot');
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+    let current = 0;
+    let transitioning = false;
+
+    function goTo(idx) {
+        if (transitioning) return;
+        if (idx < 0) idx = slides.length - 1;
+        if (idx >= slides.length) idx = 0;
+        if (idx === current) return;
+        transitioning = true;
+
+        var nextSlide = slides[idx];
+        nextSlide.style.opacity = '0';
+        nextSlide.classList.add('active');
+        nextSlide.offsetHeight;
+        nextSlide.style.opacity = '1';
+
+        setTimeout(function() {
+            slides[current].classList.remove('active');
+            slides[current].style.opacity = '';
+            current = idx;
+            transitioning = false;
+        }, 500);
+
+        dots.forEach(function(d, i) {
+            d.classList.toggle('active', i === idx);
+        });
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(current - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(current + 1); });
+    dots.forEach(function(d) { d.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(parseInt(d.dataset.idx)); }); });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') goTo(current - 1);
+        if (e.key === 'ArrowRight') goTo(current + 1);
+    });
+})();
+
+// ── Menu toggle ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.read-blog-container .post-menu-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const menu = this.closest('.post-menu');
+        document.querySelectorAll('.post-menu').forEach(m => {
+            if (m !== menu) {
+                m.classList.remove('open');
+                const dd = m.querySelector('.post-menu-dropdown');
+                if (dd) dd.style.display = 'none';
+            }
+        });
+        const dd = menu.querySelector('.post-menu-dropdown');
+        if (!dd) return;
+        if (menu.classList.contains('open')) {
+            menu.classList.remove('open');
+            dd.style.display = 'none';
+        } else {
+            menu.classList.add('open');
+            dd.style.display = 'block';
+        }
+    });
+});
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.post-menu')) {
+        document.querySelectorAll('.post-menu').forEach(m => {
+            m.classList.remove('open');
+            const dd = m.querySelector('.post-menu-dropdown');
+            if (dd) dd.style.display = 'none';
+        });
+    }
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.post-menu').forEach(m => {
+            m.classList.remove('open');
+            const dd = m.querySelector('.post-menu-dropdown');
+            if (dd) dd.style.display = 'none';
+        });
+    }
+});
+
+// ── Delete ──────────────────────────────────────────────────────────────────
+document.querySelectorAll('.delete-post-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (confirm('Bạn có chắc muốn xoá bài viết này không?')) {
+            fetch(`api/delete_post.php?id=${btn.dataset.id}`, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '?page=blog';
+                    } else {
+                        alert('Lỗi xoá bài viết.');
+                    }
+                });
+        }
+    });
+});
+
+// ── Like ────────────────────────────────────────────────────────────────────
 document.getElementById('like-btn').addEventListener('click', function() {
     const btn = this;
     const postId = btn.dataset.id;
@@ -95,7 +236,6 @@ document.getElementById('like-btn').addEventListener('click', function() {
 </script>
 
 <style>
-/* CSS bổ sung để căn chỉnh hình ảnh và bố cục trang đọc bài viết */
 .read-blog-container {
     max-width: 800px;
     margin: 40px auto;
@@ -118,21 +258,139 @@ document.getElementById('like-btn').addEventListener('click', function() {
 }
 
 /* Khung bọc ảnh bìa */
+.read-thumbnail-area {
+    position: relative;
+    margin-bottom: 25px;
+}
+
 .read-thumbnail-wrap {
     width: 100%;
     max-height: 450px;
     overflow: hidden;
     border-radius: 8px;
-    margin-bottom: 25px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Định dạng ảnh bìa căng đều, không méo hình */
+.read-thumbnail-area .post-menu {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    z-index: 10;
+}
+
+.read-thumbnail-area .post-menu .post-menu-dropdown {
+    top: calc(100% + 6px);
+    right: 0;
+}
+
 .read-thumbnail {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+}
+
+.read-thumbnail-area .post-menu .post-menu-btn {
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.read-thumbnail-area .post-menu .post-menu-btn:hover {
+    background: rgba(255,255,255,1);
+}
+
+/* ── Carousel ─────────────────────────────────────────────────────────────── */
+.carousel-wrap {
+    position: relative;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.carousel-track {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.carousel-track .carousel-slide {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.carousel-track .carousel-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.carousel-track .carousel-slide img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    display: block;
+}
+
+.read-thumbnail-area .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.85);
+    border: none;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: background 0.2s;
+    z-index: 10;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.read-thumbnail-area .carousel-btn:hover {
+    background: rgba(255,255,255,1);
+}
+
+.carousel-prev { left: 12px; }
+.carousel-next { right: 12px; }
+
+.read-thumbnail-area .carousel-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.read-thumbnail-area .carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.read-thumbnail-area .carousel-dot.active {
+    background: rgba(255,255,255,1);
 }
 
 .read-summary {
@@ -155,7 +413,6 @@ document.getElementById('like-btn').addEventListener('click', function() {
     margin-bottom: 20px;
 }
 
-/* Nút Like */
 .like-btn { 
     padding: 10px 24px; 
     border: 1px solid #ddd; 

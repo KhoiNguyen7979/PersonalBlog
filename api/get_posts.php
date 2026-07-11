@@ -73,7 +73,7 @@ $sql = "
         b.ID_BaiViet, b.TieuDe, b.TomTat, b.NgayDang,
         b.ThoiGianDoc, b.ID_NguoiDung, b.ID_The_Loai,
         n.HoTenNguoiDung,
-        (SELECT COUNT(*) FROM Pics p WHERE p.ID_BaiViet = b.ID_BaiViet AND p.IsThumb = 1) AS HasThumb,
+        (SELECT COUNT(*) FROM Pics p WHERE p.ID_BaiViet = b.ID_BaiViet) AS PicCount,
         (SELECT COUNT(*) FROM ThichBaiViet t WHERE t.ID_BaiViet = b.ID_BaiViet) AS LuotThich
     FROM BaiViet b
     JOIN NguoiDung n ON b.ID_NguoiDung = n.Email
@@ -94,6 +94,23 @@ if (!empty($params)) {
 }
 $stmt->execute();
 $posts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+// Lấy danh sách ảnh cho tất cả posts
+$postIds = array_column($posts, 'ID_BaiViet');
+$postImages = [];
+if (!empty($postIds)) {
+    $placeholders = implode(',', array_fill(0, count($postIds), '?'));
+    $imgSql = "SELECT ID_BaiViet, ID_Anh FROM Pics WHERE ID_BaiViet IN ($placeholders) ORDER BY ID_Anh ASC";
+    $imgStmt = $connect->prepare($imgSql);
+    $imgTypes = str_repeat('i', count($postIds));
+    $imgStmt->bind_param($imgTypes, ...$postIds);
+    $imgStmt->execute();
+    $allImgs = $imgStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $imgStmt->close();
+    foreach ($allImgs as $img) {
+        $postImages[$img['ID_BaiViet']][] = $img['ID_Anh'];
+    }
+}
 
 // ── Render HTML ───────────────────────────────────────────────────────────────
 function formatDate($dateStr) {
@@ -121,12 +138,16 @@ if (empty($posts)) {
     echo '<div class="posts-grid">';
     echo '<div class="posts-col">';
     foreach ($col1 as $post) {
-        renderPostCard($post, $canEdit);
+        $pid = $post['ID_BaiViet'];
+        $imgs = $postImages[$pid] ?? [];
+        renderPostCard($post, $canEdit, $imgs);
     }
     echo '</div>';
     echo '<div class="posts-col">';
     foreach ($col2 as $post) {
-        renderPostCard($post, $canEdit);
+        $pid = $post['ID_BaiViet'];
+        $imgs = $postImages[$pid] ?? [];
+        renderPostCard($post, $canEdit, $imgs);
     }
     echo '</div>';
     echo '</div>';
@@ -141,23 +162,37 @@ echo json_encode([
 ]);
 
 // ── Helper: Render 1 card ─────────────────────────────────────────────────────
-function renderPostCard($post, $canEdit) {
+function renderPostCard($post, $canEdit, $images = []) {
     $id      = $post['ID_BaiViet'];
     $title   = htmlspecialchars($post['TieuDe']);
     $summary = htmlspecialchars($post['TomTat']);
     $date    = formatDate($post['NgayDang']);
-    $time    = $post['ThoiGianDoc'];
-    $likes   = $post['LuotThich']; // Đổi views thành likes
-    $imgSrc  = $post['HasThumb'] ? "get_image.php?id=$id" : "public/images/account.jpg";
+    $likes   = $post['LuotThich'];
+    $hasImages = !empty($images);
     ?>
     <div class="post-card" data-id="<?= $id ?>">
-        <a href="?page=read_blog&id=<?= $id ?>" style="text-decoration: none; color: inherit;">
-            <div class="post-img-wrap">
-                <img src="<?= $imgSrc ?>" alt="<?= $title ?>" loading="lazy">
-            </div>
-        </a>
-        <div class="post-meta">
-            <span class="post-date"><?= $date ?> · <?= $time ?> min read</span>
+        <div class="post-img-wrap" data-total="<?= count($images) ?>">
+            <a href="?page=read_blog&id=<?= $id ?>" class="post-carousel-link" style="text-decoration: none; color: inherit;">
+                <?php if ($hasImages): ?>
+                    <?php foreach ($images as $idx => $imgId): ?>
+                        <img src="get_image.php?id=<?= $id ?>&idx=<?= $idx ?>"
+                             alt="<?= $title ?>"
+                             class="post-carousel-img <?= $idx === 0 ? 'active' : '' ?>"
+                             loading="lazy">
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <img src="public/images/account.jpg" alt="<?= $title ?>" class="post-carousel-img active" loading="lazy">
+                <?php endif; ?>
+            </a>
+            <?php if (count($images) > 1): ?>
+                <button type="button" class="carousel-btn carousel-prev" aria-label="Previous">&#10094;</button>
+                <button type="button" class="carousel-btn carousel-next" aria-label="Next">&#10095;</button>
+                <div class="carousel-dots">
+                    <?php foreach ($images as $idx => $imgId): ?>
+                        <span class="carousel-dot <?= $idx === 0 ? 'active' : '' ?>" data-idx="<?= $idx ?>"></span>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
             <?php if ($canEdit): ?>
                 <div class="post-menu">
                     <button class="post-menu-btn" title="Tuỳ chọn">⋮</button>
@@ -167,6 +202,9 @@ function renderPostCard($post, $canEdit) {
                     </div>
                 </div>
             <?php endif; ?>
+        </div>
+        <div class="post-meta">
+            <span class="post-date"><?= $date ?></span>
         </div>
         <a href="?page=read_blog&id=<?= $id ?>" style="text-decoration: none; color: inherit;">
             <h3 class="post-title"><?= $title ?></h3>

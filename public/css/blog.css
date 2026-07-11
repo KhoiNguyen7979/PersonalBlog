@@ -148,28 +148,97 @@
 
 .post-img-wrap {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    max-height: 420px;
     overflow: hidden;
     border-radius: 4px;
     background: #e5e5e5;
     margin-bottom: 10px;
+    position: relative;
 }
 
-/* First card in each column gets a taller aspect ratio (portrait) */
-.posts-col:first-child .post-card:first-child .post-img-wrap {
-    aspect-ratio: 3 / 4;
-}
-
-.post-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.post-img-wrap .post-carousel-link {
     display: block;
-    transition: transform 0.3s ease;
+    position: relative;
+    min-height: 180px;
 }
 
-.post-card:hover .post-img-wrap img {
-    transform: scale(1.03);
+.post-img-wrap .post-carousel-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.post-img-wrap .post-carousel-img.active {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+}
+
+/* Carousel nav buttons */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.85);
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    pointer-events: none;
+}
+
+.post-img-wrap:hover .carousel-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.carousel-btn:hover {
+    background: rgba(255,255,255,1);
+}
+
+.carousel-prev { left: 8px; }
+.carousel-next { right: 8px; }
+
+/* Carousel dots */
+.carousel-dots {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+    z-index: 5;
+}
+
+.carousel-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.carousel-dot.active {
+    background: rgba(255,255,255,0.95);
 }
 
 .post-meta {
@@ -229,18 +298,19 @@
     display: block !important;
 }
 
-/* Position the three-dot menu on read_blog in the top-right corner */
+/* Position the three-dot menu on read_blog in the top-right corner of the thumbnail */
 .read-blog-container {
     position: relative;
 }
 
-.read-blog-container .post-menu {
+.read-thumbnail-area .post-menu {
     position: absolute;
-    right: 16px;
-    top: 16px;
+    right: 8px;
+    top: 8px;
+    z-index: 10;
 }
 
-.read-blog-container .post-menu .post-menu-dropdown {
+.read-thumbnail-area .post-menu .post-menu-dropdown {
     top: calc(100% + 6px);
     right: 0;
 }
