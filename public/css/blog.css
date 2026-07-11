@@ -217,11 +217,9 @@ top: calc(100% + 6px); /* show just below the button to avoid hover gaps */
     overflow: hidden;
 }
 
-/* Prefer explicit "open" class controlled by JS to avoid hover flicker; keep hover as fallback */
-.post-menu.open .post-menu-dropdown,
-.post-menu:hover .post-menu-dropdown,
-.post-menu-dropdown:hover {
-display: block;
+/* Prefer explicit "open" class controlled by JS — only show when JS adds .open */
+.post-menu.open .post-menu-dropdown {
+    display: block;
 }
 
 .post-menu-dropdown a {

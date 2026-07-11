@@ -33,6 +33,7 @@ $isLikedClass = $post['IsLiked'] > 0 ? 'liked' : '';
 $imgSrc = $post['HasThumb'] ? "get_image.php?id=$id" : "public/images/account.jpg";
 ?>
 <link rel="stylesheet" href="public/css/read_blog.css">
+<link rel="stylesheet" href="public/css/blog.css">
 
 <div class="read-blog-container">
     <h1 class="read-title"><?= htmlspecialchars($post['TieuDe']) ?></h1>
@@ -41,6 +42,15 @@ $imgSrc = $post['HasThumb'] ? "get_image.php?id=$id" : "public/images/account.jp
         Bởi <strong><?= htmlspecialchars($post['HoTenNguoiDung']) ?></strong> | 
         Đăng ngày: <?= date('d/m/Y', strtotime($post['NgayDang'])) ?> |
         ⏱️ <?= $post['ThoiGianDoc'] ?> phút đọc
+        <?php if (isset($email) && $email === $post['ID_NguoiDung']): ?>
+            <div class="post-menu" style="display:inline-block; margin-left:12px; vertical-align:middle;">
+                <button class="post-menu-btn" title="Tuỳ chọn">⋮</button>
+                <div class="post-menu-dropdown">
+                    <a href="?page=edit_post&id=<?= $id ?>">✏️ Chỉnh sửa</a>
+                    <a href="#" class="delete-post-btn" data-id="<?= $id ?>">🗑️ Xoá</a>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
     
     <div class="read-thumbnail-wrap">

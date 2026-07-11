@@ -182,9 +182,33 @@ document.addEventListener('DOMContentLoaded', () => {
                         .then(r => r.json())
                         .then(data => {
                             if (data.success) {
-                                // Remove card từ DOM
+                                // Remove card từ DOM nếu có
                                 const card = btn.closest('.post-card');
-                                if (card) card.remove();
+                                if (card) {
+                                    card.remove();
+                                } else {
+                                    // Nếu đang ở trang đọc bài viết, chuyển hướng về trang blog/profile sau khi xoá
+                                    if (document.querySelector('.read-blog-container')) {
+                                        window.location.href = '?page=blog';
+                                        return;
+                                    }
+                                }
+
+                                // Nếu đang hiển thị trang profile, giảm số lượng bài viết trên UI
+                                try {
+                                    document.querySelectorAll('.profile-stats-row .stat-badge').forEach(b => {
+                                        const txt = b.querySelector('.stat-txt')?.textContent?.trim();
+                                        if (txt === 'Bài viết') {
+                                            const numEl = b.querySelector('.stat-num');
+                                            if (numEl) {
+                                                let n = parseInt(numEl.textContent) || 0;
+                                                if (n > 0) numEl.textContent = n - 1;
+                                            }
+                                        }
+                                    });
+                                } catch (err) {
+                                    // ignore if profile elements not present
+                                }
                             } else {
                                 alert('Lỗi xoá bài viết.');
                             }
@@ -256,4 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Load lần đầu ─────────────────────────────────────────────────────────
     loadPosts('my');
     loadPosts('other');
+
+    // Ensure menu handlers are available on pages that don't call loadPosts (e.g., read_blog)
+    bindPostMenus();
 });
