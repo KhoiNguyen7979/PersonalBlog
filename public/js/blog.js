@@ -221,34 +221,67 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!postMenuInit) {
             postMenuInit = true;
 
+            // Ensure menus don't appear from pure hover by forcing hidden on mouseenter when not open
+            document.querySelectorAll('.post-menu').forEach(menu => {
+                    if (menu.dataset.mouseBound === '1') return;
+                    menu.dataset.mouseBound = '1';
+                    const dd = menu.querySelector('.post-menu-dropdown');
+                    menu.addEventListener('mouseenter', () => {
+                        if (!menu.classList.contains('open') && dd) dd.style.display = 'none';
+                    });
+            });
+
             // Toggle menu when clicking the ⋮ button
             document.addEventListener('click', (ev) => {
-                const btn = ev.target.closest('.post-menu-btn');
-                if (btn) {
-                    ev.stopPropagation();
-                    // Toggle open on the parent .post-menu
-                    const menu = btn.closest('.post-menu');
-                    if (menu) {
-                        // Close any other open menus first
-                        document.querySelectorAll('.post-menu.open').forEach(m => {
-                            if (m !== menu) m.classList.remove('open');
-                        });
-                        menu.classList.toggle('open');
-                    }
-                    return;
-                }
+                    const btn = ev.target.closest('.post-menu-btn');
+                    if (btn) {
+                        ev.stopPropagation();
+                        const menu = btn.closest('.post-menu');
+                        if (!menu) return;
 
-                // Clicking outside closes any open menus
-                if (!ev.target.closest('.post-menu')) {
-                    document.querySelectorAll('.post-menu.open').forEach(m => m.classList.remove('open'));
-                }
+                        // Close other menus first (and hide their dropdowns)
+                        document.querySelectorAll('.post-menu').forEach(m => {
+                            if (m !== menu) {
+                                m.classList.remove('open');
+                                const dd = m.querySelector('.post-menu-dropdown');
+                                if (dd) dd.style.display = 'none';
+                            }
+                        });
+
+                        const dropdown = menu.querySelector('.post-menu-dropdown');
+                        if (!dropdown) return;
+
+                        // Toggle via inline style to prevent CSS :hover showing the menu in some browsers
+                        const isOpen = menu.classList.contains('open');
+                        if (isOpen) {
+                            menu.classList.remove('open');
+                            dropdown.style.display = 'none';
+                        } else {
+                            menu.classList.add('open');
+                            dropdown.style.display = 'block';
+                        }
+                        return;
+                    }
+
+                    // Clicking outside closes any open menus and hide dropdowns
+                    if (!ev.target.closest('.post-menu')) {
+                        document.querySelectorAll('.post-menu').forEach(m => {
+                            m.classList.remove('open');
+                            const dd = m.querySelector('.post-menu-dropdown');
+                            if (dd) dd.style.display = 'none';
+                        });
+                    }
             });
 
             // Also close menus on Escape key
             document.addEventListener('keydown', (ev) => {
-                if (ev.key === 'Escape') {
-                    document.querySelectorAll('.post-menu.open').forEach(m => m.classList.remove('open'));
-                }
+                    if (ev.key === 'Escape') {
+                        document.querySelectorAll('.post-menu').forEach(m => {
+                            m.classList.remove('open');
+                            const dd = m.querySelector('.post-menu-dropdown');
+                            if (dd) dd.style.display = 'none';
+                        });
+                    }
             });
         }
     }

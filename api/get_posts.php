@@ -154,19 +154,19 @@ function renderPostCard($post, $canEdit) {
         <a href="?page=read_blog&id=<?= $id ?>" style="text-decoration: none; color: inherit;">
             <div class="post-img-wrap">
                 <img src="<?= $imgSrc ?>" alt="<?= $title ?>" loading="lazy">
+                <?php if ($canEdit): ?>
+                    <div class="post-menu">
+                        <button class="post-menu-btn" title="Tuỳ chọn">⋮</button>
+                        <div class="post-menu-dropdown">
+                            <a href="?page=edit_post&id=<?= $id ?>">✏️ Chỉnh sửa</a>
+                            <a href="#" class="delete-post-btn" data-id="<?= $id ?>">🗑️ Xoá</a>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </a>
         <div class="post-meta">
             <span class="post-date"><?= $date ?> · <?= $time ?> min read</span>
-            <?php if ($canEdit): ?>
-                <div class="post-menu">
-                    <button class="post-menu-btn" title="Tuỳ chọn">⋮</button>
-                    <div class="post-menu-dropdown">
-                        <a href="?page=edit_post&id=<?= $id ?>">✏️ Chỉnh sửa</a>
-                        <a href="#" class="delete-post-btn" data-id="<?= $id ?>">🗑️ Xoá</a>
-                    </div>
-                </div>
-            <?php endif; ?>
         </div>
         <a href="?page=read_blog&id=<?= $id ?>" style="text-decoration: none; color: inherit;">
             <h3 class="post-title"><?= $title ?></h3>

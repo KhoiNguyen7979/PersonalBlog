@@ -189,6 +189,12 @@
     position: relative;
 }
 
+/* Place menu as overlay inside image wrapper */
+.post-img-wrap { position: relative; }
+.post-img-wrap .post-menu { position: absolute; top: 8px; right: 8px; }
+.post-img-wrap .post-menu .post-menu-btn { background: rgba(255,255,255,0.9); padding: 6px 8px; border-radius: 6px; }
+.post-img-wrap .post-menu .post-menu-btn:hover { background: rgba(245,245,245,0.95); }
+
 .post-menu-btn {
     background: transparent;
     border: none;
