@@ -204,17 +204,39 @@
 .post-menu-btn:hover { background: #eee; }
 
 .post-menu-dropdown {
-    display: none;
+    display: none !important; /* enforce hide unless JS opens it */
+    pointer-events: auto;
     position: absolute;
     right: 0;
-top: calc(100% + 6px); /* show just below the button to avoid hover gaps */
+    top: calc(100% + 6px); /* show just below the button to avoid hover gaps */
     background: white;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.12);
     min-width: 140px;
-    z-index: 10;
+    z-index: 9999;
     overflow: hidden;
+}
+
+/* Force click-only: only show when .open is present */
+.post-menu.open .post-menu-dropdown {
+    display: block !important;
+}
+
+/* Position the three-dot menu on read_blog in the top-right corner */
+.read-blog-container {
+    position: relative;
+}
+
+.read-blog-container .post-menu {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+}
+
+.read-blog-container .post-menu .post-menu-dropdown {
+    top: calc(100% + 6px);
+    right: 0;
 }
 
 /* Prefer explicit "open" class controlled by JS — only show when JS adds .open */
