@@ -113,19 +113,24 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Cảm ơn bạn đã để lại đánh giá! Đánh giá của bạn sẽ hiển thị ở trang About.');
                     reviewForm.reset();
                     closeModal(reviewModal);
-                    // Reload trang nếu đang ở trang about
+                    if (window.showToast) {
+                        showToast('Đánh giá của bạn đã được đăng. Cảm ơn bạn!');
+                    }
                     if (window.location.search.includes('page=about')) {
-                        window.location.reload();
+                        setTimeout(() => window.location.reload(), 3000);
                     }
                 } else {
-                    alert('Lỗi: ' + data.message);
+                    if (window.showToast) {
+                        showToast('Lỗi: ' + data.message, 'error');
+                    }
                 }
             })
             .catch(err => {
-                alert('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
+                if (window.showToast) {
+                    showToast('Đã có lỗi xảy ra. Vui lòng thử lại sau.', 'error');
+                }
             })
             .finally(() => {
                 submitBtn.innerText = originalText;
@@ -141,6 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('subscribe-email').value;
             
             alert(`Cảm ơn bạn! Email "${email}" đã được đăng ký nhận bản tin thành công.`);
+            if (window.showToast) {
+                showToast('Cảm ơn bạn! Email đã được đăng ký nhận bản tin.');
+            }
             
             subscribeForm.reset();
             closeModal(subscribeModal);

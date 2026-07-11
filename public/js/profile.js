@@ -192,9 +192,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(r => r.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        updateMsg.style.color = 'green';
-                        updateMsg.innerText = 'Cập nhật thành công! Đang tải lại trang...';
-                        setTimeout(() => window.location.reload(), 1500);
+                        if (window.showToast) {
+                            showToast('Cập nhật thành công!');
+                            setTimeout(() => window.location.reload(), 2000);
+                        } else {
+                            updateMsg.style.color = 'green';
+                            updateMsg.innerText = 'Cập nhật thành công! Đang tải lại trang...';
+                            setTimeout(() => window.location.reload(), 1500);
+                        }
                     } else {
                         updateMsg.style.color = 'red';
                         updateMsg.innerText = data.message || 'Có lỗi xảy ra!';

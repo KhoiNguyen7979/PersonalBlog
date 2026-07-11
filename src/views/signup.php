@@ -85,21 +85,15 @@
 <?php if($show_modal): ?>
 <div class="modal-overlay" id="resultModal">
     <div class="modal-box">
-        <span class="close-btn" onclick="document.getElementById('resultModal').style.display='none'"> &times; </span>
-        
+        <span class="close-btn" onclick="document.getElementById('resultModal').style.display='none'">&times;</span>
         <h2><?= $modal_title ?></h2>
         <p><?= $modal_message ?></p>
-        <?php if($modal_title != "Đăng ký thành công!"):?>
-            <button class="ok-btn" onclick="document.getElementById('resultModal').style.display='none'">OK</button><br><br>
-        <?php else: ?>
-        <style>
-            .modal-box{
-                height: 280px;
-            }
-        </style>
-        <br><br>
-        <?php endif; ?>
-        <a href="?page=signin" id=signin_direct>Chuyển đến trang đăng nhập</a>
+        <div class="modal-actions">
+            <?php if($modal_title != "Đăng ký thành công!"):?>
+                <button class="ok-btn" onclick="document.getElementById('resultModal').style.display='none'">OK</button>
+            <?php endif; ?>
+            <a href="?page=signin" class="direct-link">Chuyển đến trang đăng nhập</a>
+        </div>
     </div>
 </div>
 <?php endif; ?>

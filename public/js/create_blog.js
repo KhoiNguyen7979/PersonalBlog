@@ -95,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             if (data.success) {
                 showToast('Đăng bài thành công! Đang chuyển hướng...');
+                var overlay = document.getElementById('page-transition');
+                if (overlay) overlay.classList.add('active');
                 setTimeout(() => {
                     window.location.href = 'index.php?page=blog';
                 }, 1500);

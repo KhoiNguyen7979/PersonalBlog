@@ -6,9 +6,9 @@
 
 /* ── Blog page wrapper ─────────────────────────────────────────────────────── */
 .blog-page {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 40px 20px 80px;
+    padding: 40px 30px 80px;
     font-family: 'Inter', Arial, sans-serif;
 }
 
@@ -125,7 +125,7 @@
 /* ── Posts Grid ─────────────────────────────────────────────────────────────── */
 .posts-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 24px;
     align-items: start;
 }
@@ -148,11 +148,11 @@
 
 .post-img-wrap {
     width: 100%;
-    max-height: 420px;
+    max-height: 300px;
     overflow: hidden;
-    border-radius: 4px;
+    border-radius: 8px;
     background: #e5e5e5;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     position: relative;
 }
 
@@ -434,6 +434,12 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media screen and (max-width: 900px) {
+    .posts-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 @media screen and (max-width: 600px) {
     .posts-grid {
         grid-template-columns: 1fr;
@@ -444,5 +450,8 @@
     }
     .section-title {
         font-size: 22px;
+    }
+    .blog-page {
+        padding: 40px 16px 80px;
     }
 }

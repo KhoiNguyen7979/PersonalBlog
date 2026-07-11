@@ -43,9 +43,6 @@ $connect->close();
                 <?php foreach ($images as $img): ?>
                     <div class="edit-img-item" data-id="<?= $img['ID_Anh'] ?>">
                         <img src="get_image.php?id=<?= $id ?>&idx=<?= array_search($img, $images) ?>" alt="<?= htmlspecialchars($img['Ten_File_Anh']) ?>">
-                        <?php if ($img['IsThumb']): ?>
-                            <span class="edit-img-badge">Thumb</span>
-                        <?php endif; ?>
                         <button type="button" class="edit-img-delete" title="Xoá ảnh này">&times;</button>
                     </div>
                 <?php endforeach; ?>
@@ -171,10 +168,21 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(function(r) { return r.json(); })
         .then(function(data) {
             if (data.success) {
-                alert('Cập nhật thành công!');
-                window.location.href = '?page=blog';
+                var overlay = document.getElementById('page-transition');
+                if (window.showToast) {
+                    showToast('Cập nhật thành công!');
+                    if (overlay) overlay.classList.add('active');
+                    setTimeout(function() { window.location.href = '?page=blog'; }, 2000);
+                } else {
+                    if (overlay) overlay.classList.add('active');
+                    window.location.href = '?page=blog&toast=' + encodeURIComponent('Cập nhật thành công!');
+                }
             } else {
-                alert('Lỗi: ' + data.message);
+                if (window.showToast) {
+                    showToast('Lỗi: ' + data.message, 'error');
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
                 btn.innerText = 'Cập nhật';
                 btn.disabled = false;
             }
@@ -205,18 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
     height: 100%;
     object-fit: cover;
     display: block;
-}
-
-.edit-img-badge {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 600;
 }
 
 .edit-img-delete {

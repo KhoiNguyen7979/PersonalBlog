@@ -212,7 +212,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                     // ignore if profile elements not present
                                 }
                             } else {
-                                alert('Lỗi xoá bài viết.');
+                                if (window.showToast) {
+                                    showToast('Lỗi xoá bài viết.', 'error');
+                                } else {
+                                    alert('Lỗi xoá bài viết.');
+                                }
                             }
                         });
                 }

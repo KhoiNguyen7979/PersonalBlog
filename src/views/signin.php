@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
             $_SESSION['email'] = $user['Email'];
             $_SESSION['hoten'] = $user['TenDangNhap'];
             
-            header("Location: index.php");
+            header("Location: index.php?toast=" . urlencode("Đăng nhập thành công!"));
             exit();
         } else {
             $show_modal = true;
@@ -91,13 +91,13 @@ $connect->close();
 <?php if($show_modal): ?>
 <div class="modal-overlay" id="resultModal">
     <div class="modal-box">
-        <span class="close-btn" onclick="document.getElementById('resultModal').style.display='none'"> &times; </span>
-        
+        <span class="close-btn" onclick="document.getElementById('resultModal').style.display='none'">&times;</span>
         <h2><?= $modal_title ?></h2>
         <p><?= $modal_message ?></p>
-        
-        <button class="ok-btn" onclick="document.getElementById('resultModal').style.display='none'">OK</button><br><br>
-        <a href="?page=signup" id=signup_direct>Bạn chưa có tài khoản?</a>
+        <div class="modal-actions">
+            <button class="ok-btn" onclick="document.getElementById('resultModal').style.display='none'">OK</button>
+            <a href="?page=signup" class="direct-link">Bạn chưa có tài khoản?</a>
+        </div>
     </div>
 </div>
 <?php endif; ?>

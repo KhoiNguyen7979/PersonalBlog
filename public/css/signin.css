@@ -1,271 +1,384 @@
-*{
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
-body{
+body {
     height: 100vh;
+    background: #f8f9fa;
 }
 
-.container{
+.container {
     display: flex;
     height: 100vh;
 }
 
-.left-panel{
-    width: 68%;
+/* ── LEFT PANEL ─────────────────────────────────────── */
+.left-panel {
+    width: 60%;
     position: relative;
     background-image: url('../images/arrow.png');
     background-size: cover;
     background-position: center;
+    overflow: hidden;
 }
 
-.left-panel h1{
+.left-panel::after {
+    content: '';
     position: absolute;
-    top: 40px;
-    left: 30px;
-    color: white;
-    font-size: 80px;
-    font-weight: bold;
-    text-shadow: 4px 4px 6px rgba(0,0,0,0.3);
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 100%);
 }
 
-.logo{
+.left-panel h1 {
     position: absolute;
-    bottom: 35px;
+    top: 48px;
+    left: 40px;
+    color: #fff;
+    font-size: 72px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    z-index: 2;
+    line-height: 1.1;
+}
+
+.logo {
+    position: absolute;
+    bottom: 40px;
     right: 40px;
-    width: 480px;
+    width: 420px;
+    z-index: 2;
+    filter: drop-shadow(0 4px 20px rgba(0,0,0,0.2));
+    transition: transform 0.3s ease;
 }
 
-.right-panel{
-    width: 32%;
-    background: #f3f3f3;
-    padding: 50px;
+.logo:hover {
+    transform: scale(1.02);
 }
 
-.right-panel h2{
-    text-align: center;
-    font-size: 60px;
-    margin-top: 90px;
-    margin-bottom: 60px;
-}
-
-form{
+/* ── RIGHT PANEL ────────────────────────────────────── */
+.right-panel {
+    width: 40%;
+    background: #fff;
+    padding: 60px 50px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    position: relative;
 }
 
-input[type=text], input[type=password]{
+.right-panel h2 {
+    text-align: center;
+    font-size: 42px;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+}
+
+.right-panel h2::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: #111;
+    border-radius: 2px;
+    margin: 16px auto 0;
+}
+
+/* ── FORM ───────────────────────────────────────────── */
+form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+}
+
+input[type=text],
+input[type=password] {
     border: none;
-    border-bottom: 3px solid black;
+    border-bottom: 2px solid #e5e7eb;
     background: transparent;
-    font-size: 18px;
-    padding: 15px 5px;
-    margin-bottom: 25px;
+    font-size: 16px;
+    padding: 16px 4px;
+    margin-bottom: 20px;
     outline: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    color: #111;
+    transition: border-color 0.3s ease;
 }
 
-.remember{
+input[type=text]:focus,
+input[type=password]:focus {
+    border-bottom-color: #111;
+}
+
+input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+/* ── CHECKBOX ───────────────────────────────────────── */
+.remember {
     display: flex;
     align-items: center;
-    margin-top: 10px;
-    margin-bottom: 40px;
+    margin-top: 4px;
+    margin-bottom: 36px;
 }
 
-.remember input{
-    width: 22px;
-    height: 22px;
-    margin-right: 15px;
-}
-
-.button{
-    display: flex;
-    gap: 45px;
-    align-items: center;
-}
-
-.signin-btn{
-    width: 200px;
-    height: 60px;
-    border: none;
-    border-radius: 35px;
-    background-color: black;
-    color: white;
-    font-size: 30px;
+.remember input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 12px;
+    accent-color: #111;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
 }
 
-.signin-btn:hover{
-    transform: scale(1.05);
+.remember label {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+    cursor: pointer;
 }
 
-.signin-btn:active{
-    transform: scale(0.95);
+/* ── BUTTONS ────────────────────────────────────────── */
+.button {
+    display: flex;
+    align-items: center;
+    gap: 32px;
 }
 
-.signup{
-    display: inline-block;
-    transition: 0.3s;
+.signin-btn {
+    width: 180px;
+    height: 52px;
+    border: none;
+    border-radius: 12px;
+    background: #111;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.3px;
 }
 
-.button a{
-    font-size: 28px;
-    color: black;
-    font-weight: bold;
+.signin-btn:hover {
+    background: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.signin-btn:active {
+    transform: translateY(0);
+}
+
+.button a {
+    font-size: 16px;
+    color: #111;
+    font-weight: 700;
     text-decoration: none;
+    transition: color 0.2s ease;
+    position: relative;
 }
 
-.signup:hover{
-    transform: scale(1.05);
-}
-
-.signup:active{
-    transform: scale(0.95);
-}
-
-.forgot-password{
-    text-align: right;
+.button a::after {
+    content: '';
     position: absolute;
-    bottom: 20px;
-    right: 20px;
-}
-.forgot-password a{
-    font-size: 20px;
-    color: black;
-    font-style: italic;
-    font-weight: bold;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #111;
+    transition: width 0.3s ease;
 }
 
-.forgot-password a:hover{
-    color: rgb(255, 0, 0);
+.button a:hover::after {
+    width: 100%;
 }
 
-/*pop up đăng nhập tài khoản thành công*/
-/* Lớp nền mờ bao phủ toàn màn hình */
+/* ── FORGOT PASSWORD ────────────────────────────────── */
+.forgot-password {
+    text-align: right;
+    margin-top: 24px;
+}
+
+.forgot-password a {
+    font-size: 14px;
+    color: #6b7280;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.forgot-password a:hover {
+    color: #111;
+}
+
+/* ── MODAL ──────────────────────────────────────────── */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.8); /* Nền đen mờ 60% */
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Đảm bảo nó đè lên mọi thứ khác */
+    z-index: 1000;
 }
 
-/* Hộp nội dung Pop-up */
 .modal-box {
-    background: whitesmoke;
-    padding: 40px;
-    border-radius: 20px; /* Bo góc giống ảnh của bạn */
-    width: 600px;
-    height: 400px;
+    background: #fff;
+    padding: 48px 40px;
+    border-radius: 20px;
+    width: 480px;
     max-width: 90%;
     text-align: center;
     position: relative;
-    font-size: 25px;
-    box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
-    animation: popIn 0.3s ease-out; /* Hiệu ứng nảy nhẹ khi hiện lên */
+    font-size: 18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: popIn 0.3s ease-out;
+    color: #374151;
+    line-height: 1.6;
 }
 
-/* Nút X góc trên phải */
-.close-btn{
+.close-btn {
     position: absolute;
-    top: 15px;
+    top: 16px;
     right: 20px;
-    font-size: 30px;
+    font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-    color: #333;
-}
-
-.close-btn:hover{
-    color: red;
-    border-radius: 10px;
-    background-color: black;
-}
-
-/* Nút OK */
-.ok-btn,#signup_direct{
-    margin-top: 30px;
-    padding: 10px 25px;
-    background: black;
-    color: white;
+    color: #9ca3af;
+    transition: color 0.2s ease;
+    background: none;
     border: none;
-    border-radius: 25px;
-    font-size: 25px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-}
-.ok-btn:hover,#signup_direct:hover{
-    background: lightgray;
-    color: black;
 }
 
-/* Hiệu ứng nảy lúc xuất hiện */
+.close-btn:hover {
+    color: #111;
+}
+
+.modal-box h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 16px;
+}
+
+.modal-box p {
+    font-size: 16px;
+    color: #6b7280;
+    margin-bottom: 24px;
+}
+
+.modal-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.ok-btn {
+    padding: 12px 32px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.ok-btn:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
+.direct-link {
+    display: inline-block;
+    padding: 12px 32px;
+    font-size: 15px;
+    color: #fff;
+    background: #111;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.direct-link:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
 @keyframes popIn {
-    from { transform: scale(0.8); opacity: 0; }
+    from { transform: scale(0.9); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
 
-
-/* --- RESPONSIVE MEDIA QUERIES --- */
+/* ── RESPONSIVE ─────────────────────────────────────── */
 @media screen and (max-width: 850px) {
     .container {
         flex-direction: column;
         height: auto;
         min-height: 100vh;
     }
-    
+
     .left-panel {
         width: 100%;
-        height: 30vh;
-        min-height: 250px;
+        height: 35vh;
+        min-height: 240px;
     }
-    
+
     .left-panel h1 {
-        font-size: 50px;
-        top: 20px;
-        left: 20px;
+        font-size: 42px;
+        top: 24px;
+        left: 24px;
     }
-    
+
     .logo {
-        width: 250px;
+        width: 220px;
         bottom: 20px;
         right: 20px;
     }
-    
+
     .right-panel {
         width: 100%;
-        padding: 30px;
+        padding: 40px 28px;
+        flex: 1;
     }
-    
+
     .right-panel h2 {
-        font-size: 40px;
-        margin-top: 20px;
-        margin-bottom: 40px;
+        font-size: 32px;
     }
-    
+
     .button {
         flex-direction: column;
-        gap: 20px;
+        gap: 16px;
     }
-    
+
     .signin-btn {
         width: 100%;
     }
-    
+
     .forgot-password {
         text-align: center;
-        left: 0;
-        top: 20px;
-        margin-bottom: 40px;
+        margin-top: 16px;
     }
 }

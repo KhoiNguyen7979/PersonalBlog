@@ -133,29 +133,22 @@ ob_start();
 if (empty($posts)) {
     echo '<div class="no-posts"><p>Chưa có bài viết nào.</p></div>';
 } else {
-    // Chia thành 2 cột
-    $col1 = [];
-    $col2 = [];
+    // Chia thành 3 cột
+    $cols = [[], [], []];
     foreach ($posts as $i => $post) {
-        if ($i % 2 === 0) $col1[] = $post;
-        else              $col2[] = $post;
+        $cols[$i % 3][] = $post;
     }
 
     echo '<div class="posts-grid">';
-    echo '<div class="posts-col">';
-    foreach ($col1 as $post) {
-        $pid = $post['ID_BaiViet'];
-        $imgs = $postImages[$pid] ?? [];
-        renderPostCard($post, $canEdit, $imgs);
+    foreach ($cols as $col) {
+        echo '<div class="posts-col">';
+        foreach ($col as $post) {
+            $pid = $post['ID_BaiViet'];
+            $imgs = $postImages[$pid] ?? [];
+            renderPostCard($post, $canEdit, $imgs);
+        }
+        echo '</div>';
     }
-    echo '</div>';
-    echo '<div class="posts-col">';
-    foreach ($col2 as $post) {
-        $pid = $post['ID_BaiViet'];
-        $imgs = $postImages[$pid] ?? [];
-        renderPostCard($post, $canEdit, $imgs);
-    }
-    echo '</div>';
     echo '</div>';
 }
 $html = ob_get_clean();

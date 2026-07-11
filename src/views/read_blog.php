@@ -204,9 +204,15 @@ document.querySelectorAll('.delete-post-btn').forEach(btn => {
                 .then(r => r.json())
                 .then(data => {
                     if (data.success) {
+                        var overlay = document.getElementById('page-transition');
+                        if (overlay) overlay.classList.add('active');
                         window.location.href = '?page=blog';
                     } else {
-                        alert('Lỗi xoá bài viết.');
+                        if (window.showToast) {
+                            showToast('Lỗi xoá bài viết.', 'error');
+                        } else {
+                            alert('Lỗi xoá bài viết.');
+                        }
                     }
                 });
         }
@@ -229,7 +235,11 @@ document.getElementById('like-btn').addEventListener('click', function() {
                 btn.classList.remove('liked');
             }
         } else {
-            alert(data.message);
+            if (window.showToast) {
+                showToast(data.message, 'error');
+            } else {
+                alert(data.message);
+            }
         }
     });
 });
