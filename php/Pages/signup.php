@@ -1,5 +1,5 @@
 <?php 
-    require_once("mySQLconnect.php");
+    require_once(__DIR__ . '/../mySQLconnect.php');
     $show_modal = false;
     $modal_title = "";
     $modal_message = "";

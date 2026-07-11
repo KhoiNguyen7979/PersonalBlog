@@ -1,9 +1,9 @@
 <?php
 /**
- * src/views/public_profile.php
+ * php/Pages/public_profile.php
  * Trang hồ sơ công khai của người dùng khác
  */
-require_once 'mySQLconnect.php';
+require_once __DIR__ . '/../mySQLconnect.php';
 
 $email = isset($_GET['email']) ? trim($_GET['email']) : '';
 

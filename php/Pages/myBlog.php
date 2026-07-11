@@ -1,6 +1,6 @@
 <?php
 /**
- * src/views/myBlog.php
+ * php/Pages/myBlog.php
  * Giao diện trang blog - hiển thị My Posts và Posts from the other
  */
 ?>

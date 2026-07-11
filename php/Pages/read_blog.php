@@ -1,9 +1,9 @@
 <?php
 /**
- * src/views/read_blog.php
+ * php/Pages/read_blog.php
  * Giao diện đọc chi tiết bài viết - hiển thị nội dung, ảnh bìa và chức năng LIKE
  */
-require_once 'mySQLconnect.php';
+require_once __DIR__ . '/../mySQLconnect.php';
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $email = $_SESSION['email'] ?? null;

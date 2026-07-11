@@ -1,6 +1,6 @@
 <?php
 /**
- * src/views/profile.php
+ * php/Pages/profile.php
  * Trang hồ sơ cá nhân
  */
 if (!isset($_SESSION['email'])) {
@@ -11,7 +11,7 @@ if (!isset($_SESSION['email'])) {
 // Header đã require_once mySQLconnect rồi, nên $connect đã có sẵn.
 // Gọi lại phòng trường hợp vào trực tiếp.
 if (!isset($connect) || $connect->connect_error) {
-    require_once 'src/views/mySQLconnect.php';
+    require_once __DIR__ . '/../mySQLconnect.php';
 }
 
 $email = $_SESSION['email'];

@@ -9,7 +9,7 @@
  *                   get_image.php?id=1&idx=1  (ảnh thứ hai)
  *   Avatar user  : get_image.php?email=domixi@gmail.com
  */
-require_once 'src/views/mySQLconnect.php';
+require_once __DIR__ . '/php/mySQLconnect.php';
 
 if (isset($_GET['id'])) {
     $id  = intval($_GET['id']);

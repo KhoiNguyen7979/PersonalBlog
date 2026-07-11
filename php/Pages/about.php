@@ -2,9 +2,9 @@
 $pageTitle = "About - BloggerZ";
 
 // Fetch reviews
-require_once 'src/views/mySQLconnect.php';
+require_once __DIR__ . '/../mySQLconnect.php';
 $reviews = [];
-$stmt = $connect->query("SELECT HoTen, NoiDung, NgayTao FROM Reviews ORDER BY NgayTao DESC LIMIT 10");
+$stmt = $connect->query("SELECT HoTen, Email, NoiDung, NgayTao FROM Reviews ORDER BY NgayTao DESC LIMIT 10");
 if ($stmt) {
     while ($row = $stmt->fetch_assoc()) {
         $reviews[] = $row;
@@ -62,8 +62,8 @@ if ($stmt) {
             <?php else: ?>
                 <div class="reviews-track" id="reviews-track">
                     <?php foreach ($reviews as $rev): 
-                        // Hiển thị tên người review (ẩn một phần cho riêng tư nếu muốn, ở đây hiển thị đầy đủ)
                         $name = htmlspecialchars($rev['HoTen']);
+                        $email = htmlspecialchars($rev['Email']);
                         $content = htmlspecialchars($rev['NoiDung']);
                         $date = date('M d, Y', strtotime($rev['NgayTao']));
                     ?>
@@ -71,11 +71,11 @@ if ($stmt) {
                         <div class="review-quote-icon">❝</div>
                         <p class="review-content">"<?= $content ?>"</p>
                         <div class="review-meta">
-                            <div class="review-avatar">
+                            <a href="?page=public_profile&email=<?= $email ?>" class="review-avatar">
                                 <?= mb_strtoupper(mb_substr($name, 0, 1)) ?>
-                            </div>
+                            </a>
                             <div class="review-author">
-                                <h4><?= $name ?></h4>
+                                <h4><a href="?page=public_profile&email=<?= $email ?>"><?= $name ?></a></h4>
                                 <span><?= $date ?></span>
                             </div>
                         </div>

@@ -4,7 +4,7 @@
  * Lưu review vào database
  */
 session_start();
-require_once '../src/views/mySQLconnect.php';
+require_once __DIR__ . '/../php/mySQLconnect.php';
 
 header('Content-Type: application/json; charset=utf-8');
 

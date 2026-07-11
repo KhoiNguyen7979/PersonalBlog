@@ -9,7 +9,7 @@ if (isset($_SESSION['email'])) {
 }
 
 // Thiết lập kết nối CSDL
-require_once("mySQLconnect.php");
+require_once(__DIR__ . '/../mySQLconnect.php');
 
 // Xử lý khi người dùng gửi thông tin đăng nhập
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {

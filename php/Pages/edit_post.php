@@ -3,7 +3,7 @@ if (!isset($_SESSION['email'])) {
     header("Location: index.php?page=signin");
     exit;
 }
-require_once 'src/views/mySQLconnect.php';
+require_once __DIR__ . '/../mySQLconnect.php';
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $email = $_SESSION['email'];

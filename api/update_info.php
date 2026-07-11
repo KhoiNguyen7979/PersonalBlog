@@ -8,7 +8,7 @@ if (!isset($_SESSION['email'])) {
     exit;
 }
 
-require_once '../src/views/mySQLconnect.php';
+require_once __DIR__ . '/../php/mySQLconnect.php';
 
 $email = $_SESSION['email'];
 $username = $_POST['username'] ?? '';

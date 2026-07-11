@@ -10,7 +10,7 @@
  *   page     = 1, 2, 3...
  */
 session_start();
-require_once '../src/views/mySQLconnect.php';
+require_once __DIR__ . '/../php/mySQLconnect.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -202,15 +202,17 @@ function renderPostCard($post, $canEdit, $images = []) {
                 </div>
             <?php endif; ?>
         </div>
-        <div class="post-meta">
-            <span class="post-date"><?= $date ?></span>
+        <div class="post-card-body">
+            <div class="post-meta">
+                <span class="post-date"><?= $date ?></span>
+            </div>
+            <a href="?page=read_blog&id=<?= $id ?>" style="text-decoration: none; color: inherit;">
+                <h3 class="post-title"><?= $title ?></h3>
+                <p class="post-summary"><?= $summary ?></p>
+            </a>
+            <hr class="post-divider">
+            <span class="post-likes">❤️ <?= $likes ?> Likes</span>
         </div>
-        <a href="?page=read_blog&id=<?= $id ?>" style="text-decoration: none; color: inherit;">
-            <h3 class="post-title"><?= $title ?></h3>
-            <p class="post-summary"><?= $summary ?></p>
-        </a>
-        <hr class="post-divider">
-        <span class="post-likes">❤️ <?= $likes ?> Likes</span>
     </div>
     <?php
 }

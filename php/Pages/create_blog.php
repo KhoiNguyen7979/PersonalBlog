@@ -1,6 +1,6 @@
 <?php
 /**
- * src/views/create_blog.php
+ * php/Pages/create_blog.php
  * Giao diện tạo bài viết mới
  */
 if (!isset($_SESSION['email'])) {

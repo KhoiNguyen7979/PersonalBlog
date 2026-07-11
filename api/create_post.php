@@ -4,7 +4,7 @@
  * API xử lý lưu bài viết mới và nhiều ảnh vào Database
  */
 session_start();
-require_once '../src/views/mySQLconnect.php';
+require_once __DIR__ . '/../php/mySQLconnect.php';
 
 header('Content-Type: application/json; charset=utf-8');
 

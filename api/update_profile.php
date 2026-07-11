@@ -4,7 +4,7 @@
  * Cập nhật thông tin hồ sơ người dùng (avatar, mô tả).
  */
 session_start();
-require_once '../src/views/mySQLconnect.php';
+require_once __DIR__ . '/../php/mySQLconnect.php';
 
 header('Content-Type: application/json; charset=utf-8');
 

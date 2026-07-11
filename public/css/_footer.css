@@ -132,11 +132,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    animation: footerFloat 3s ease-in-out infinite;
+}
+
+@keyframes footerFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-2px); }
 }
 
 .footer_subscribe button:hover {
     background-color: #45a049;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    animation-play-state: paused;
 }
 
 /* Bottom Bar */
