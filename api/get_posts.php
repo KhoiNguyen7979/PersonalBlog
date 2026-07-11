@@ -6,7 +6,7 @@
  * Params:
  *   type     = my | other
  *   category = all | technology | skill | story | music
- *   sort     = newest | views
+ *   sort     = newest | oldest | likes
  *   page     = 1, 2, 3...
  */
 session_start();
@@ -54,7 +54,13 @@ if ($category !== 'all') {
 $where = count($conditions) > 0 ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
 // ── ORDER BY ─────────────────────────────────────────────────────────────────
-$orderBy = $sort === 'views' ? 'b.LuotXem DESC' : 'b.NgayDang DESC';
+if ($sort === 'oldest') {
+    $orderBy = 'b.NgayDang ASC';
+} elseif ($sort === 'likes') {
+    $orderBy = '(SELECT COUNT(*) FROM ThichBaiViet t WHERE t.ID_BaiViet = b.ID_BaiViet) DESC';
+} else {
+    $orderBy = 'b.NgayDang DESC';
+}
 
 // ── Đếm tổng ─────────────────────────────────────────────────────────────────
 $countSql = "SELECT COUNT(*) as total FROM BaiViet b $where";

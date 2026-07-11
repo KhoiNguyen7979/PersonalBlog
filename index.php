@@ -6,16 +6,17 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 // Tiêu đề trang theo từng page (Đã thêm read_blog và edit_post)
 $titles = [
-    'home'        => 'Home - BloggerZ',
-    'blog'        => 'My Blog - BloggerZ',
-    'about'       => 'About - BloggerZ',
-    'signin'      => 'Sign In - BloggerZ',
-    'signup'      => 'Sign Up - BloggerZ',
-    'signout'     => 'Sign Out - BloggerZ',
-    'profile'     => 'Profile - BloggerZ',
-    'create_blog' => 'Write a Blog - BloggerZ',
-    'read_blog'   => 'Read Blog - BloggerZ', // Thêm title cho trang đọc bài
-    'edit_post'   => 'Edit Post - BloggerZ', // Thêm title cho trang sửa bài
+    'home'          => 'Home - BloggerZ',
+    'blog'          => 'My Blog - BloggerZ',
+    'about'         => 'About - BloggerZ',
+    'signin'        => 'Sign In - BloggerZ',
+    'signup'        => 'Sign Up - BloggerZ',
+    'signout'       => 'Sign Out - BloggerZ',
+    'profile'       => 'Profile - BloggerZ',
+    'public_profile'=> 'Profile - BloggerZ',
+    'create_blog'   => 'Write a Blog - BloggerZ',
+    'read_blog'     => 'Read Blog - BloggerZ',
+    'edit_post'     => 'Edit Post - BloggerZ',
 ];
 //Tạo biến title để xuất tên web ra trên tab (dựa vào biến page trước đó)
 $title = $titles[$page] ?? 'BloggerZ';
@@ -69,6 +70,9 @@ $title = $titles[$page] ?? 'BloggerZ';
         
     <?php elseif ($page === 'profile'): ?>
         <?php include 'src/views/profile.php'; ?>
+        
+    <?php elseif ($page === 'public_profile'): ?>
+        <?php include 'src/views/public_profile.php'; ?>
         
     <?php elseif ($page === 'create_blog'): ?>
         <?php include 'src/views/create_blog.php'; ?>

@@ -33,7 +33,8 @@
                 <label>Filter:</label>
                 <select class="filter-select" data-target="my">
                     <option value="newest">Newest</option>
-                    <option value="views">Most Views</option>
+                    <option value="oldest">Oldest</option>
+                    <option value="likes">Most Likes</option>
                 </select>
             </div>
         </div>
@@ -76,7 +77,8 @@
                 <label>Filter:</label>
                 <select class="filter-select" data-target="other">
                     <option value="newest">Newest</option>
-                    <option value="views">Most Views</option>
+                    <option value="oldest">Oldest</option>
+                    <option value="likes">Most Likes</option>
                 </select>
             </div>
         </div>

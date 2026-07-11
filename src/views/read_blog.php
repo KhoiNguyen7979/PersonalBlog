@@ -51,7 +51,7 @@ $connect->close();
     <h1 class="read-title"><?= htmlspecialchars($post['TieuDe']) ?></h1>
     
     <div class="read-meta">
-        Bởi <strong><?= htmlspecialchars($post['HoTenNguoiDung']) ?></strong> | 
+        Bởi <a href="?page=public_profile&email=<?= urlencode($post['ID_NguoiDung']) ?>" class="author-link"><strong><?= htmlspecialchars($post['HoTenNguoiDung']) ?></strong></a> | 
         Đăng ngày: <?= date('d/m/Y', strtotime($post['NgayDang'])) ?>
     </div>
     
@@ -255,6 +255,17 @@ document.getElementById('like-btn').addEventListener('click', function() {
     font-size: 14px;
     color: #666;
     margin-bottom: 30px;
+}
+
+.author-link {
+    color: #4CAF50;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.author-link:hover {
+    color: #388E3C;
+    text-decoration: underline;
 }
 
 /* Khung bọc ảnh bìa */
