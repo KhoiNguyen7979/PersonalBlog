@@ -143,7 +143,7 @@ function formatPostDate($dateStr) {
                     <a href="?page=read_blog&id=<?= $pid ?>" class="pub-post-card">
                         <div class="pub-post-img-wrap">
                             <?php if ($hasImg): ?>
-                                <img src="get_image.php?id=<?= $pid ?>&idx=0"
+                                <img src="get_image.php?id=<?= $pid ?>&idx=0&v=<?= time() ?>"
                                      alt="<?= htmlspecialchars($post['TieuDe']) ?>"
                                      class="pub-post-img" loading="lazy">
                             <?php else: ?>

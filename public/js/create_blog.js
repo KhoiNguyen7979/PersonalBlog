@@ -1,29 +1,76 @@
-/**
- * public/js/create_blog.js
- * Xử lý giao diện tạo bài viết: preview ảnh bìa, ảnh bổ sung, và submit form.
- */
 document.addEventListener('DOMContentLoaded', () => {
 
     const form          = document.getElementById('create-blog-form');
-    const fileInput     = document.getElementById('thumbnail');
+    const fileInput     = document.getElementById('images-input');
     const previewImg    = document.getElementById('thumbnail-preview');
     const placeholder   = document.getElementById('upload-placeholder');
     const publishBtn    = document.getElementById('publish-btn');
     const toast         = document.getElementById('create-toast');
-    const extraInput    = document.getElementById('extra-images');
-    const extraPreview  = document.getElementById('extra-preview-list');
 
-    // ── 1. Preview ảnh bìa ───────────────────────────────────────────────────
+    let cropper = null;
+    let currentFile = null;
+
+    const cropModal = document.getElementById('crop-modal');
+    const cropImage = document.getElementById('crop-image');
+    const cropClose = document.getElementById('crop-close');
+    const cropCancel = document.getElementById('crop-cancel');
+    const cropConfirm = document.getElementById('crop-confirm');
+
+    function openCrop(file) {
+        currentFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            cropImage.src = e.target.result;
+            cropImage.onload = () => {
+                cropModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                if (cropper) cropper.destroy();
+                const maxDim = Math.max(cropImage.naturalWidth, cropImage.naturalHeight);
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: NaN,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    responsive: true,
+                    minCanvasWidth: maxDim,
+                    minCanvasHeight: maxDim,
+                });
+            };
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function closeCrop() {
+        cropModal.classList.remove('active');
+        document.body.style.overflow = '';
+        if (cropper) { cropper.destroy(); cropper = null; }
+        currentFile = null;
+    }
+
+    cropClose.addEventListener('click', closeCrop);
+    cropCancel.addEventListener('click', closeCrop);
+    cropModal.addEventListener('click', (e) => {
+        if (e.target === cropModal) closeCrop();
+    });
+
+    cropConfirm.addEventListener('click', () => {
+        if (!cropper || !currentFile) return;
+        const canvas = cropper.getCroppedCanvas();
+        if (!canvas) return;
+
+        canvas.toBlob((blob) => {
+            const newFile = new File([blob], currentFile.name, { type: currentFile.type });
+            const dt = new DataTransfer();
+            dt.items.add(newFile);
+            fileInput.files = dt.files;
+            showPreview(newFile);
+            closeCrop();
+        });
+    });
+
     fileInput.addEventListener('change', () => {
         const file = fileInput.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImg.src = e.target.result;
-                previewImg.style.display = 'block';
-                placeholder.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
+            openCrop(file);
         } else {
             previewImg.style.display = 'none';
             previewImg.src = '';
@@ -31,41 +78,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ── 2. Preview ảnh bổ sung ────────────────────────────────────────────────
-    if (extraInput) {
-        extraInput.addEventListener('change', () => {
-            extraPreview.innerHTML = '';
-            Array.from(extraInput.files).forEach((file, i) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const div = document.createElement('div');
-                    div.className = 'extra-preview-item';
-                    div.innerHTML = `<img src="${e.target.result}" alt="Ảnh ${i+1}"><button type="button" class="extra-remove-btn" data-idx="${i}">&times;</button>`;
-                    extraPreview.appendChild(div);
-                };
-                reader.readAsDataURL(file);
-            });
-        });
-
-        extraPreview.addEventListener('click', (e) => {
-            if (e.target.classList.contains('extra-remove-btn')) {
-                const idx = parseInt(e.target.dataset.idx);
-                const dt = new DataTransfer();
-                Array.from(extraInput.files).forEach((f, i) => {
-                    if (i !== idx) dt.items.add(f);
-                });
-                extraInput.files = dt.files;
-                extraInput.dispatchEvent(new Event('change'));
-            }
-        });
+    function showPreview(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImg.src = e.target.result;
+            previewImg.style.display = 'block';
+            placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
     }
 
-    // ── 3. Submit form ────────────────────────────────────────────────────────
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
         if (!fileInput.files[0]) {
-            showToast('Vui lòng chọn ảnh bìa (Thumbnail) cho bài viết.');
+            showToast('Vui lòng chọn ảnh cho bài viết.');
             return;
         }
 
@@ -75,12 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('category',  document.getElementById('category').value);
         formData.append('content',   document.getElementById('content').value);
         formData.append('images',    fileInput.files[0]);
-
-        if (extraInput && extraInput.files.length > 0) {
-            Array.from(extraInput.files).forEach(f => {
-                formData.append('images', f);
-            });
-        }
 
         const originalText = publishBtn.innerText;
         publishBtn.innerText = 'Đang đăng...';
@@ -99,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (overlay) overlay.classList.add('active');
                 setTimeout(() => {
                     window.location.href = 'index.php?page=blog';
-                }, 1500);
+                }, 800);
             } else {
                 showToast('Lỗi: ' + data.message);
                 resetButton();
@@ -118,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ── 4. Toast ──────────────────────────────────────────────────────────────
     function showToast(message) {
         toast.textContent = message;
         toast.classList.add('show');

@@ -25,55 +25,27 @@ if (empty($title) || empty($summary) || empty($category) || empty($content)) {
     exit;
 }
 
-// Xử lý nhiều ảnh
-$files = [];
-if (isset($_FILES['images']) && $_FILES['images']['error'] !== UPLOAD_ERR_NO_FILE) {
-    // Có thể là 1 file hoặc nhiều files
-    if (is_array($_FILES['images']['name'])) {
-        $count = count($_FILES['images']['name']);
-        for ($i = 0; $i < $count; $i++) {
-            if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
-                $files[] = [
-                    'name' => $_FILES['images']['name'][$i],
-                    'tmp'  => $_FILES['images']['tmp_name'][$i],
-                    'size' => $_FILES['images']['size'][$i],
-                ];
-            }
-        }
-    } elseif ($_FILES['images']['error'] === UPLOAD_ERR_OK) {
-        $files[] = [
-            'name' => $_FILES['images']['name'],
-            'tmp'  => $_FILES['images']['tmp_name'],
-            'size' => $_FILES['images']['size'],
-        ];
-    }
-}
-
-if (empty($files)) {
-    echo json_encode(['success' => false, 'message' => 'Vui lòng chọn ít nhất 1 ảnh.']);
-    exit;
-}
-
+// Xử lý 1 ảnh duy nhất
 $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 $finfo = finfo_open(FILEINFO_MIME_TYPE);
 $extMap = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif', 'image/webp' => 'webp'];
 
-$validFiles = [];
-foreach ($files as $f) {
-    $mime = finfo_file($finfo, $f['tmp']);
-    if (!in_array($mime, $allowedTypes)) continue;
-    if ($f['size'] > 5 * 1024 * 1024) continue;
-    $validFiles[] = [
-        'name' => $f['name'],
-        'ext'  => $extMap[$mime],
-        'size' => $f['size'],
-        'data' => file_get_contents($f['tmp']),
-    ];
+$validFile = null;
+if (isset($_FILES['images']) && $_FILES['images']['error'] === UPLOAD_ERR_OK) {
+    $mime = finfo_file($finfo, $_FILES['images']['tmp_name']);
+    if (in_array($mime, $allowedTypes) && $_FILES['images']['size'] <= 5 * 1024 * 1024) {
+        $validFile = [
+            'name' => $_FILES['images']['name'],
+            'ext'  => $extMap[$mime],
+            'size' => $_FILES['images']['size'],
+            'data' => file_get_contents($_FILES['images']['tmp_name']),
+        ];
+    }
 }
 finfo_close($finfo);
 
-if (empty($validFiles)) {
-    echo json_encode(['success' => false, 'message' => 'Không có ảnh hợp lệ.']);
+if (!$validFile) {
+    echo json_encode(['success' => false, 'message' => 'Vui lòng chọn 1 ảnh hợp lệ.']);
     exit;
 }
 
@@ -98,14 +70,11 @@ $stmtPic = $connect->prepare("
     INSERT INTO Pics (Ten_File_Anh, Duoi_File_Anh, Kich_Co_Anh, Du_Lieu_Anh, ID_BaiViet, IsThumb)
     VALUES (?, ?, ?, ?, ?, ?)
 ");
-
-foreach ($validFiles as $i => $img) {
-    $isThumb = ($i === 0) ? 1 : 0;
-    $stmtPic->bind_param("ssissi", $img['name'], $img['ext'], $img['size'], $img['data'], $post_id, $isThumb);
-    if (!$stmtPic->execute()) {
-        echo json_encode(['success' => false, 'message' => 'Lỗi insert ảnh: ' . $stmtPic->error]);
-        exit;
-    }
+$isThumb = 1;
+$stmtPic->bind_param("ssissi", $validFile['name'], $validFile['ext'], $validFile['size'], $validFile['data'], $post_id, $isThumb);
+if (!$stmtPic->execute()) {
+    echo json_encode(['success' => false, 'message' => 'Lỗi insert ảnh: ' . $stmtPic->error]);
+    exit;
 }
 $stmtPic->close();
 $connect->close();

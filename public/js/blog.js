@@ -184,10 +184,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         .then(r => r.json())
                         .then(data => {
                             if (data.success) {
-                                // Remove card từ DOM nếu có
                                 const card = btn.closest('.post-card');
                                 if (card) {
-                                    card.remove();
+                                    card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                                    card.style.opacity = '0';
+                                    card.style.transform = 'scale(0.95)';
+                                    setTimeout(() => {
+                                        const type = card.closest('#my-posts-container') ? 'my' : 'other';
+                                        loadPosts(type);
+                                    }, 300);
                                 } else {
                                     // Nếu đang ở trang đọc bài viết, chuyển hướng về trang blog/profile sau khi xoá
                                     if (document.querySelector('.read-blog-container')) {
@@ -333,14 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
             let autoTimer = null;
             let transitioning = false;
 
-            function updateHeight() {
-                const h = imgs[current].naturalHeight || imgs[current].offsetHeight;
-                if (h > 0) link.style.height = h + 'px';
-            }
-
-            imgs[0].addEventListener('load', updateHeight);
-            updateHeight();
-
             function goTo(idx) {
                 if (transitioning) return;
                 if (idx < 0) idx = total - 1;
@@ -353,10 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 function doFade() {
                     nextImg.style.opacity = '0';
                     nextImg.classList.add('active');
-
-                    var h = nextImg.naturalHeight || nextImg.offsetHeight;
-                    if (h > 0) link.style.height = h + 'px';
-
                     nextImg.offsetHeight;
                     nextImg.style.opacity = '1';
 

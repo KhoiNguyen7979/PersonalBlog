@@ -9,6 +9,7 @@ if (!isset($_SESSION['email'])) {
 }
 ?>
 <link rel="stylesheet" href="public/css/create_blog.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
 
 <div class="create-blog-page">
     <div class="create-blog-header">
@@ -18,30 +19,17 @@ if (!isset($_SESSION['email'])) {
 
     <form id="create-blog-form" class="create-blog-form">
         
-        <!-- Ảnh bìa -->
+        <!-- Ảnh bài viết -->
         <div class="form-group">
-            <label>Thumbnail*</label>
+            <label>Ảnh bài viết*</label>
             <div class="thumbnail-upload" id="thumbnail-upload-box">
-                <input type="file" id="thumbnail" name="thumbnail" accept="image/*" required>
+                <input type="file" id="images-input" name="images[]" accept="image/*" required>
                 <div class="upload-placeholder" id="upload-placeholder">
                     <span class="icon">📷</span>
-                    <span class="text">Click để tải ảnh lên*</span>
+                    <span class="text">Click để chọn ảnh</span>
                 </div>
                 <img id="thumbnail-preview" src="" alt="Preview">
             </div>
-        </div>
-
-        <!-- Ảnh bổ sung -->
-        <div class="form-group">
-            <label>Ảnh bổ sung (tùy chọn)</label>
-            <div class="extra-images-upload" id="extra-images-upload">
-                <input type="file" id="extra-images" name="extra_images[]" accept="image/*" multiple>
-                <div class="upload-placeholder" id="extra-placeholder">
-                    <span class="icon">🖼️</span>
-                    <span class="text">Chọn thêm ảnh (giữ Ctrl để chọn nhiều)</span>
-                </div>
-            </div>
-            <div id="extra-preview-list" class="extra-preview-list"></div>
         </div>
 
         <!-- Tiêu đề -->
@@ -87,4 +75,27 @@ if (!isset($_SESSION['email'])) {
 <!-- Toast notification -->
 <div id="create-toast" class="create-toast"></div>
 
+<!-- Crop Modal -->
+<div class="crop-modal-overlay" id="crop-modal">
+    <div class="crop-modal-box">
+        <div class="crop-modal-header">
+            <h3>Xén ảnh</h3>
+            <button type="button" class="crop-modal-close" id="crop-close">&times;</button>
+        </div>
+        <div class="crop-modal-body">
+            <div class="crop-canvas-wrapper" id="crop-canvas-wrapper">
+                <img id="crop-image" src="">
+            </div>
+        </div>
+        <div class="crop-modal-footer">
+            <span class="crop-hint">Kéo thả để chọn vùng ảnh</span>
+            <div class="crop-modal-actions">
+                <button type="button" class="btn-crop-cancel" id="crop-cancel">Bỏ qua</button>
+                <button type="button" class="btn-crop-confirm" id="crop-confirm">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 <script src="public/js/create_blog.js"></script>

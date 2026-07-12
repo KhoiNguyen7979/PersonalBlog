@@ -27,6 +27,7 @@ $imgStmt->close();
 $connect->close();
 ?>
 <link rel="stylesheet" href="public/css/create_blog.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
 
 <div class="create-blog-page">
     <div class="create-blog-header">
@@ -42,25 +43,24 @@ $connect->close();
             <div class="edit-images-grid" id="edit-images-grid">
                 <?php foreach ($images as $img): ?>
                     <div class="edit-img-item" data-id="<?= $img['ID_Anh'] ?>">
-                        <img src="get_image.php?id=<?= $id ?>&idx=<?= array_search($img, $images) ?>" alt="<?= htmlspecialchars($img['Ten_File_Anh']) ?>">
-                        <button type="button" class="edit-img-delete" title="Xoá ảnh này">&times;</button>
+                        <img src="get_image.php?id=<?= $id ?>&idx=<?= array_search($img, $images) ?>&v=<?= time() ?>" alt="<?= htmlspecialchars($img['Ten_File_Anh']) ?>">
                     </div>
                 <?php endforeach; ?>
             </div>
             <div id="deleted-ids-container"></div>
         </div>
 
-        <!-- Thêm ảnh mới -->
+        <!-- Đổi ảnh mới -->
         <div class="form-group">
-            <label>Ảnh bổ sung</label>
-            <div class="extra-images-upload" id="extra-images-upload">
-                <input type="file" id="new-images" name="new_images[]" accept="image/*" multiple>
-                <div class="upload-placeholder" id="extra-placeholder">
-                    <span class="icon">🖼️</span>
-                    <span class="text">Chọn thêm ảnh (giữ Ctrl để chọn nhiều)</span>
+            <label>Đổi ảnh</label>
+            <div class="thumbnail-upload" id="edit-thumbnail-upload">
+                <input type="file" id="edit-new-image" name="new_image" accept="image/*">
+                <div class="upload-placeholder" id="edit-upload-placeholder">
+                    <span class="icon">📷</span>
+                    <span class="text">Click để chọn ảnh mới</span>
                 </div>
+                <img id="edit-new-preview" src="" alt="">
             </div>
-            <div id="extra-preview-list" class="extra-preview-list"></div>
         </div>
 
         <div class="form-group">
@@ -97,59 +97,101 @@ $connect->close();
 
 <div id="create-toast" class="create-toast"></div>
 
+<!-- Crop Modal -->
+<div class="crop-modal-overlay" id="crop-modal">
+    <div class="crop-modal-box">
+        <div class="crop-modal-header">
+            <h3>Xén ảnh</h3>
+            <button type="button" class="crop-modal-close" id="crop-close">&times;</button>
+        </div>
+        <div class="crop-modal-body">
+            <div class="crop-canvas-wrapper" id="crop-canvas-wrapper">
+                <img id="crop-image" src="">
+            </div>
+        </div>
+        <div class="crop-modal-footer">
+            <span class="crop-hint">Kéo thả để chọn vùng ảnh</span>
+            <div class="crop-modal-actions">
+                <button type="button" class="btn-crop-cancel" id="crop-cancel">Bỏ qua</button>
+                <button type="button" class="btn-crop-confirm" id="crop-confirm">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const grid = document.getElementById('edit-images-grid');
-    const container = document.getElementById('deleted-ids-container');
-    const newImagesInput = document.getElementById('new-images');
-    const extraPreview = document.getElementById('extra-preview-list');
+    const newImageInput = document.getElementById('edit-new-image');
+    const newPreview = document.getElementById('edit-new-preview');
+    const uploadPlaceholder = document.getElementById('edit-upload-placeholder');
 
-    // Xoá ảnh hiện tại
-    grid.addEventListener('click', function(e) {
-        const btn = e.target.closest('.edit-img-delete');
-        if (!btn) return;
-        const item = btn.closest('.edit-img-item');
-        const id = item.dataset.id;
-        const inp = document.createElement('input');
-        inp.type = 'hidden';
-        inp.name = 'delete_ids[]';
-        inp.value = id;
-        container.appendChild(inp);
-        item.remove();
+    let cropper = null;
+    let croppedFile = null;
+
+    const cropModal = document.getElementById('crop-modal');
+    const cropImage = document.getElementById('crop-image');
+    const cropClose = document.getElementById('crop-close');
+    const cropCancel = document.getElementById('crop-cancel');
+    const cropConfirm = document.getElementById('crop-confirm');
+
+    function openCrop(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            cropImage.src = e.target.result;
+            cropImage.onload = function() {
+                cropModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                if (cropper) cropper.destroy();
+                var maxDim = Math.max(cropImage.naturalWidth, cropImage.naturalHeight);
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: NaN,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    responsive: true,
+                    minCanvasWidth: maxDim,
+                    minCanvasHeight: maxDim,
+                });
+            };
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function closeCrop() {
+        cropModal.classList.remove('active');
+        document.body.style.overflow = '';
+        if (cropper) { cropper.destroy(); cropper = null; }
+    }
+
+    cropClose.addEventListener('click', closeCrop);
+    cropCancel.addEventListener('click', closeCrop);
+    cropModal.addEventListener('click', function(e) {
+        if (e.target === cropModal) closeCrop();
     });
 
-    // Preview ảnh mới (cộng dồn khi chọn nhiều lần)
-    var accumulatedFiles = [];
-    if (newImagesInput) {
-        newImagesInput.addEventListener('change', function() {
-            Array.from(this.files).forEach(function(f) { accumulatedFiles.push(f); });
-            renderPreviews();
-            // Reset input để có thể chọn lại cùng file
-            this.value = '';
-        });
+    cropConfirm.addEventListener('click', function() {
+        if (!cropper) return;
+        var canvas = cropper.getCroppedCanvas();
+        if (!canvas) return;
 
-        function renderPreviews() {
-            extraPreview.innerHTML = '';
-            accumulatedFiles.forEach(function(file, i) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var div = document.createElement('div');
-                    div.className = 'extra-preview-item';
-                    div.innerHTML = '<img src="' + e.target.result + '" alt="Ảnh ' + (i+1) + '"><button type="button" class="extra-remove-btn" data-idx="' + i + '">&times;</button>';
-                    extraPreview.appendChild(div);
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        extraPreview.addEventListener('click', function(e) {
-            if (e.target.classList.contains('extra-remove-btn')) {
-                var idx = parseInt(e.target.dataset.idx);
-                accumulatedFiles.splice(idx, 1);
-                renderPreviews();
-            }
+        canvas.toBlob(function(blob) {
+            croppedFile = new File([blob], newImageInput.files[0].name, { type: newImageInput.files[0].type });
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                newPreview.src = e.target.result;
+                newPreview.style.display = 'block';
+                uploadPlaceholder.style.display = 'none';
+            };
+            reader.readAsDataURL(blob);
+            closeCrop();
         });
-    }
+    });
+
+    // Chọn ảnh mới với crop
+    newImageInput.addEventListener('change', function() {
+        var file = this.files[0];
+        if (file) openCrop(file);
+    });
 
     // Submit form
     document.getElementById('edit-blog-form').addEventListener('submit', function(e) {
@@ -159,10 +201,9 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.innerText = 'Đang cập nhật...';
         btn.disabled = true;
 
-        // Thêm ảnh mới vào FormData (cộng dồn)
-        accumulatedFiles.forEach(function(f) {
-            formData.append('new_images[]', f);
-        });
+        if (croppedFile) {
+            formData.append('new_image', croppedFile);
+        }
 
         fetch('api/update_post.php', { method: 'POST', body: formData })
         .then(function(r) { return r.json(); })
@@ -172,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (window.showToast) {
                     showToast('Cập nhật thành công!');
                     if (overlay) overlay.classList.add('active');
-                    setTimeout(function() { window.location.href = '?page=blog'; }, 2000);
+                    setTimeout(function() { window.location.href = '?page=blog'; }, 800);
                 } else {
                     if (overlay) overlay.classList.add('active');
                     window.location.href = '?page=blog&toast=' + encodeURIComponent('Cập nhật thành công!');

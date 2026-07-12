@@ -37,7 +37,7 @@ $imgStmt->close();
 
 $images = [];
 foreach ($imgRows as $i => $row) {
-    $images[] = "get_image.php?id=$id&idx=$i";
+    $images[] = "get_image.php?id=$id&idx=$i&v=" . time();
 }
 $imgCount = count($images);
 $hasMultiple = $imgCount > 1;
@@ -83,8 +83,8 @@ $connect->close();
             <div class="post-menu">
                 <button class="post-menu-btn" title="Tuỳ chọn">⋮</button>
                 <div class="post-menu-dropdown">
-                    <a href="?page=edit_post&id=<?= $id ?>">✏️ Chỉnh sửa</a>
-                    <a href="#" class="delete-post-btn" data-id="<?= $id ?>">🗑️ Xoá</a>
+                    <a href="?page=edit_post&id=<?= $id ?>">Chỉnh sửa</a>
+                    <a href="#" class="delete-post-btn" data-id="<?= $id ?>">Xoá</a>
                 </div>
             </div>
         <?php endif; ?>
@@ -286,10 +286,10 @@ document.getElementById('like-btn').addEventListener('click', function() {
 
 .read-thumbnail-wrap {
     width: 100%;
-    max-height: 450px;
-    overflow: hidden;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #f0f0f0;
+    overflow: hidden;
 }
 
 .read-thumbnail-area .post-menu {
@@ -306,8 +306,7 @@ document.getElementById('like-btn').addEventListener('click', function() {
 
 .read-thumbnail {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     display: block;
 }
 
@@ -335,7 +334,6 @@ document.getElementById('like-btn').addEventListener('click', function() {
 .carousel-track {
     position: relative;
     width: 100%;
-    height: 450px;
     overflow: hidden;
     border-radius: 8px;
 }
@@ -357,8 +355,7 @@ document.getElementById('like-btn').addEventListener('click', function() {
 
 .carousel-track .carousel-slide img {
     width: 100%;
-    height: 450px;
-    object-fit: cover;
+    height: auto;
     display: block;
 }
 

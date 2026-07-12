@@ -72,7 +72,7 @@ if ($stmt) {
                         <p class="review-content">"<?= $content ?>"</p>
                         <div class="review-meta">
                             <a href="?page=public_profile&email=<?= $email ?>" class="review-avatar">
-                                <?= mb_strtoupper(mb_substr($name, 0, 1)) ?>
+                                <img src="get_image.php?email=<?= $email ?>&v=<?= time() ?>" alt="<?= $name ?>">
                             </a>
                             <div class="review-author">
                                 <h4><a href="?page=public_profile&email=<?= $email ?>"><?= $name ?></a></h4>

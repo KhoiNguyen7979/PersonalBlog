@@ -93,7 +93,7 @@
 .thumbnail-upload {
     position: relative;
     width: 100%;
-    aspect-ratio: 2 / 1;
+    min-height: 360px;
     border: 2px dashed #ccc;
     border-radius: 8px;
     background: #fafafa;
@@ -239,45 +239,28 @@
     }
 }
 
-/* ── Nút đổi ảnh bìa ─────────────────────────────────────────────────────── */
-.change-thumb-btn {
-    position: absolute;
-    bottom: 12px;
-    right: 12px;
-    z-index: 20;
-    background: rgba(0,0,0,0.55);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-size: 13px;
-    font-family: inherit;
-    cursor: pointer;
-    transition: background 0.2s;
-    backdrop-filter: blur(4px);
-}
-.change-thumb-btn:hover {
-    background: rgba(0,0,0,0.8);
-}
-
-/* ── Crop Modal Overlay ──────────────────────────────────────────────────── */
+/* ── Crop Modal ────────────────────────────────────────────────────────────── */
 .crop-modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.7);
     z-index: 10000;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+    padding: 32px;
+}
+
+.crop-modal-overlay.active {
+    display: flex;
 }
 
 .crop-modal-box {
     background: #fff;
     border-radius: 12px;
     width: 100%;
-    max-width: 700px;
-    max-height: 90vh;
+    max-width: 900px;
+    max-height: 92vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -303,7 +286,7 @@
 .crop-modal-close {
     background: none;
     border: none;
-    font-size: 18px;
+    font-size: 22px;
     cursor: pointer;
     color: #888;
     line-height: 1;
@@ -311,6 +294,7 @@
     border-radius: 4px;
     transition: background 0.15s, color 0.15s;
 }
+
 .crop-modal-close:hover {
     background: #f0f0f0;
     color: #111;
@@ -325,7 +309,7 @@
 
 .crop-canvas-wrapper {
     width: 100%;
-    height: 400px;
+    height: 600px;
 }
 
 .crop-canvas-wrapper img {
@@ -365,6 +349,7 @@
     color: #555;
     transition: background 0.15s;
 }
+
 .btn-crop-cancel:hover { background: #f5f5f5; }
 
 .btn-crop-confirm {
@@ -379,85 +364,11 @@
     cursor: pointer;
     transition: background 0.15s;
 }
-.btn-crop-confirm:hover { background: #000; }
-.btn-crop-confirm:disabled { opacity: 0.6; cursor: wait; }
 
-@media screen and (max-width: 600px) {
-    .crop-canvas-wrapper { height: 260px; }
+.btn-crop-confirm:hover { background: #000; }
+
+@media screen and (max-width: 768px) {
+    .crop-canvas-wrapper { height: 300px; }
     .crop-modal-footer { flex-direction: column; align-items: flex-end; }
 }
 
-/* ── Extra images upload ───────────────────────────────────────────────────── */
-.extra-images-upload {
-    position: relative;
-    width: 100%;
-    min-height: 80px;
-    border: 2px dashed #ccc;
-    border-radius: 8px;
-    background: #fafafa;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.2s, background 0.2s;
-}
-
-.extra-images-upload:hover {
-    border-color: #222;
-    background: #f0f0f0;
-}
-
-.extra-images-upload input[type="file"] {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 10;
-}
-
-.extra-preview-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 12px;
-}
-
-.extra-preview-item {
-    position: relative;
-    width: 100px;
-    height: 80px;
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid #ddd;
-}
-
-.extra-preview-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.extra-remove-btn {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-    border: none;
-    font-size: 14px;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s;
-}
-
-.extra-remove-btn:hover {
-    background: rgba(220,0,0,0.8);
-}

@@ -174,7 +174,7 @@ function renderPostCard($post, $canEdit, $images = []) {
             <a href="?page=read_blog&id=<?= $id ?>" class="post-carousel-link" style="text-decoration: none; color: inherit;">
                 <?php if ($hasImages): ?>
                     <?php foreach ($images as $idx => $imgId): ?>
-                        <img src="get_image.php?id=<?= $id ?>&idx=<?= $idx ?>"
+                        <img src="get_image.php?id=<?= $id ?>&idx=<?= $idx ?>&v=<?= time() ?>"
                              alt="<?= $title ?>"
                              class="post-carousel-img <?= $idx === 0 ? 'active' : '' ?>"
                              loading="lazy">
@@ -196,8 +196,8 @@ function renderPostCard($post, $canEdit, $images = []) {
                 <div class="post-menu">
                     <button class="post-menu-btn" title="Tuỳ chọn">⋮</button>
                     <div class="post-menu-dropdown">
-                        <a href="?page=edit_post&id=<?= $id ?>">✏️ Chỉnh sửa</a>
-                        <a href="#" class="delete-post-btn" data-id="<?= $id ?>">🗑️ Xoá</a>
+                        <a href="?page=edit_post&id=<?= $id ?>">Chỉnh sửa</a>
+                        <a href="#" class="delete-post-btn" data-id="<?= $id ?>">Xoá</a>
                     </div>
                 </div>
             <?php endif; ?>

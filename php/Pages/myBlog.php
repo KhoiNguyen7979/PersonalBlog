@@ -14,7 +14,7 @@
         <div class="blog-section-header">
             <h2 class="section-title">My Posts</h2>
             <hr class="section-title-line">
-            <a href="?page=create_blog" class="create-blog-btn">✏️ New Blog </a>
+            <a href="?page=create_blog" class="create-blog-btn">New Blog</a>
         </div>
 
         <div class="blog-controls">
