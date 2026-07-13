@@ -19,7 +19,9 @@
                 <li><a href="index.php">Home</a></li>
                 <li><a href="?page=blog">My Blog</a></li>
                 <li><a href="?page=about">About</a></li>
+                <?php if (!isset($_SESSION['vaitro']) || $_SESSION['vaitro'] !== 'admin'): ?>
                 <li><a href="#" id="contact-footer-btn">Review</a></li>
+                <?php endif;?>
             </ul>
         </div>
 

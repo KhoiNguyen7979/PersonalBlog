@@ -65,21 +65,6 @@ CREATE TABLE `Pics` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
--- Bảng Videos
--- =====================================================
-CREATE TABLE `Videos` (
-  `ID_Video` int(11) NOT NULL AUTO_INCREMENT,
-  `Ten_File_Video` varchar(200) NOT NULL,
-  `Duoi_file` varchar(10) NOT NULL,
-  `Kich_Co_Video` int(11) NOT NULL,
-  `Du_Lieu_Video` mediumblob NOT NULL,
-  `ID_BaiViet` int(11) NOT NULL,
-  PRIMARY KEY (`ID_Video`),
-  KEY `ID_BaiViet` (`ID_BaiViet`),
-  CONSTRAINT `Videos_ibfk_1` FOREIGN KEY (`ID_BaiViet`) REFERENCES `BaiViet` (`ID_BaiViet`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- =====================================================
 -- Bảng ThichBaiViet
 -- =====================================================
 CREATE TABLE `ThichBaiViet` (

@@ -53,19 +53,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === cropModal) closeCrop();
     });
 
-    cropConfirm.addEventListener('click', () => {
-        if (!cropper || !currentFile) return;
-        const canvas = cropper.getCroppedCanvas();
-        if (!canvas) return;
+   cropConfirm.addEventListener('click', () => {
+        if (!cropper || !currentFile) return; //
+        const canvas = cropper.getCroppedCanvas(); //[cite: 3]
+        if (!canvas) return; //[cite: 3]
 
+        // Ép định dạng sang WebP và nén với chất lượng 70% (0.7)
         canvas.toBlob((blob) => {
-            const newFile = new File([blob], currentFile.name, { type: currentFile.type });
-            const dt = new DataTransfer();
-            dt.items.add(newFile);
-            fileInput.files = dt.files;
-            showPreview(newFile);
-            closeCrop();
-        });
+            // Cắt đuôi file cũ và đổi thành .webp
+            const originalName = currentFile.name;
+            const newFileName = originalName.substring(0, originalName.lastIndexOf('.')) + '.webp';
+            
+            // Tạo file mới với chuẩn định dạng WebP
+            const newFile = new File([blob], newFileName, { type: 'image/webp' });
+            
+            const dt = new DataTransfer(); //[cite: 3]
+            dt.items.add(newFile); //[cite: 3]
+            fileInput.files = dt.files; //[cite: 3]
+            
+            showPreview(newFile); //[cite: 3]
+            closeCrop(); //[cite: 3]
+        }, 'image/webp', 0.7); // <-- Chỉ định rõ định dạng và chất lượng nén
     });
 
     fileInput.addEventListener('change', () => {

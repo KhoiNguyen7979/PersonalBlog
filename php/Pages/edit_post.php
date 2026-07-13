@@ -184,16 +184,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!canvas) return;
 
         canvas.toBlob(function(blob) {
-            croppedFile = new File([blob], newImageInput.files[0].name, { type: newImageInput.files[0].type });
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                newPreview.src = e.target.result;
-                newPreview.style.display = 'block';
-                uploadPlaceholder.style.display = 'none';
-            };
-            reader.readAsDataURL(blob);
-            closeCrop();
-        });
+    // Đổi tên đuôi file thành .webp cho khớp định dạng mới
+    var originalName = newImageInput.files[0].name;
+    var newFileName = originalName.substring(0, originalName.lastIndexOf('.')) + '.webp';
+    
+    // Ghi đè file với Blob đã nén
+    croppedFile = new File([blob], newFileName, { type: 'image/webp' });
+    
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        newPreview.src = e.target.result;
+        newPreview.style.display = 'block';
+        uploadPlaceholder.style.display = 'none';
+    };
+    reader.readAsDataURL(blob);
+    closeCrop();
+}, 'image/webp', 0.7);
     });
 
     // Chọn ảnh mới với crop
