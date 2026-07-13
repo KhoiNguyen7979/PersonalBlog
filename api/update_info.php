@@ -33,7 +33,7 @@ if (empty($username) || empty($fullname)) {
 try {
     if (!empty($password)) {
         // Cập nhật cả thông tin và mật khẩu
-        // Lưu ý: Tùy vào hệ thống của bạn, có thể cần đổi md5() thành password_hash() nếu bạn dùng chuẩn mã hóa mới
+        // password_hash() tự động tạo salt và mã hóa bằng bcrypt (PASSWORD_DEFAULT)
         $hashed_password = password_hash($password, PASSWORD_DEFAULT); 
         
         $stmt = $connect->prepare("UPDATE NguoiDung SET HoTenNguoiDung = ?, TenDangNhap = ?, MatKhau = ? WHERE Email = ?");

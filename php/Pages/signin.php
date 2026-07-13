@@ -16,13 +16,13 @@ require_once(__DIR__ . '/../mySQLconnect.php');
 // Xử lý khi người dùng gửi thông tin đăng nhập
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
     $email = $_POST['email'];
-    $matkhau_dabam = sha1($_POST['password']); 
+    $matkhau = $_POST['password'];
 
-    $sql = "SELECT Email, TenDangNhap, VaiTro FROM nguoidung WHERE Email = ? AND MatKhau = ?";
+    $sql = "SELECT Email, TenDangNhap, VaiTro, MatKhau FROM nguoidung WHERE Email = ?";
     $stmt = $connect->prepare($sql);
     
     if ($stmt) {
-        $stmt->bind_param("ss", $email, $matkhau_dabam);
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         
         $result = $stmt->get_result();
@@ -30,13 +30,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
             
-            // Lưu trạng thái vào biến session
-            $_SESSION['email'] = $user['Email'];
-            $_SESSION['hoten'] = $user['TenDangNhap'];
-            $_SESSION['vaitro'] = $user['VaiTro'];
-            
-            header("Location: index.php?toast=" . urlencode("Login successful!"));
-            exit();
+            if (password_verify($matkhau, $user['MatKhau'])) {
+                $_SESSION['email'] = $user['Email'];
+                $_SESSION['hoten'] = $user['TenDangNhap'];
+                $_SESSION['vaitro'] = $user['VaiTro'];
+                
+                header("Location: index.php?toast=" . urlencode("Login successful!"));
+                exit();
+            } else {
+                $show_modal = true;
+                $modal_title = "Oops! Login Error";
+                $modal_message = "Incorrect email or password. Please try again.";
+            }
         } else {
             $show_modal = true;
             $modal_title = "Oops! Login Error";

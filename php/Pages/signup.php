@@ -13,7 +13,7 @@
         $xac_nhan_mat_khau = $_POST['confirm_password'];
         
 
-        $matkhau_dabam = sha1($xac_nhan_mat_khau);
+        $matkhau_dabam = password_hash($xac_nhan_mat_khau, PASSWORD_DEFAULT);
         $sql_command = "INSERT INTO nguoidung (Email, HoTenNguoiDung, TenDangNhap, MatKhau) VALUES (?, ?, ?, ?)";
         $stmt = $connect->prepare($sql_command);
         
