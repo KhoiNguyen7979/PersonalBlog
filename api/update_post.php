@@ -62,14 +62,14 @@ if ($isAdmin) {
         SET TieuDe=?, NoiDung=?, TomTat=?, ThoiGianDoc=?, ID_The_Loai=? 
         WHERE ID_BaiViet=?
     ");
-    $stmt->bind_param("sssssi", $title, $content, $summary, $readTime, $category, $id);
+    $stmt->bind_param("sssisi", $title, $content, $summary, $readTime, $category, $id);
 } else {
     $stmt = $connect->prepare("
         UPDATE BaiViet 
         SET TieuDe=?, NoiDung=?, TomTat=?, ThoiGianDoc=?, ID_The_Loai=? 
         WHERE ID_BaiViet=? AND ID_NguoiDung=?
     ");
-    $stmt->bind_param("sssssis", $title, $content, $summary, $readTime, $category, $id, $email);
+    $stmt->bind_param("sssisis", $title, $content, $summary, $readTime, $category, $id, $email);
 }
 
 if ($stmt->execute()) {

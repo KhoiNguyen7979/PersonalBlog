@@ -1,3 +1,4 @@
+<?php
 // === TRANG CHỈNH SỬA BÀI VIẾT ===
 // Các block: Form sửa bài (ảnh hiện tại + ảnh thay thế + tiêu đề + tóm tắt + thể loại + nội dung) | Crop Modal
 // Script inline: CropperJS, submit form qua fetch API
@@ -210,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.disabled = true;
 
         if (croppedFile) {
-            formData.append('new_image', croppedFile);
+            formData.set('new_image', croppedFile);
         }
 
         fetch('api/update_post.php', { method: 'POST', body: formData })

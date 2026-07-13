@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsDataURL(file);
     }
 
+    const form = document.getElementById('create-blog-form');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -117,11 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             if (data.success) {
                 showToast('Published successfully! Redirecting...');
-                var overlay = document.getElementById('page-transition');
-                if (overlay) overlay.classList.add('active');
                 setTimeout(() => {
-                    window.location.href = 'index.php?page=blog';
-                }, 800);
+                    var overlay = document.getElementById('page-transition');
+                    if (overlay) overlay.classList.add('active');
+                    setTimeout(() => {
+                        window.location.href = 'index.php?page=blog';
+                    }, 400);
+                }, 1000);
             } else {
                 showToast('Lỗi: ' + data.message);
                 resetButton();
@@ -143,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showToast(message) {
         toast.textContent = message;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
+        setTimeout(() => toast.classList.remove('show'), 5000);
     }
 
 });
