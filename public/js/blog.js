@@ -1,6 +1,12 @@
 /**
- * public/js/blog.js
- * Xử lý AJAX load bài viết, lọc thể loại, phân trang, smooth scroll.
+ * blog.js - Trang Blog (My Posts + Posts from the other)
+ * 1. AJAX load bài viết theo thể loại/sắp xếp/trang
+ * 2. Phân trang cho "Posts from the other"
+ * 3. "Read more" nạp thêm bài cho "My Posts"
+ * 4. Lọc theo thể loại (tabs) và sắp xếp (dropdown)
+ * 5. Menu 3 chấm: Edit/Delete bài viết
+ * 6. Carousel ảnh trên card bài viết
+ * 7. Smooth scroll "Read the Blog" + nút Subscribe
  */
 document.addEventListener('DOMContentLoaded', () => {
 

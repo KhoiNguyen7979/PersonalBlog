@@ -3,11 +3,14 @@
  * api/create_post.php
  * API xử lý lưu bài viết mới và nhiều ảnh vào Database
  */
+// === API: Tạo bài viết mới (bài viết + 1 ảnh) ===
+// Nhận POST từ form tạo blog, lưu vào bảng BaiViet + Pics
 session_start();
 require_once __DIR__ . '/../php/mySQLconnect.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
+// Kiểm tra đăng nhập
 if (!isset($_SESSION['email'])) {
     echo json_encode(['success' => false, 'message' => 'You must be logged in to create a post.']);
     exit;

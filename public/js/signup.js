@@ -1,3 +1,5 @@
+// === signup.js - Trang đăng ký ===
+// Kiểm tra mật khẩu xác nhận có trùng khớp không trước khi submit form
 document.querySelector("form").addEventListener("submit", function(event) {
     var password = document.querySelector('input[name="password"]').value;
     var confirmPassword = document.querySelector('input[name="confirm_password"]').value;

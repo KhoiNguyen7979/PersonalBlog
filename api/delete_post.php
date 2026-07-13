@@ -1,4 +1,6 @@
 <?php
+// === API: Xóa bài viết ===
+// Xóa bài viết kèm ảnh và lượt thích liên quan. Chỉ chủ bài viết hoặc admin mới được xóa.
 session_start();
 require_once __DIR__ . '/../php/mySQLconnect.php';
 header('Content-Type: application/json; charset=utf-8');

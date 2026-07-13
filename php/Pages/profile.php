@@ -1,8 +1,6 @@
 <?php
-/**
- * php/Pages/profile.php
- * Trang hồ sơ cá nhân
- */
+// === TRANG HỒ SƠ CÁ NHÂN ===
+// Các block: Profile Header Card (avatar + tên + stats) | Bio Section (xem/sửa) | Personal Info Section (xem/sửa) | Avatar Crop Modal
 if (!isset($_SESSION['email'])) {
     header("Location: index.php?page=signin");
     exit;
@@ -163,11 +161,23 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
                     <h4>Change Password <span style="color:#999; font-weight:400">(Leave empty to keep current)</span></h4>
                     <div class="form-field">
                         <label>New Password</label>
-                        <input type="password" id="edit-new-password" placeholder="Enter new password">
+                        <div class="password-wrap">
+                            <input type="password" id="edit-new-password" placeholder="Enter new password">
+                            <button type="button" class="toggle-pw" aria-label="Show password">
+                                <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                            </button>
+                        </div>
                     </div>
                     <div class="form-field">
                         <label>Confirm Password</label>
-                        <input type="password" id="edit-confirm-password" placeholder="Re-enter new password">
+                        <div class="password-wrap">
+                            <input type="password" id="edit-confirm-password" placeholder="Re-enter new password">
+                            <button type="button" class="toggle-pw" aria-label="Show password">
+                                <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 

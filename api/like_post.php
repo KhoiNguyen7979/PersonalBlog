@@ -1,9 +1,12 @@
 <?php
+// === API: Bật/tắt like bài viết ===
+// Nếu đã like thì unlike, nếu chưa thì like. Trả về số like mới nhất.
 session_start();
 require_once __DIR__ . '/../php/mySQLconnect.php';
 
 header('Content-Type: application/json');
 
+// Kiểm tra đăng nhập
 if (!isset($_SESSION['email'])) {
     echo json_encode(['success' => false, 'message' => 'You must be logged in to like a post.']);
     exit;

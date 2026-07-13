@@ -1,8 +1,6 @@
 <?php
-/**
- * php/Pages/public_profile.php
- * Trang hồ sơ công khai của người dùng khác
- */
+// === TRANG HỒ SƠ CÔNG KHAI ===
+// Các block: Profile Header (avatar + tên + stats) | Bio | Danh sách bài viết của user đó
 require_once __DIR__ . '/../mySQLconnect.php';
 
 $email = isset($_GET['email']) ? trim($_GET['email']) : '';

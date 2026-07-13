@@ -1,8 +1,6 @@
 <?php
-/**
- * php/Pages/myBlog.php
- * Giao diện trang blog - hiển thị My Posts và Posts from the other
- */
+// === TRANG BLOG ===
+// Các block: My Posts (có khi đăng nhập) | Sign-in CTA (khi chưa đăng nhập) | Posts from the other (chỉ ở trang Home)
 ?>
 <link rel="stylesheet" href="public/css/blog.css">
 

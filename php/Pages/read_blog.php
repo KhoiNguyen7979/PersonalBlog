@@ -1,8 +1,7 @@
 <?php
-/**
- * php/Pages/read_blog.php
- * Giao diện đọc chi tiết bài viết - hiển thị nội dung, ảnh bìa và chức năng LIKE
- */
+// === TRANG ĐỌC BÀI VIẾT ===
+// Các block: Tiêu đề + Tác giả | Ảnh bìa (carousel nếu nhiều ảnh) | Tóm tắt | Nội dung | Nút Like | Menu Edit/Delete
+// Script inline: Carousel, Menu toggle, Delete, Like
 require_once __DIR__ . '/../mySQLconnect.php';
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -106,7 +105,9 @@ $connect->close();
 </div>
 
 <script>
-// ── Carousel ────────────────────────────────────────────────────────────────
+// === Inline JS của trang đọc bài viết ===
+
+// --- Carousel ảnh bìa: prev/next/dots/keyboard arrows ---
 (function() {
     const track = document.getElementById('carousel-track');
     if (!track) return;
@@ -152,7 +153,7 @@ $connect->close();
     });
 })();
 
-// ── Menu toggle ─────────────────────────────────────────────────────────────
+// --- Menu 3 chấm: mở/đóng dropdown edit/delete ---
 document.querySelectorAll('.read-blog-container .post-menu-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -194,7 +195,7 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// ── Delete ──────────────────────────────────────────────────────────────────
+// --- Xóa bài viết: gọi API xóa, chuyển về trang blog ---
 document.querySelectorAll('.delete-post-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -219,7 +220,7 @@ document.querySelectorAll('.delete-post-btn').forEach(btn => {
     });
 });
 
-// ── Like ────────────────────────────────────────────────────────────────────
+// --- Nút Like: gọi API like/unlike, cập nhật số like và giao diện ---
 document.getElementById('like-btn').addEventListener('click', function() {
     const btn = this;
     const postId = btn.dataset.id;
@@ -277,6 +278,8 @@ document.getElementById('like-btn').addEventListener('click', function() {
     color: #388E3C;
     text-decoration: underline;
 }
+
+/* === CSS của trang đọc bài viết ===
 
 /* Khung bọc ảnh bìa */
 .read-thumbnail-area {

@@ -1,4 +1,6 @@
-// Toast notification
+// === index.js - JS toàn cục (chạy trên mọi trang) ===
+
+// --- Toast notification: đọc ?toast= từ URL và hiển thị thông báo ---
 (function() {
     var toast = document.getElementById('global-toast');
     if (!toast) return;
@@ -23,7 +25,7 @@
     };
 })();
 
-// Page transition
+// --- Page transition: chặn click link nội bộ, hiển thị overlay fade rồi chuyển trang ---
 (function() {
     var overlay = document.getElementById('page-transition');
     if (!overlay) return;
@@ -48,3 +50,23 @@
 
     document.body.classList.remove('loading');
 })();
+
+// --- Password toggle: hiển thị/ẩn mật khẩu khi bấm nút con mắt ---
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.toggle-pw');
+    if (!btn) return;
+    var wrap = btn.closest('.password-wrap');
+    if (!wrap) return;
+    var input = wrap.querySelector('input');
+    if (!input) return;
+
+    var isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+
+    var eyeOpen = btn.querySelector('.eye-open');
+    var eyeClosed = btn.querySelector('.eye-closed');
+    if (eyeOpen && eyeClosed) {
+        eyeOpen.style.display = isPassword ? 'none' : '';
+        eyeClosed.style.display = isPassword ? '' : 'none';
+    }
+});

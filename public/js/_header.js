@@ -1,4 +1,5 @@
-//Cài đặt cho sign-up, sign-in xuất hiện khi hover qua logo tài khoản
+// === _header.js - Dropdown menu tài khoản (hover hiện/ẩn) ===
+// Hiển thị dropdown khi hover vào avatar, ẩn sau 200ms khi rời chuột
 const accountContainer = document.getElementById('account_container_2');
 const dropbox_log = document.getElementById('logoption');
 let closeTimer_too;

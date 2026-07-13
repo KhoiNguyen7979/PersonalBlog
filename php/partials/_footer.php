@@ -1,3 +1,4 @@
+<!-- === FOOTER: Brand | Quick Links | Contact | Newsletter + Bottom bar === -->
 <link rel="stylesheet" href="public/css/_footer.css">
 <footer class="modern-footer">
     <div class="footer_container">

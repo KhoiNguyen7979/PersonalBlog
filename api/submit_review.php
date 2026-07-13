@@ -3,11 +3,14 @@
  * api/submit_review.php
  * Lưu review vào database
  */
+// === API: Gửi review/đánh giá ===
+// Lưu review từ form modal vào bảng Reviews
 session_start();
 require_once __DIR__ . '/../php/mySQLconnect.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
+// Chỉ chấp nhận POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
     exit;

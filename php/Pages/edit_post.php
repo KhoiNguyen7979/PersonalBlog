@@ -1,4 +1,6 @@
-<?php
+// === TRANG CHỈNH SỬA BÀI VIẾT ===
+// Các block: Form sửa bài (ảnh hiện tại + ảnh thay thế + tiêu đề + tóm tắt + thể loại + nội dung) | Crop Modal
+// Script inline: CropperJS, submit form qua fetch API
 if (!isset($_SESSION['email'])) {
     header("Location: index.php?page=signin");
     exit;

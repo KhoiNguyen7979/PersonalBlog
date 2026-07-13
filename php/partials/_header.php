@@ -6,6 +6,7 @@
     }
 ?>
 
+<!-- === HEADER: Logo + Nav (Home, My Blog, About, Review) + Account dropdown === -->
 <link rel="stylesheet" href="public/css/_header.css">
 <header>
     <div class="nav_container">

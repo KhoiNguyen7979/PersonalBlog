@@ -1,6 +1,7 @@
 /**
- * about.js - Xử lý hiệu ứng scroll ngang cho Review Carousel
- * và liên kết nút Leave a Review với Modal
+ * about.js - Trang About
+ * 1. Mở modal Review khi bấm "Leave a Review"
+ * 2. Carousel review: cuộn ngang bằng nút prev/next + kéo thả chuột
  */
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Liên kết nút Leave Review trong trang About với modal

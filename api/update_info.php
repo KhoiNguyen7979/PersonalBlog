@@ -1,4 +1,6 @@
 <?php
+// === API: Cập nhật thông tin cá nhân ===
+// Sửa tên hiển thị, tên đăng nhập và mật khẩu. Admin không được sửa.
 session_start();
 header('Content-Type: application/json');
 

@@ -1,8 +1,6 @@
 <?php
-/**
- * php/Pages/create_blog.php
- * Giao diện tạo bài viết mới
- */
+// === TRANG TẠO BLOG MỚI ===
+// Các block: Header | Form (ảnh bìa + tiêu đề + tóm tắt + thể loại + nội dung) | Crop Modal
 if (!isset($_SESSION['email'])) {
     header("Location: index.php?page=signin");
     exit;

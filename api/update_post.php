@@ -1,8 +1,11 @@
 <?php
+// === API: Cập nhật bài viết ===
+// Sửa tiêu đề, tóm tắt, nội dung, thể loại và (tuỳ chọn) thay ảnh mới
 session_start();
 require_once __DIR__ . '/../php/mySQLconnect.php';
 header('Content-Type: application/json; charset=utf-8');
 
+// Kiểm tra đăng nhập
 if (!isset($_SESSION['email'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;

@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    const form          = document.getElementById('create-blog-form');
+// === create_blog.js - Trang tạo blog mới ===
+// 1. Chọn ảnh → mở CropperJS (tỷ lệ tuỳ ý)
+// 2. Submit form qua fetch API → tạo bài viết + lưu ảnh vào DB
     const fileInput     = document.getElementById('images-input');
     const previewImg    = document.getElementById('thumbnail-preview');
     const placeholder   = document.getElementById('upload-placeholder');

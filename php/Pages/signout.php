@@ -1,4 +1,6 @@
 <?php
+// === TRANG ĐĂNG XUẤT ===
+// Xoá session và chuyển về trang chủ với toast thông báo
 session_start();
 session_unset();
 session_destroy();

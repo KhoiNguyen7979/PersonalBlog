@@ -1,6 +1,8 @@
 /**
- * public/js/profile.js
- * Xử lý đổi avatar (với crop), sửa mô tả và cập nhật thông tin cá nhân.
+ * profile.js - Trang hồ sơ cá nhân
+ * 1. Đổi avatar (chụp ảnh → crop 1:1 → upload base64 lên server)
+ * 2. Chỉnh sửa bio/mô tả (hiện/ẩn textarea, gửi qua fetch)
+ * 3. Chỉnh sửa thông tin cá nhân (tên, username, mật khẩu)
  */
 document.addEventListener('DOMContentLoaded', () => {
 

@@ -161,7 +161,7 @@ echo json_encode([
     'page'       => $page,
 ]);
 
-// ── Helper: Render 1 card ─────────────────────────────────────────────────────
+// --- Hàm render từng card bài viết (ảnh carousel, menu edit/delete, like) ---
 function renderPostCard($post, $canEdit, $images = []) {
     $id      = $post['ID_BaiViet'];
     $title   = htmlspecialchars($post['TieuDe']);

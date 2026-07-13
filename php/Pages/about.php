@@ -1,4 +1,6 @@
 <?php
+// === TRANG ABOUT ===
+// Các block: Hero Section | Story Section | Reviews Carousel
 $pageTitle = "About - BloggerZ";
 
 require_once __DIR__ . '/../mySQLconnect.php';

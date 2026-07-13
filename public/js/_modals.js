@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+// === _modals.js - Quản lý modal Review và Subscribe ===
+// Mở/đóng modal, gửi form review qua fetch, form subscribe (client-side only)
    
     const reviewModal = document.getElementById('review-modal');
     const subscribeModal = document.getElementById('subscribe-modal');
@@ -145,9 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const email = document.getElementById('subscribe-email').value;
             
-            alert(`Thank you! Email "${email}" has been subscribed successfully.`);
             if (window.showToast) {
-                showToast('Thank you! Email has been subscribed.');
+                showToast('Thank you! Your Email has been subscribed.');
             }
             
             subscribeForm.reset();

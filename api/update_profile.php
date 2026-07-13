@@ -3,11 +3,14 @@
  * api/update_profile.php
  * Cập nhật thông tin hồ sơ người dùng (avatar, mô tả).
  */
+// === API: Cập nhật hồ sơ (avatar hoặc bio) ===
+// Nhận action='update_avatar' hoặc action='update_bio'
 session_start();
 require_once __DIR__ . '/../php/mySQLconnect.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
+// Kiểm tra đăng nhập
 if (!isset($_SESSION['email'])) {
     echo json_encode(['success' => false, 'message' => 'Not logged in.']);
     exit;

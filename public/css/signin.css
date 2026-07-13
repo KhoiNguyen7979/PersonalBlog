@@ -144,6 +144,33 @@ input::placeholder {
     font-weight: 400;
 }
 
+/* ── PASSWORD TOGGLE ──────────────────────────────────── */
+.password-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.password-wrap input {
+    flex: 1;
+    margin-bottom: 20px;
+}
+.toggle-pw {
+    position: absolute;
+    right: 4px;
+    bottom: 22px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+.toggle-pw:hover {
+    color: #111;
+}
+
 /* ── CHECKBOX ───────────────────────────────────────── */
 .remember {
     display: flex;

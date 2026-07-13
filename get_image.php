@@ -39,6 +39,7 @@ if (isset($_GET['id'])) {
     header("Cache-Control: public, max-age=86400");
     echo $data;
 
+// --- PHẦN 2: Lấy ảnh avatar theo email ---
 } elseif (isset($_GET['email'])) {
     $email = $_GET['email'];
     $stmt = $connect->prepare("SELECT Avatar, DuoiAnhAvatar FROM NguoiDung WHERE Email = ? LIMIT 1");
