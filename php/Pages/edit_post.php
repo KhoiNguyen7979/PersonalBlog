@@ -7,14 +7,20 @@ require_once __DIR__ . '/../mySQLconnect.php';
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $email = $_SESSION['email'];
+$isAdmin = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
 
-$stmt = $connect->prepare("SELECT * FROM BaiViet WHERE ID_BaiViet = ? AND ID_NguoiDung = ?");
-$stmt->bind_param("is", $id, $email);
+if ($isAdmin) {
+    $stmt = $connect->prepare("SELECT * FROM BaiViet WHERE ID_BaiViet = ?");
+    $stmt->bind_param("i", $id);
+} else {
+    $stmt = $connect->prepare("SELECT * FROM BaiViet WHERE ID_BaiViet = ? AND ID_NguoiDung = ?");
+    $stmt->bind_param("is", $id, $email);
+}
 $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
 
 if (!$post) {
-    echo "Bài viết không tồn tại hoặc bạn không có quyền chỉnh sửa.";
+    echo "Post not found or you do not have permission to edit.";
     exit;
 }
 
@@ -39,7 +45,7 @@ $connect->close();
         
         <!-- Ảnh hiện tại -->
         <div class="form-group">
-            <label>Ảnh hiện tại</label>
+            <label>Current images</label>
             <div class="edit-images-grid" id="edit-images-grid">
                 <?php foreach ($images as $img): ?>
                     <div class="edit-img-item" data-id="<?= $img['ID_Anh'] ?>">
@@ -52,12 +58,12 @@ $connect->close();
 
         <!-- Đổi ảnh mới -->
         <div class="form-group">
-            <label>Đổi ảnh</label>
+            <label>Replace image</label>
             <div class="thumbnail-upload" id="edit-thumbnail-upload">
                 <input type="file" id="edit-new-image" name="new_image" accept="image/*">
                 <div class="upload-placeholder" id="edit-upload-placeholder">
                     <span class="icon">📷</span>
-                    <span class="text">Click để chọn ảnh mới</span>
+                    <span class="text">Click to choose a new image</span>
                 </div>
                 <img id="edit-new-preview" src="" alt="">
             </div>
@@ -74,7 +80,7 @@ $connect->close();
         </div>
 
         <div class="form-group">
-            <label for="category">Thể loại</label>
+            <label for="category">Category</label>
             <select id="category" name="category" class="form-control" required>
                 <option value="technology" <?= $post['ID_The_Loai'] == 'technology' ? 'selected' : '' ?>>Technology</option>
                 <option value="skill" <?= $post['ID_The_Loai'] == 'skill' ? 'selected' : '' ?>>Skill</option>
@@ -89,8 +95,8 @@ $connect->close();
         </div>
 
         <div class="form-actions">
-            <button type="button" class="btn-cancel" onclick="window.history.back()">Hủy</button>
-            <button type="submit" class="btn-publish" id="update-btn">Cập nhật</button>
+            <button type="button" class="btn-cancel" onclick="window.history.back()">Cancel</button>
+            <button type="submit" class="btn-publish" id="update-btn">Update</button>
         </div>
     </form>
 </div>
@@ -101,7 +107,7 @@ $connect->close();
 <div class="crop-modal-overlay" id="crop-modal">
     <div class="crop-modal-box">
         <div class="crop-modal-header">
-            <h3>Xén ảnh</h3>
+            <h3>Crop image</h3>
             <button type="button" class="crop-modal-close" id="crop-close">&times;</button>
         </div>
         <div class="crop-modal-body">
@@ -110,10 +116,10 @@ $connect->close();
             </div>
         </div>
         <div class="crop-modal-footer">
-            <span class="crop-hint">Kéo thả để chọn vùng ảnh</span>
+            <span class="crop-hint">Drag to select image area</span>
             <div class="crop-modal-actions">
-                <button type="button" class="btn-crop-cancel" id="crop-cancel">Bỏ qua</button>
-                <button type="button" class="btn-crop-confirm" id="crop-confirm">Xác nhận</button>
+                <button type="button" class="btn-crop-cancel" id="crop-cancel">Skip</button>
+                <button type="button" class="btn-crop-confirm" id="crop-confirm">Confirm</button>
             </div>
         </div>
     </div>
@@ -198,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         var formData = new FormData(this);
         var btn = document.getElementById('update-btn');
-        btn.innerText = 'Đang cập nhật...';
+        btn.innerText = 'Updating...';
         btn.disabled = true;
 
         if (croppedFile) {
@@ -211,20 +217,20 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 var overlay = document.getElementById('page-transition');
                 if (window.showToast) {
-                    showToast('Cập nhật thành công!');
+                    showToast('Updated successfully!');
                     if (overlay) overlay.classList.add('active');
                     setTimeout(function() { window.location.href = '?page=blog'; }, 800);
                 } else {
                     if (overlay) overlay.classList.add('active');
-                    window.location.href = '?page=blog&toast=' + encodeURIComponent('Cập nhật thành công!');
+                    window.location.href = '?page=blog&toast=' + encodeURIComponent('Updated successfully!');
                 }
             } else {
                 if (window.showToast) {
-                    showToast('Lỗi: ' + data.message, 'error');
+                    showToast('Error: ' + data.message, 'error');
                 } else {
-                    alert('Lỗi: ' + data.message);
+                    alert('Error: ' + data.message);
                 }
-                btn.innerText = 'Cập nhật';
+                btn.innerText = 'Update';
                 btn.disabled = false;
             }
         });

@@ -4,20 +4,27 @@ header('Content-Type: application/json');
 
 // Kiểm tra đăng nhập
 if (!isset($_SESSION['email'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Bạn chưa đăng nhập.']);
+    echo json_encode(['status' => 'error', 'message' => 'You are not logged in.']);
     exit;
 }
 
 require_once __DIR__ . '/../php/mySQLconnect.php';
 
 $email = $_SESSION['email'];
+$isAdmin = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
+
+if ($isAdmin) {
+    echo json_encode(['status' => 'error', 'message' => 'Admin account cannot edit this information.']);
+    exit;
+}
+
 $username = $_POST['username'] ?? '';
 $fullname = $_POST['fullname'] ?? '';
 $password = $_POST['password'] ?? '';
 
 // Validate cơ bản
 if (empty($username) || empty($fullname)) {
-    echo json_encode(['status' => 'error', 'message' => 'Tên đăng nhập và Họ tên không được để trống.']);
+    echo json_encode(['status' => 'error', 'message' => 'Username and Full Name cannot be empty.']);
     exit;
 }
 
@@ -39,12 +46,12 @@ try {
         $_SESSION['hoten'] = $username;
         echo json_encode(['status' => 'success']);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Không thể cập nhật thông tin. Vui lòng thử lại.']);
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update information. Please try again.']);
     }
 
     $stmt->close();
 } catch (Exception $e) {
-    echo json_encode(['status' => 'error', 'message' => 'Lỗi máy chủ: ' . $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'Server error: ' . $e->getMessage()]);
 }
 
 $connect->close();

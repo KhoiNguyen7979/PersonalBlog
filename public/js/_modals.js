@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const submitBtn = document.getElementById('submit-review-btn');
             const originalText = submitBtn.innerText;
-            submitBtn.innerText = 'Đang gửi...';
+            submitBtn.innerText = 'Sending...';
             submitBtn.disabled = true;
 
             const formData = new FormData(reviewForm);
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     reviewForm.reset();
                     closeModal(reviewModal);
                     if (window.showToast) {
-                        showToast('Đánh giá của bạn đã được đăng. Cảm ơn bạn!');
+                        showToast('Your review has been posted. Thank you!');
                     }
                     if (window.location.search.includes('page=about')) {
                         setTimeout(() => window.location.reload(), 3000);
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(err => {
                 if (window.showToast) {
-                    showToast('Đã có lỗi xảy ra. Vui lòng thử lại sau.', 'error');
+                    showToast('An error occurred. Please try again later.', 'error');
                 }
             })
             .finally(() => {
@@ -145,9 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const email = document.getElementById('subscribe-email').value;
             
-            alert(`Cảm ơn bạn! Email "${email}" đã được đăng ký nhận bản tin thành công.`);
+            alert(`Thank you! Email "${email}" has been subscribed successfully.`);
             if (window.showToast) {
-                showToast('Cảm ơn bạn! Email đã được đăng ký nhận bản tin.');
+                showToast('Thank you! Email has been subscribed.');
             }
             
             subscribeForm.reset();

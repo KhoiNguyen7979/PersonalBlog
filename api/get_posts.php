@@ -23,6 +23,7 @@ $offset   = ($page - 1) * $perPage;
 
 $loggedIn = isset($_SESSION['email']) && !empty($_SESSION['email']);
 $myEmail  = $loggedIn ? $_SESSION['email'] : '';
+$isAdmin  = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
 
 // ── Điều kiện WHERE ──────────────────────────────────────────────────────────
 $conditions = [];
@@ -127,11 +128,11 @@ function formatDate($dateStr) {
 }
 
 $isMyType  = ($type === 'my');
-$canEdit   = $isMyType && $loggedIn;
+$canEdit   = ($isMyType && $loggedIn) || $isAdmin;
 
 ob_start();
 if (empty($posts)) {
-    echo '<div class="no-posts"><p>Chưa có bài viết nào.</p></div>';
+    echo '<div class="no-posts"><p>No posts yet.</p></div>';
 } else {
     // Chia thành 3 cột
     $cols = [[], [], []];
@@ -194,10 +195,10 @@ function renderPostCard($post, $canEdit, $images = []) {
             <?php endif; ?>
             <?php if ($canEdit): ?>
                 <div class="post-menu">
-                    <button class="post-menu-btn" title="Tuỳ chọn">⋮</button>
+                    <button class="post-menu-btn" title="Options">⋮</button>
                     <div class="post-menu-dropdown">
-                        <a href="?page=edit_post&id=<?= $id ?>">Chỉnh sửa</a>
-                        <a href="#" class="delete-post-btn" data-id="<?= $id ?>">Xoá</a>
+                        <a href="?page=edit_post&id=<?= $id ?>">Edit</a>
+                        <a href="#" class="delete-post-btn" data-id="<?= $id ?>">Delete</a>
                     </div>
                 </div>
             <?php endif; ?>

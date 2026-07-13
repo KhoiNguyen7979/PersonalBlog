@@ -19,6 +19,11 @@
     50%      { opacity: 0.6; }
 }
 
+@keyframes floatIn {
+    0%   { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
 /* ── Blog page wrapper ─────────────────────────────────────────────────────── */
 .blog-page {
     max-width: 1200px;
@@ -29,7 +34,7 @@
 
 /* ── Section ────────────────────────────────────────────────────────────────── */
 .blog-section {
-    margin-bottom: 80px;
+    margin-bottom: 100px;
     animation: fadeInUp 0.6s ease both;
 }
 
@@ -178,14 +183,14 @@
 .posts-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 24px;
+    gap: 36px;
     align-items: start;
 }
 
 .posts-col {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 36px;
 }
 
 .posts-grid .post-card {
@@ -463,6 +468,76 @@
     font-weight: 500;
 }
 
+/* ── Login CTA Card ─────────────────────────────────────────────────────────── */
+.login-cta {
+    background: #fff;
+    border: 2px dashed #e0e0e0;
+    border-radius: 16px;
+    padding: 48px 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.login-cta:hover {
+    border-color: #4CAF50;
+    box-shadow: 0 8px 30px rgba(76, 175, 80, 0.1);
+}
+
+.login-cta-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #111;
+    margin: 0 0 10px;
+    animation: floatIn 0.7s ease 0.1s both;
+}
+
+.login-cta-text {
+    font-size: 15px;
+    color: #777;
+    margin: 0 0 28px;
+    line-height: 1.6;
+    animation: floatIn 0.7s ease 0.3s both;
+}
+
+.login-cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    animation: floatIn 0.7s ease 0.5s both;
+}
+
+.login-cta-btn {
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-cta-btn.primary {
+    background: #4CAF50;
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(76, 175, 80, 0.25);
+}
+
+.login-cta-btn.primary:hover {
+    background: #43a047;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.login-cta-btn.secondary {
+    background: transparent;
+    color: #111;
+    border: 2px solid #e0e0e0;
+}
+
+.login-cta-btn.secondary:hover {
+    border-color: #111;
+    transform: translateY(-2px);
+}
+
 /* ── Loading / Empty ────────────────────────────────────────────────────────── */
 .loading-spinner {
     text-align: center;
@@ -577,5 +652,12 @@
     }
     .post-card-body {
         padding: 14px 16px 16px;
+    }
+    .login-cta {
+        padding: 36px 24px;
+    }
+    .login-cta-buttons {
+        flex-direction: column;
+        align-items: center;
     }
 }

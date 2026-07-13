@@ -8,7 +8,7 @@ require_once __DIR__ . '/../mySQLconnect.php';
 $email = isset($_GET['email']) ? trim($_GET['email']) : '';
 
 if (empty($email)) {
-    echo '<p style="color:red; padding:40px; text-align:center;">Thiếu thông tin người dùng.</p>';
+    echo '<p style="color:red; padding:40px; text-align:center;">Missing user information.</p>';
     $connect->close();
     exit;
 }
@@ -16,7 +16,7 @@ if (empty($email)) {
 // Lấy thông tin người dùng
 $stmt = $connect->prepare("SELECT HoTenNguoiDung, TenDangNhap, MoTa FROM NguoiDung WHERE Email = ?");
 if (!$stmt) {
-    echo '<p style="color:red; padding:40px;">Lỗi DB: ' . htmlspecialchars($connect->error) . '</p>';
+    echo '<p style="color:red; padding:40px;">Database error: ' . htmlspecialchars($connect->error) . '</p>';
     $connect->close();
     exit;
 }
@@ -25,7 +25,7 @@ $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 
 if (!$user) {
-    echo '<p style="color:red; padding:40px; text-align:center;">Không tìm thấy người dùng này.</p>';
+    echo '<p style="color:red; padding:40px; text-align:center;">User not found.</p>';
     $connect->close();
     exit;
 }
@@ -108,11 +108,11 @@ function formatPostDate($dateStr) {
             <div class="pub-stats-row">
                 <div class="pub-stat">
                     <span class="pub-stat-num"><?= $stats['total_posts'] ?></span>
-                    <span class="pub-stat-txt">Bài viết</span>
+                    <span class="pub-stat-txt">Posts</span>
                 </div>
                 <div class="pub-stat">
                     <span class="pub-stat-num"><?= $totalLikes ?></span>
-                    <span class="pub-stat-txt">Lượt like</span>
+                    <span class="pub-stat-txt">Likes</span>
                 </div>
             </div>
         </div>
@@ -121,17 +121,17 @@ function formatPostDate($dateStr) {
     <!-- Bio Section -->
     <?php if (!empty($user['MoTa'])): ?>
     <div class="pub-section">
-        <h3 class="pub-section-title">Giới thiệu</h3>
+        <h3 class="pub-section-title">About</h3>
         <p class="pub-bio"><?= nl2br(htmlspecialchars($user['MoTa'])) ?></p>
     </div>
     <?php endif; ?>
 
     <!-- User's Posts -->
     <div class="pub-section">
-        <h3 class="pub-section-title">Bài viết của <?= htmlspecialchars($user['HoTenNguoiDung']) ?></h3>
+        <h3 class="pub-section-title">Posts by <?= htmlspecialchars($user['HoTenNguoiDung']) ?></h3>
 
         <?php if (empty($posts)): ?>
-            <div class="no-posts"><p>Chưa có bài viết nào.</p></div>
+            <div class="no-posts"><p>No posts yet.</p></div>
         <?php else: ?>
             <div class="pub-posts-list">
                 <?php foreach ($posts as $post): ?>

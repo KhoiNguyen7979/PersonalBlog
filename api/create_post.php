@@ -9,7 +9,7 @@ require_once __DIR__ . '/../php/mySQLconnect.php';
 header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($_SESSION['email'])) {
-    echo json_encode(['success' => false, 'message' => 'Bạn phải đăng nhập để viết bài.']);
+    echo json_encode(['success' => false, 'message' => 'You must be logged in to create a post.']);
     exit;
 }
 
@@ -21,7 +21,7 @@ $category = trim($_POST['category'] ?? '');
 $content  = trim($_POST['content']  ?? '');
 
 if (empty($title) || empty($summary) || empty($category) || empty($content)) {
-    echo json_encode(['success' => false, 'message' => 'Vui lòng điền đầy đủ các trường thông tin.']);
+    echo json_encode(['success' => false, 'message' => 'Please fill in all required fields.']);
     exit;
 }
 
@@ -45,7 +45,7 @@ if (isset($_FILES['images']) && $_FILES['images']['error'] === UPLOAD_ERR_OK) {
 finfo_close($finfo);
 
 if (!$validFile) {
-    echo json_encode(['success' => false, 'message' => 'Vui lòng chọn 1 ảnh hợp lệ.']);
+    echo json_encode(['success' => false, 'message' => 'Please select a valid image.']);
     exit;
 }
 
@@ -59,7 +59,7 @@ $stmt = $connect->prepare("
 ");
 $stmt->bind_param("sssiss", $title, $content, $summary, $readTime, $email, $category);
 if (!$stmt->execute()) {
-    echo json_encode(['success' => false, 'message' => 'Lỗi insert BaiViet: ' . $stmt->error]);
+    echo json_encode(['success' => false, 'message' => 'Failed to create post: ' . $stmt->error]);
     exit;
 }
 $post_id = $connect->insert_id;
@@ -73,11 +73,11 @@ $stmtPic = $connect->prepare("
 $isThumb = 1;
 $stmtPic->bind_param("ssissi", $validFile['name'], $validFile['ext'], $validFile['size'], $validFile['data'], $post_id, $isThumb);
 if (!$stmtPic->execute()) {
-    echo json_encode(['success' => false, 'message' => 'Lỗi insert ảnh: ' . $stmtPic->error]);
+    echo json_encode(['success' => false, 'message' => 'Failed to insert image: ' . $stmtPic->error]);
     exit;
 }
 $stmtPic->close();
 $connect->close();
 
-echo json_encode(['success' => true, 'message' => 'Tạo bài viết thành công.']);
+echo json_encode(['success' => true, 'message' => 'Post created successfully.']);
 ?>

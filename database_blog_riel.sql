@@ -30,17 +30,19 @@ CREATE TABLE `NguoiDung` (
   `MatKhau` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `MoTa` text COLLATE utf8mb4_unicode_ci,
   `Avatar` mediumblob,
-  `DuoiAnhAvatar` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT 'jpg'
+  `DuoiAnhAvatar` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT 'jpg',
+  `VaiTro` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `NguoiDung`
 -- (Mật khẩu mặc định là: 123456)
 --
-INSERT INTO `NguoiDung` (`Email`, `HoTenNguoiDung`, `TenDangNhap`, `MatKhau`, `MoTa`) VALUES
-('domixi@gmail.com', 'Độ Mixi', 'domixi', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Được biết đến với danh hiệu "Chủ tịch Bộ tộc MixiGaming", Độ Mixi là một trong những streamer có sức ảnh hưởng lớn nhất Việt Nam. Từ những ngày đầu livestream game cho đến khi trở thành cái tên quen thuộc trên khắp các nền tảng mạng xã hội, anh luôn giữ được phong cách gần gũi, chân thật và cực kỳ hài hước.'),
-('nguyen.abc@gmail.com', 'Nguyễn Văn A', 'nguyenvana', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Blogger công nghệ từ Hà Nội.'),
-('tran.xyz@gmail.com', 'Trần Thị B', 'tranthib', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Yêu thích âm nhạc và chia sẻ câu chuyện cuộc sống.');
+INSERT INTO `NguoiDung` (`Email`, `HoTenNguoiDung`, `TenDangNhap`, `MatKhau`, `MoTa`, `VaiTro`) VALUES
+('admin@admin.com', 'Admin', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'Quản trị viên hệ thống.', 'admin'),
+('domixi@gmail.com', 'Độ Mixi', 'domixi', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Được biết đến với danh hiệu "Chủ tịch Bộ tộc MixiGaming", Độ Mixi là một trong những streamer có sức ảnh hưởng lớn nhất Việt Nam. Từ những ngày đầu livestream game cho đến khi trở thành cái tên quen thuộc trên khắp các nền tảng mạng xã hội, anh luôn giữ được phong cách gần gũi, chân thật và cực kỳ hài hước.', 'user'),
+('nguyen.abc@gmail.com', 'Nguyễn Văn A', 'nguyenvana', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Blogger công nghệ từ Hà Nội.', 'user'),
+('tran.xyz@gmail.com', 'Trần Thị B', 'tranthib', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Yêu thích âm nhạc và chia sẻ câu chuyện cuộc sống.', 'user');
 
 -- --------------------------------------------------------
 

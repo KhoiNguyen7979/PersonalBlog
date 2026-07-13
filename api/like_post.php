@@ -5,7 +5,7 @@ require_once __DIR__ . '/../php/mySQLconnect.php';
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['email'])) {
-    echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập để Thích bài viết.']);
+    echo json_encode(['success' => false, 'message' => 'You must be logged in to like a post.']);
     exit;
 }
 

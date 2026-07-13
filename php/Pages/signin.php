@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
     $email = $_POST['email'];
     $matkhau_dabam = sha1($_POST['password']); 
 
-    $sql = "SELECT Email, TenDangNhap FROM nguoidung WHERE Email = ? AND MatKhau = ?";
+    $sql = "SELECT Email, TenDangNhap, VaiTro FROM nguoidung WHERE Email = ? AND MatKhau = ?";
     $stmt = $connect->prepare($sql);
     
     if ($stmt) {
@@ -31,19 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
             // Lưu trạng thái vào biến session
             $_SESSION['email'] = $user['Email'];
             $_SESSION['hoten'] = $user['TenDangNhap'];
+            $_SESSION['vaitro'] = $user['VaiTro'];
             
-            header("Location: index.php?toast=" . urlencode("Đăng nhập thành công!"));
+            header("Location: index.php?toast=" . urlencode("Login successful!"));
             exit();
         } else {
             $show_modal = true;
-            $modal_title = "Oops! Lỗi đăng nhập";
-            $modal_message = "Bạn đã nhập email hoặc mật khẩu chưa chính xác, vui lòng nhập lại";
+            $modal_title = "Oops! Login Error";
+            $modal_message = "Incorrect email or password. Please try again.";
         }
         $stmt->close();
     } else {
          $show_modal = true;
-            $modal_title = "Oops! Lỗi kết nối CSDL";
-            $modal_message = "Cơ sở dữ liệu hệ thống hiện không phản hồi, vui lòng thử lại sau";
+            $modal_title = "Oops! Database Error";
+            $modal_message = "The database is not responding. Please try again later.";
     }
 }
 $connect->close();
@@ -96,7 +97,7 @@ $connect->close();
         <p><?= $modal_message ?></p>
         <div class="modal-actions">
             <button class="ok-btn" onclick="document.getElementById('resultModal').style.display='none'">OK</button>
-            <a href="?page=signup" class="direct-link">Bạn chưa có tài khoản?</a>
+            <a href="?page=signup" class="direct-link">Don't have an account?</a>
         </div>
     </div>
 </div>

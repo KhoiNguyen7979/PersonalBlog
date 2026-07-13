@@ -18,7 +18,7 @@ $titles = [
 $title = $titles[$page] ?? 'BloggerZ';
 ?>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,7 +54,9 @@ $title = $titles[$page] ?? 'BloggerZ';
                     <hr class="hero_line">
                     <div class="hero_buttons">
                         <button id="read">Read the Blog</button>
+                        <?php if (!isset($_SESSION['vaitro']) || $_SESSION['vaitro'] !== 'admin'): ?>
                         <button id="sub">Subscribe</button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

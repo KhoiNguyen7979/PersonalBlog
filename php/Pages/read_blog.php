@@ -22,7 +22,7 @@ $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
 
 if (!$post) {
-    echo "<h1 style='text-align:center; margin-top:50px;'>Bài viết không tồn tại.</h1>";
+    echo "<h1 style='text-align:center; margin-top:50px;'>Post not found.</h1>";
     exit;
 }
 
@@ -51,8 +51,8 @@ $connect->close();
     <h1 class="read-title"><?= htmlspecialchars($post['TieuDe']) ?></h1>
     
     <div class="read-meta">
-        Bởi <a href="?page=public_profile&email=<?= urlencode($post['ID_NguoiDung']) ?>" class="author-link"><strong><?= htmlspecialchars($post['HoTenNguoiDung']) ?></strong></a> | 
-        Đăng ngày: <?= date('d/m/Y', strtotime($post['NgayDang'])) ?>
+        By <a href="?page=public_profile&email=<?= urlencode($post['ID_NguoiDung']) ?>" class="author-link"><strong><?= htmlspecialchars($post['HoTenNguoiDung']) ?></strong></a> | 
+        Published: <?= date('d/m/Y', strtotime($post['NgayDang'])) ?>
     </div>
     
     <div class="read-thumbnail-area">
@@ -61,7 +61,7 @@ $connect->close();
             <div class="carousel-track" id="carousel-track">
                 <?php foreach ($images as $i => $src): ?>
                     <div class="carousel-slide <?= $i === 0 ? 'active' : '' ?>">
-                        <img src="<?= $src ?>" alt="<?= htmlspecialchars($post['TieuDe']) ?> - Ảnh <?= $i+1 ?>">
+                        <img src="<?= $src ?>" alt="<?= htmlspecialchars($post['TieuDe']) ?> - Image <?= $i+1 ?>">
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -79,12 +79,12 @@ $connect->close();
         </div>
         <?php endif; ?>
 
-        <?php if (isset($email) && $email === $post['ID_NguoiDung']): ?>
+        <?php if (isset($email) && ($email === $post['ID_NguoiDung'] || (isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin'))): ?>
             <div class="post-menu">
-                <button class="post-menu-btn" title="Tuỳ chọn">⋮</button>
+                <button class="post-menu-btn" title="Options">⋮</button>
                 <div class="post-menu-dropdown">
-                    <a href="?page=edit_post&id=<?= $id ?>">Chỉnh sửa</a>
-                    <a href="#" class="delete-post-btn" data-id="<?= $id ?>">Xoá</a>
+                    <a href="?page=edit_post&id=<?= $id ?>">Edit</a>
+                    <a href="#" class="delete-post-btn" data-id="<?= $id ?>">Delete</a>
                 </div>
             </div>
         <?php endif; ?>
@@ -100,7 +100,7 @@ $connect->close();
     
     <div class="like-section">
         <button id="like-btn" class="like-btn <?= $isLikedClass ?>" data-id="<?= $id ?>">
-            ❤️ <span id="like-count"><?= $post['TotalLikes'] ?></span> Thích
+            ❤️ <span id="like-count"><?= $post['TotalLikes'] ?></span> Like
         </button>
     </div>
 </div>
@@ -199,7 +199,7 @@ document.querySelectorAll('.delete-post-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        if (confirm('Bạn có chắc muốn xoá bài viết này không?')) {
+        if (confirm('Are you sure you want to delete this post?')) {
             fetch(`api/delete_post.php?id=${btn.dataset.id}`, { method: 'POST' })
                 .then(r => r.json())
                 .then(data => {
@@ -209,9 +209,9 @@ document.querySelectorAll('.delete-post-btn').forEach(btn => {
                         window.location.href = '?page=blog';
                     } else {
                         if (window.showToast) {
-                            showToast('Lỗi xoá bài viết.', 'error');
+                            showToast('Failed to delete post.', 'error');
                         } else {
-                            alert('Lỗi xoá bài viết.');
+                            alert('Failed to delete post.');
                         }
                     }
                 });

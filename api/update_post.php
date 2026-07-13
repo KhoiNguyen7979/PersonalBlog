@@ -14,9 +14,10 @@ $summary  = trim($_POST['summary'] ?? '');
 $category = trim($_POST['category'] ?? '');
 $content  = trim($_POST['content'] ?? '');
 $email    = $_SESSION['email'];
+$isAdmin  = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
 
 if (empty($title) || empty($content)) {
-    echo json_encode(['success' => false, 'message' => 'Thiếu thông tin.']);
+    echo json_encode(['success' => false, 'message' => 'Missing information.']);
     exit;
 }
 
@@ -52,16 +53,25 @@ finfo_close($finfo);
 $wordCount = str_word_count(strip_tags($content));
 $readTime = max(1, ceil($wordCount / 200));
 
-$stmt = $connect->prepare("
-    UPDATE BaiViet 
-    SET TieuDe=?, NoiDung=?, TomTat=?, ThoiGianDoc=?, ID_The_Loai=? 
-    WHERE ID_BaiViet=? AND ID_NguoiDung=?
-");
-$stmt->bind_param("sssssis", $title, $content, $summary, $readTime, $category, $id, $email);
+if ($isAdmin) {
+    $stmt = $connect->prepare("
+        UPDATE BaiViet 
+        SET TieuDe=?, NoiDung=?, TomTat=?, ThoiGianDoc=?, ID_The_Loai=? 
+        WHERE ID_BaiViet=?
+    ");
+    $stmt->bind_param("sssssi", $title, $content, $summary, $readTime, $category, $id);
+} else {
+    $stmt = $connect->prepare("
+        UPDATE BaiViet 
+        SET TieuDe=?, NoiDung=?, TomTat=?, ThoiGianDoc=?, ID_The_Loai=? 
+        WHERE ID_BaiViet=? AND ID_NguoiDung=?
+    ");
+    $stmt->bind_param("sssssis", $title, $content, $summary, $readTime, $category, $id, $email);
+}
 
 if ($stmt->execute()) {
     echo json_encode(['success' => true]);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Lỗi CSDL.']);
+    echo json_encode(['success' => false, 'message' => 'Database error.']);
 }
 ?>

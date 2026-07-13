@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         if (!fileInput.files[0]) {
-            showToast('Vui lòng chọn ảnh cho bài viết.');
+            showToast('Please select an image for your post.');
             return;
         }
 
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('images',    fileInput.files[0]);
 
         const originalText = publishBtn.innerText;
-        publishBtn.innerText = 'Đang đăng...';
+        publishBtn.innerText = 'Publishing...';
         publishBtn.classList.add('loading');
         publishBtn.disabled = true;
 
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                showToast('Đăng bài thành công! Đang chuyển hướng...');
+                showToast('Published successfully! Redirecting...');
                 var overlay = document.getElementById('page-transition');
                 if (overlay) overlay.classList.add('active');
                 setTimeout(() => {
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
             console.error(err);
-            showToast('Đã xảy ra lỗi kết nối với máy chủ.');
+            showToast('Server connection error.');
             resetButton();
         });
 

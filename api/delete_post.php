@@ -21,6 +21,7 @@ if ($id <= 0) {
 }
 
 $userEmail = $_SESSION['email'];
+$isAdmin = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
 
 // Verify ownership
 $stmt = $connect->prepare('SELECT ID_NguoiDung FROM BaiViet WHERE ID_BaiViet = ?');
@@ -31,7 +32,7 @@ if (!$owner) {
     echo json_encode(['success' => false, 'message' => 'Post not found']);
     exit;
 }
-if ($owner['ID_NguoiDung'] !== $userEmail) {
+if ($owner['ID_NguoiDung'] !== $userEmail && !$isAdmin) {
     echo json_encode(['success' => false, 'message' => 'No permission']);
     exit;
 }
@@ -47,8 +48,13 @@ $stmt->bind_param('i', $id);
 $stmt->execute();
 
 // Delete the post
-$stmt = $connect->prepare('DELETE FROM BaiViet WHERE ID_BaiViet = ? AND ID_NguoiDung = ?');
-$stmt->bind_param('is', $id, $userEmail);
+if ($isAdmin) {
+    $stmt = $connect->prepare('DELETE FROM BaiViet WHERE ID_BaiViet = ?');
+    $stmt->bind_param('i', $id);
+} else {
+    $stmt = $connect->prepare('DELETE FROM BaiViet WHERE ID_BaiViet = ? AND ID_NguoiDung = ?');
+    $stmt->bind_param('is', $id, $userEmail);
+}
 $stmt->execute();
 
 if ($stmt->affected_rows > 0) {

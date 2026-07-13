@@ -8,6 +8,6 @@
     $connect = new mysqli($tenserver, $tennguoidung, $matkhau, $tendatabase);
     //Nếu kết nối thất bại đến CSDL sẽ dừng toàn bộ trang web và báo lỗi.
     if($connect->connect_error){
-        die("Kết nối failed" . $connect->connect_error);
+        die("Connection failed" . $connect->connect_error);
     }
 ?>

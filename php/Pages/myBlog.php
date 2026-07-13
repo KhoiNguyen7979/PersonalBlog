@@ -40,11 +40,25 @@
         </div>
 
         <div class="posts-container" id="my-posts-container">
-            <div class="loading-spinner">Đang tải...</div>
+            <div class="loading-spinner">Loading...</div>
         </div>
 
         <div class="read-more-wrap">
             <button class="read-more-btn" id="my-read-more" data-page="1" data-type="my" style="display:none;">Read more</button>
+        </div>
+    </section>
+    <?php endif; ?>
+
+    <?php if (!isset($_SESSION['email'])): ?>
+    <!-- ── CTA: Sign in prompt ── -->
+    <section class="blog-section">
+        <div class="login-cta">
+            <h3 class="login-cta-title">Start blogging today!</h3>
+            <p class="login-cta-text">Create an account to write and share your own blog posts with the community.</p>
+            <div class="login-cta-buttons">
+                <a href="?page=signup" class="login-cta-btn primary">Sign Up</a>
+                <a href="?page=signin" class="login-cta-btn secondary">Sign In</a>
+            </div>
         </div>
     </section>
     <?php endif; ?>
@@ -84,7 +98,7 @@
         </div>
 
         <div class="posts-container" id="other-posts-container">
-            <div class="loading-spinner">Đang tải...</div>
+            <div class="loading-spinner">Loading...</div>
         </div>
 
         <!-- Pagination -->

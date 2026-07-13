@@ -1,8 +1,10 @@
 <?php
 $pageTitle = "About - BloggerZ";
 
-// Fetch reviews
 require_once __DIR__ . '/../mySQLconnect.php';
+$isAdmin = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
+
+// Fetch reviews
 $reviews = [];
 $stmt = $connect->query("SELECT HoTen, Email, NoiDung, NgayTao FROM Reviews ORDER BY NgayTao DESC LIMIT 10");
 if ($stmt) {
@@ -57,7 +59,7 @@ if ($stmt) {
         <div class="reviews-carousel-wrapper">
             <?php if (empty($reviews)): ?>
                 <div class="no-reviews">
-                    <p>Chưa có đánh giá nào. Hãy là người đầu tiên để lại đánh giá nhé!</p>
+                    <p>No reviews yet. Be the first to leave one!</p>
                 </div>
             <?php else: ?>
                 <div class="reviews-track" id="reviews-track">
@@ -90,9 +92,11 @@ if ($stmt) {
             <?php endif; ?>
         </div>
         
+        <?php if (!$isAdmin): ?>
         <div class="leave-review-cta">
             <button class="btn-primary" id="about-leave-review-btn">Leave a Review</button>
         </div>
+        <?php endif; ?>
     </section>
 </main>
 

@@ -28,11 +28,12 @@
             <ul class="footer_contact">
                 <li><span>📞</span> <a href="tel:03636363363">03636 363 363</a></li>
                 <li><span>✉️</span> <a href="mailto:bloggerZ@gmail.com">bloggerZ@gmail.com</a></li>
-                <li><span>📍</span> Số 36, Đường 30/4, Thanh Hoá</li>
+                <li><span>📍</span> 36, 30/4 Street, Thanh Hoa</li>
             </ul>
         </div>
 
         <!-- Cột Newsletter -->
+        <?php if (!isset($_SESSION['vaitro']) || $_SESSION['vaitro'] !== 'admin'): ?>
         <div class="footer_col newsletter_col">
             <h3 class="col_title">Newsletter</h3>
             <p>Subscribe to get our latest content delivered to your inbox.</p>
@@ -40,6 +41,7 @@
                 <button id="footer-subscribe-btn">Subscribe ↗</button>
             </div>
         </div>
+        <?php endif; ?>
 
     </div>
 

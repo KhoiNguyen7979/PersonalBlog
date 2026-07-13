@@ -15,6 +15,7 @@ if (!isset($connect) || $connect->connect_error) {
 }
 
 $email = $_SESSION['email'];
+$isAdmin = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
 
 // Tự động thêm các cột mới nếu chưa tồn tại (tránh lỗi DB)
 $connect->query("ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS MoTa TEXT DEFAULT NULL");
@@ -24,7 +25,7 @@ $connect->query("ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS DuoiAnhAvatar VA
 // Lấy thông tin người dùng
 $stmt = $connect->prepare("SELECT HoTenNguoiDung, TenDangNhap, Email, MoTa FROM NguoiDung WHERE Email = ?");
 if (!$stmt) {
-    echo '<p style="color:red; padding:40px;">Lỗi DB: ' . htmlspecialchars($connect->error) . '</p>';
+    echo '<p style="color:red; padding:40px;">DB Error: ' . htmlspecialchars($connect->error) . '</p>';
     return;
 }
 $stmt->bind_param("s", $email);
@@ -32,7 +33,7 @@ $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 
 if (!$user) {
-    echo '<p style="color:red; padding:40px;">Không tìm thấy thông tin người dùng.</p>';
+    echo '<p style="color:red; padding:40px;">User information not found.</p>';
     return;
 }
 
@@ -70,10 +71,12 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
                     class="profile-avatar"
                     onerror="this.src='public/images/account.jpg'"
                 >
-                <label for="avatar-upload" class="avatar-overlay" title="Đổi ảnh đại diện">
+                <?php if (!$isAdmin): ?>
+                <label for="avatar-upload" class="avatar-overlay" title="Change avatar">
                     <span>📷</span>
                 </label>
                 <input type="file" id="avatar-upload" accept="image/*" style="display:none">
+                <?php endif; ?>
             </div>
         </div>
         
@@ -85,11 +88,11 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
             <div class="profile-stats-row">
                 <div class="stat-badge">
                     <span class="stat-num"><?= $stats['total_posts'] ?></span>
-                    <span class="stat-txt">Bài viết</span>
+                    <span class="stat-txt">Posts</span>
                 </div>
                 <div class="stat-badge">
                     <span class="stat-num"><?= $totalLikes ?></span>
-                    <span class="stat-txt">Lượt like</span>
+                    <span class="stat-txt">Likes</span>
                 </div>
             </div>
         </div>
@@ -98,19 +101,21 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
     <!-- Bio Section -->
     <div class="profile-section">
         <div class="section-header">
-            <h3>Giới thiệu</h3>
-            <a href="#" class="edit-link" id="edit-bio-btn">Chỉnh sửa</a>
+            <h3>About</h3>
+            <?php if (!$isAdmin): ?>
+            <a href="#" class="edit-link" id="edit-bio-btn">Edit</a>
+            <?php endif; ?>
         </div>
         <div class="profile-bio" id="bio-display">
             <p id="bio-text">
-                <?= nl2br(htmlspecialchars($user['MoTa'] ?? 'Chưa có mô tả. Nhấn Chỉnh sửa để thêm.')) ?>
+                <?= nl2br(htmlspecialchars($user['MoTa'] ?? 'No description yet. Click Edit to add one.')) ?>
             </p>
         </div>
         <div class="profile-bio-edit" id="bio-edit" style="display:none;">
-            <textarea id="bio-textarea" rows="4" placeholder="Viết gì đó về bản thân bạn..."><?= htmlspecialchars($user['MoTa'] ?? '') ?></textarea>
+            <textarea id="bio-textarea" rows="4" placeholder="Write something about yourself..."><?= htmlspecialchars($user['MoTa'] ?? '') ?></textarea>
             <div class="edit-actions">
-                <button id="save-bio-btn" class="btn-save">Lưu</button>
-                <button id="cancel-bio-btn" class="btn-cancel-sm">Hủy</button>
+                <button id="save-bio-btn" class="btn-save">Save</button>
+                <button id="cancel-bio-btn" class="btn-cancel-sm">Cancel</button>
             </div>
         </div>
     </div>
@@ -118,17 +123,19 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
     <!-- Info Edit Section -->
     <div class="profile-section">
         <div class="section-header">
-            <h3>Thông tin cá nhân</h3>
-            <button id="edit-info-btn" class="edit-link">Chỉnh sửa</button>
+            <h3>Personal Information</h3>
+            <?php if (!$isAdmin): ?>
+            <button id="edit-info-btn" class="edit-link">Edit</button>
+            <?php endif; ?>
         </div>
         
         <div class="info-display" id="info-display">
             <div class="info-row">
-                <span class="info-label">Tên đăng nhập</span>
+                <span class="info-label">Username</span>
                 <span class="info-value"><?= htmlspecialchars($user['TenDangNhap']) ?></span>
             </div>
             <div class="info-row">
-                <span class="info-label">Họ và tên</span>
+                <span class="info-label">Full Name</span>
                 <span class="info-value"><?= htmlspecialchars($user['HoTenNguoiDung']) ?></span>
             </div>
             <div class="info-row">
@@ -140,35 +147,35 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
         <div class="profile-info-edit" id="info-edit-section" style="display:none;">
             <form id="update-info-form">
                 <div class="form-field">
-                    <label>Email (Không thể thay đổi)</label>
+                    <label>Email (Cannot be changed)</label>
                     <input type="text" value="<?= htmlspecialchars($user['Email']) ?>" disabled>
                 </div>
                 <div class="form-field">
-                    <label>Tên đăng nhập</label>
+                    <label>Username</label>
                     <input type="text" id="edit-username" value="<?= htmlspecialchars($user['TenDangNhap']) ?>" required>
                 </div>
                 <div class="form-field">
-                    <label>Họ và tên</label>
+                    <label>Full Name</label>
                     <input type="text" id="edit-fullname" value="<?= htmlspecialchars($user['HoTenNguoiDung']) ?>" required>
                 </div>
                 
                 <div class="password-section">
-                    <h4>Đổi mật khẩu <span style="color:#999; font-weight:400">(Bỏ trống nếu không muốn đổi)</span></h4>
+                    <h4>Change Password <span style="color:#999; font-weight:400">(Leave empty to keep current)</span></h4>
                     <div class="form-field">
-                        <label>Mật khẩu mới</label>
-                        <input type="password" id="edit-new-password" placeholder="Nhập mật khẩu mới">
+                        <label>New Password</label>
+                        <input type="password" id="edit-new-password" placeholder="Enter new password">
                     </div>
                     <div class="form-field">
-                        <label>Xác nhận mật khẩu</label>
-                        <input type="password" id="edit-confirm-password" placeholder="Nhập lại mật khẩu mới">
+                        <label>Confirm Password</label>
+                        <input type="password" id="edit-confirm-password" placeholder="Re-enter new password">
                     </div>
                 </div>
 
                 <div id="update-msg" class="update-msg"></div>
 
                 <div class="edit-actions">
-                    <button type="submit" class="btn-save">Lưu thay đổi</button>
-                    <button type="button" id="cancel-info-btn" class="btn-cancel-sm">Hủy</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                    <button type="button" id="cancel-info-btn" class="btn-cancel-sm">Cancel</button>
                 </div>
             </form>
         </div>
@@ -183,7 +190,7 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
 <div id="avatar-crop-modal" class="av-crop-overlay" style="display:none;">
     <div class="av-crop-box">
         <div class="av-crop-header">
-            <h3>Cắt ảnh đại diện</h3>
+            <h3>Crop avatar</h3>
             <button type="button" id="av-crop-close" class="av-crop-close">✕</button>
         </div>
         <div class="av-crop-body">
@@ -192,10 +199,10 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
             </div>
         </div>
         <div class="av-crop-footer">
-            <span class="av-crop-hint">Kéo để di chuyển • Cuộn để phóng to/thu nhỏ</span>
+            <span class="av-crop-hint">Drag to move • Scroll to zoom</span>
             <div class="av-crop-actions">
-                <button type="button" id="av-crop-cancel" class="btn-av-cancel">Hủy</button>
-                <button type="button" id="av-crop-confirm" class="btn-av-confirm">Xác nhận</button>
+                <button type="button" id="av-crop-cancel" class="btn-av-cancel">Cancel</button>
+                <button type="button" id="av-crop-confirm" class="btn-av-confirm">Confirm</button>
             </div>
         </div>
     </div>

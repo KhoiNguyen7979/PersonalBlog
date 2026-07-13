@@ -18,7 +18,7 @@ $email = trim($_POST['email'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
 if (empty($full_name) || empty($email) || empty($message)) {
-    echo json_encode(['success' => false, 'message' => 'Vui lòng điền đầy đủ thông tin.']);
+    echo json_encode(['success' => false, 'message' => 'Please fill in all fields.']);
     exit;
 }
 

@@ -4,9 +4,9 @@ document.querySelector("form").addEventListener("submit", function(event) {
     if (password !== confirmPassword) {
         event.preventDefault();
         if (window.showToast) {
-            showToast('Mật khẩu xác nhận không trùng khớp. Vui lòng nhập lại!', 'error');
+            showToast('Passwords do not match. Please try again!', 'error');
         } else {
-            alert("Mật khẩu xác nhận không trùng khớp. Vui lòng nhập lại!");
+            alert("Passwords do not match. Please try again!");
         }
     }
 });

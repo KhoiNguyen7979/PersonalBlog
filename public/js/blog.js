@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById(`${type}-posts-container`);
         if (!container) return;
 
-        container.innerHTML = '<div class="loading-spinner">Đang tải...</div>';
+        container.innerHTML = '<div class="loading-spinner">Loading...</div>';
 
         const params = new URLSearchParams({
             type:     type,
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(`api/get_posts.php?${params}`)
             .then(r => r.json())
             .then(data => {
-                container.innerHTML = data.html || '<div class="no-posts">Chưa có bài viết nào.</div>';
+                container.innerHTML = data.html || '<div class="no-posts">No posts yet.</div>';
                 s.totalPages = data.totalPages || 1;
 
                 if (type === 'other') {
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 initCarousels();
             })
             .catch(() => {
-                container.innerHTML = '<div class="no-posts">Lỗi tải bài viết. Vui lòng thử lại.</div>';
+                container.innerHTML = '<div class="no-posts">Failed to load posts. Please try again.</div>';
             });
     }
 
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                if (confirm('Bạn có chắc muốn xoá bài viết này không?')) {
+                if (confirm('Are you sure you want to delete this post?')) {
                     const id = btn.dataset.id;
                     fetch(`api/delete_post.php?id=${id}`, { method: 'POST' })
                         .then(r => r.json())
@@ -218,9 +218,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 }
                             } else {
                                 if (window.showToast) {
-                                    showToast('Lỗi xoá bài viết.', 'error');
+                                    showToast('Failed to delete post.', 'error');
                                 } else {
-                                    alert('Lỗi xoá bài viết.');
+                                    alert('Failed to delete post.');
                                 }
                             }
                         });

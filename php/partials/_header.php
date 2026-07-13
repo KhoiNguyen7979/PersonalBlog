@@ -16,7 +16,9 @@
             <div class="nav_a"><a href="index.php">Home</a></div>
             <div class="nav_a"><a href="?page=blog">My Blog</a></div>
             <div class="nav_a"><a href="?page=about">About</a></div>
+            <?php if (!isset($_SESSION['vaitro']) || $_SESSION['vaitro'] !== 'admin'): ?>
             <div class="nav_a"><a href="#" id="contact-nav-btn">Review</a></div>
+            <?php endif; ?>
         </div>
         
         <div class="account_container" id="account_container_2">
@@ -38,8 +40,8 @@
                 </div>
                 <!-- Menu dropdown (Hồ sơ & Đăng xuất) -->
                 <div id="logoption">
-                    <a href="?page=profile">Hồ sơ</a>
-                    <a href="?page=signout">Đăng xuất</a>
+                    <a href="?page=profile">Profile</a>
+                    <a href="?page=signout">Sign Out</a>
                 </div>
 
             <?php else: ?>

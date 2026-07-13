@@ -9,28 +9,40 @@ require_once __DIR__ . '/../php/mySQLconnect.php';
 header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($_SESSION['email'])) {
-    echo json_encode(['success' => false, 'message' => 'Chưa đăng nhập.']);
+    echo json_encode(['success' => false, 'message' => 'Not logged in.']);
     exit;
 }
 
 $email  = $_SESSION['email'];
 $action = $_POST['action'] ?? '';
+$isAdmin = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
 
 if ($action === 'update_bio') {
+    if ($isAdmin) {
+        echo json_encode(['success' => false, 'message' => 'Admin account cannot edit this information.']);
+        exit;
+    }
     // Cập nhật mô tả
     $mota = trim($_POST['mota'] ?? '');
     $stmt = $connect->prepare("UPDATE NguoiDung SET MoTa = ? WHERE Email = ?");
     $stmt->bind_param("ss", $mota, $email);
     if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Đã cập nhật mô tả.']);
+        echo json_encode(['success' => true, 'message' => 'Description updated.']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Lỗi cập nhật mô tả.']);
+        echo json_encode(['success' => false, 'message' => 'Failed to update description.']);
     }
 
 } elseif ($action === 'update_avatar') {
+    // Admin không được đổi avatar
+    $vaitro = $_SESSION['vaitro'] ?? 'user';
+    if ($vaitro === 'admin') {
+        echo json_encode(['success' => false, 'message' => 'Admin account cannot change avatar.']);
+        exit;
+    }
+
     // Upload avatar mới
     if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
-        echo json_encode(['success' => false, 'message' => 'Lỗi upload file.']);
+        echo json_encode(['success' => false, 'message' => 'File upload error.']);
         exit;
     }
 
@@ -41,13 +53,13 @@ if ($action === 'update_bio') {
     finfo_close($finfo);
 
     if (!in_array($mime, $allowedTypes)) {
-        echo json_encode(['success' => false, 'message' => 'Chỉ chấp nhận file ảnh (jpg, png, gif, webp).']);
+        echo json_encode(['success' => false, 'message' => 'Only image files are accepted (jpg, png, gif, webp).']);
         exit;
     }
 
     $maxSize = 5 * 1024 * 1024; // 5MB
     if ($file['size'] > $maxSize) {
-        echo json_encode(['success' => false, 'message' => 'File ảnh quá lớn (tối đa 5MB).']);
+        echo json_encode(['success' => false, 'message' => 'File too large (max 5MB).']);
         exit;
     }
 
@@ -66,13 +78,13 @@ if ($action === 'update_bio') {
     $stmt->send_long_data(0, $data); 
     
     if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Đã cập nhật ảnh đại diện.']);
+        echo json_encode(['success' => true, 'message' => 'Avatar updated.']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Lỗi lưu ảnh vào database.']);
+        echo json_encode(['success' => false, 'message' => 'Failed to save image to database.']);
     }
 
 } else {
-    echo json_encode(['success' => false, 'message' => 'Action không hợp lệ.']);
+    echo json_encode(['success' => false, 'message' => 'Invalid action.']);
 }
 
 $connect->close();

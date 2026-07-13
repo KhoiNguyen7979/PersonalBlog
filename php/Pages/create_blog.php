@@ -14,19 +14,19 @@ if (!isset($_SESSION['email'])) {
 <div class="create-blog-page">
     <div class="create-blog-header">
         <h1>Write a Blog</h1>
-        <p>Chia sẻ câu chuyện, kiến thức của bạn với mọi người.</p>
+        <p>Share your stories and knowledge with the world.</p>
     </div>
 
     <form id="create-blog-form" class="create-blog-form">
         
         <!-- Ảnh bài viết -->
         <div class="form-group">
-            <label>Ảnh bài viết*</label>
+            <label>Featured Image*</label>
             <div class="thumbnail-upload" id="thumbnail-upload-box">
                 <input type="file" id="images-input" name="images[]" accept="image/*" required>
                 <div class="upload-placeholder" id="upload-placeholder">
                     <span class="icon">📷</span>
-                    <span class="text">Click để chọn ảnh</span>
+                    <span class="text">Click to choose an image</span>
                 </div>
                 <img id="thumbnail-preview" src="" alt="Preview">
             </div>
@@ -35,25 +35,25 @@ if (!isset($_SESSION['email'])) {
         <!-- Tiêu đề -->
         <div class="form-group">
             <label for="title">Title*</label>
-            <input type="text" id="title" name="title" class="form-control" placeholder="Nhập tiêu đề bài viết..." required>
+            <input type="text" id="title" name="title" class="form-control" placeholder="Enter post title..." required>
         </div>
 
         <!-- Tóm tắt -->
         <div class="form-group">
             <label for="summary">Summary</label>
-            <textarea id="summary" name="summary" class="form-control" rows="2" placeholder="Một đoạn ngắn mô tả nội dung bài viết..." required></textarea>
+            <textarea id="summary" name="summary" class="form-control" rows="2" placeholder="A short summary of your post..." required></textarea>
         </div>
 
         <!-- Thể loại -->
         <div class="form-group">
-            <label for="category">Thể loại</label>
+            <label for="category">Category</label>
             <div class="custom-select-wrapper">
                 <select id="category" name="category" class="form-control custom-select" required>
-                    <option value="" disabled selected>-- Chọn thể loại --</option>
-                    <option value="technology">Technology (Công nghệ)</option>
-                    <option value="skill">Skill (Kỹ năng)</option>
-                    <option value="story">Story (Câu chuyện)</option>
-                    <option value="music">Music (Âm nhạc)</option>
+                    <option value="" disabled selected>-- Select a category --</option>
+                    <option value="technology">Technology</option>
+                    <option value="skill">Skill</option>
+                    <option value="story">Story</option>
+                    <option value="music">Music</option>
                 </select>
             </div>
         </div>
@@ -61,13 +61,13 @@ if (!isset($_SESSION['email'])) {
         <!-- Nội dung -->
         <div class="form-group">
             <label for="content">Desribe</label>
-            <textarea id="content" name="content" class="form-control editor-content" rows="15" placeholder="Bạn đang nghĩ gì? Hãy viết ra đây..." required></textarea>
+            <textarea id="content" name="content" class="form-control editor-content" rows="15" placeholder="What's on your mind? Write it here..." required></textarea>
         </div>
 
         <!-- Nút hành động -->
         <div class="form-actions">
-            <button type="button" class="btn-cancel" onclick="window.history.back()">Hủy</button>
-            <button type="submit" class="btn-publish" id="publish-btn">Đăng bài</button>
+            <button type="button" class="btn-cancel" onclick="window.history.back()">Cancel</button>
+            <button type="submit" class="btn-publish" id="publish-btn">Publish</button>
         </div>
     </form>
 </div>
@@ -79,7 +79,7 @@ if (!isset($_SESSION['email'])) {
 <div class="crop-modal-overlay" id="crop-modal">
     <div class="crop-modal-box">
         <div class="crop-modal-header">
-            <h3>Xén ảnh</h3>
+            <h3>Crop image</h3>
             <button type="button" class="crop-modal-close" id="crop-close">&times;</button>
         </div>
         <div class="crop-modal-body">
@@ -88,10 +88,10 @@ if (!isset($_SESSION['email'])) {
             </div>
         </div>
         <div class="crop-modal-footer">
-            <span class="crop-hint">Kéo thả để chọn vùng ảnh</span>
+            <span class="crop-hint">Drag to select image area</span>
             <div class="crop-modal-actions">
-                <button type="button" class="btn-crop-cancel" id="crop-cancel">Bỏ qua</button>
-                <button type="button" class="btn-crop-confirm" id="crop-confirm">Xác nhận</button>
+                <button type="button" class="btn-crop-cancel" id="crop-cancel">Skip</button>
+                <button type="button" class="btn-crop-confirm" id="crop-confirm">Confirm</button>
             </div>
         </div>
     </div>

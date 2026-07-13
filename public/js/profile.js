@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cropConfirm.addEventListener('click', () => {
             if (!cropper) return;
 
-            cropConfirm.textContent = 'Đang xử lý...';
+            cropConfirm.textContent = 'Processing...';
             cropConfirm.disabled = true;
 
             cropper.getCroppedCanvas({
@@ -85,11 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetch('api/update_profile.php', { method: 'POST', body: formData })
                     .then(r => r.json())
                     .then(data => {
-                        showToast(data.success ? '✅ Đã cập nhật ảnh đại diện!' : '❌ ' + data.message);
+                        showToast(data.success ? '✅ Avatar updated!' : '❌ ' + data.message);
                     })
-                    .catch(() => showToast('❌ Lỗi kết nối server.'));
+                    .catch(() => showToast('❌ Server connection error.'));
 
-                cropConfirm.textContent = 'Xác nhận';
+                cropConfirm.textContent = 'Confirm';
                 cropConfirm.disabled = false;
                 closeCropModal();
             }, 'image/jpeg', 0.92);
@@ -133,15 +133,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(r => r.json())
                 .then(data => {
                     if (data.success) {
-                        bioText.innerHTML = newBio.replace(/\n/g, '<br>') || '<em>Chưa có mô tả.</em>';
+                        bioText.innerHTML = newBio.replace(/\n/g, '<br>') || '<em>No description.</em>';
                         bioDisplay.style.display = 'block';
                         bioEdit.style.display    = 'none';
-                        showToast('✅ Đã cập nhật mô tả!');
+                        showToast('✅ Description updated!');
                     } else {
                         showToast('❌ ' + data.message);
                     }
                 })
-                .catch(() => showToast('❌ Lỗi kết nối server.'));
+                .catch(() => showToast('❌ Server connection error.'));
         });
     }
 
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (newPassword !== '' && newPassword !== confirmPassword) {
                 updateMsg.style.color = 'red';
-                updateMsg.innerText = 'Mật khẩu xác nhận không khớp!';
+                updateMsg.innerText = 'Passwords do not match!';
                 return;
             }
 
@@ -193,21 +193,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => {
                     if (data.status === 'success') {
                         if (window.showToast) {
-                            showToast('Cập nhật thành công!');
+                            showToast('Update successful!');
                             setTimeout(() => window.location.reload(), 2000);
                         } else {
                             updateMsg.style.color = 'green';
-                            updateMsg.innerText = 'Cập nhật thành công! Đang tải lại trang...';
+                            updateMsg.innerText = 'Update successful! Reloading...';
                             setTimeout(() => window.location.reload(), 1500);
                         }
                     } else {
                         updateMsg.style.color = 'red';
-                        updateMsg.innerText = data.message || 'Có lỗi xảy ra!';
+                        updateMsg.innerText = data.message || 'An error occurred!';
                     }
                 })
                 .catch(() => {
                     updateMsg.style.color = 'red';
-                    updateMsg.innerText = 'Lỗi kết nối máy chủ!';
+                    updateMsg.innerText = 'Server connection error!';
                 });
         });
     }

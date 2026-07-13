@@ -72,7 +72,7 @@ if (isset($_GET['id'])) {
 
 } else {
     http_response_code(400);
-    echo "Bad request: Cần tham số ?id=... hoặc ?email=...";
+    echo "Bad request: Missing parameter ?id=... or ?email=...";
 }
 
 $connect->close();
