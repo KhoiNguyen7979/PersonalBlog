@@ -44,7 +44,7 @@ if ($stmt) {
             </div>
             
             <div class="story-image">
-                <img src="public/images/account.jpg" alt="About Me">
+                <img src="public/images/bloggerZ.png" alt="BloggerZ Logo">
             </div>
         </div>
     </section>
