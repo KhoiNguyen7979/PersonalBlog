@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 // === create_blog.js - Trang tạo blog mới ===
-// 1. Chọn ảnh → mở CropperJS (tỷ lệ tuỳ ý)
+// 1. Chọn ảnh → mở CropperJS (Cố định tỷ lệ chữ nhật, có scroll để zoom)
 // 2. Submit form qua fetch API → tạo bài viết + lưu ảnh vào DB
     const fileInput     = document.getElementById('images-input');
     const previewImg    = document.getElementById('thumbnail-preview');
@@ -25,15 +25,24 @@ document.addEventListener('DOMContentLoaded', () => {
             cropImage.onload = () => {
                 cropModal.classList.add('active');
                 document.body.style.overflow = 'hidden';
+                
                 if (cropper) cropper.destroy();
-                const maxDim = Math.max(cropImage.naturalWidth, cropImage.naturalHeight);
+                
                 cropper = new Cropper(cropImage, {
-                    aspectRatio: NaN,
+                    // Để NaN để có thể kéo khung cắt lấy toàn bộ ảnh 1920x1280
+                    // Hoặc nếu muốn khóa đúng tỷ lệ của ảnh này thì dùng: 1920 / 1280
+                    aspectRatio: NaN, 
                     viewMode: 1,
-                    autoCropArea: 1,
+                    dragMode: 'move',
+                    autoCropArea: 1,           // Đặt là 1 để mặc định khung cắt sẽ chọn toàn bộ ảnh
                     responsive: true,
-                    minCanvasWidth: maxDim,
-                    minCanvasHeight: maxDim,
+                    restore: false,
+                    guides: true,
+                    center: true,
+                    highlight: false,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: false,
                 });
             };
         };
@@ -54,26 +63,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
    cropConfirm.addEventListener('click', () => {
-        if (!cropper || !currentFile) return; //
-        const canvas = cropper.getCroppedCanvas(); //[cite: 3]
-        if (!canvas) return; //[cite: 3]
+        if (!cropper || !currentFile) return; 
+        
+        // SỬA LẠI PHẦN XUẤT ẢNH
+        const canvas = cropper.getCroppedCanvas({
+            // Xóa bỏ width và height cố định
+            // Dùng maxWidth và maxHeight để giữ độ phân giải cao nhất là 1920x1920
+            // Ảnh gốc bao nhiêu thì sẽ crop ra bấy nhiêu (tối đa đến giới hạn này)
+            maxWidth: 1920,
+            maxHeight: 1920,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high',
+        }); 
+        
+        if (!canvas) return; 
 
-        // Ép định dạng sang WebP và nén với chất lượng 70% (0.7)
         canvas.toBlob((blob) => {
-            // Cắt đuôi file cũ và đổi thành .webp
             const originalName = currentFile.name;
             const newFileName = originalName.substring(0, originalName.lastIndexOf('.')) + '.webp';
             
-            // Tạo file mới với chuẩn định dạng WebP
             const newFile = new File([blob], newFileName, { type: 'image/webp' });
             
-            const dt = new DataTransfer(); //[cite: 3]
-            dt.items.add(newFile); //[cite: 3]
-            fileInput.files = dt.files; //[cite: 3]
+            const dt = new DataTransfer(); 
+            dt.items.add(newFile); 
+            fileInput.files = dt.files; 
             
-            showPreview(newFile); //[cite: 3]
-            closeCrop(); //[cite: 3]
-        }, 'image/webp', 0.7); // <-- Chỉ định rõ định dạng và chất lượng nén
+            showPreview(newFile); 
+            closeCrop(); 
+        }, 'image/webp', 0.8); // Có thể tăng chất lượng lên 0.8 hoặc 0.9 để ảnh 1920x1280 nét hơn
     });
 
     fileInput.addEventListener('change', () => {

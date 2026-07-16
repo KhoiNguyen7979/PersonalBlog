@@ -1,12 +1,12 @@
 <?php
 // === TRANG ABOUT ===
-// Các block: Hero Section | Story Section | Reviews Carousel
+
 $pageTitle = "About - BloggerZ";
 
 require_once __DIR__ . '/../mySQLconnect.php';
 $isAdmin = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
 
-// Fetch reviews
+// Lấy các reviews từ CSDL
 $reviews = [];
 $stmt = $connect->query("SELECT HoTen, Email, NoiDung, NgayTao FROM Reviews ORDER BY NgayTao DESC LIMIT 10");
 if ($stmt) {
@@ -18,7 +18,7 @@ if ($stmt) {
 <link rel="stylesheet" href="public/css/about.css">
 
 <main class="about-main">
-    <!-- Hero Section -->
+    <!-- Phần giới thiệu -->
     <section class="about-hero">
         <div class="about-hero-content">
             <h1 class="about-title">Welcome to <span>BloggerZ</span></h1>
@@ -26,7 +26,7 @@ if ($stmt) {
         </div>
     </section>
 
-    <!-- My Journey / Content Section -->
+    <!-- Phần nội dung -->
     <section class="about-story">
         <div class="story-container">
             <div class="story-text">
@@ -51,7 +51,7 @@ if ($stmt) {
         </div>
     </section>
 
-    <!-- Reviews Section (Horizontal Carousel) -->
+    <!-- Phần Reviews của người dùng -->
     <section class="about-reviews">
         <div class="reviews-header">
             <h2>What People Say</h2>
@@ -59,6 +59,7 @@ if ($stmt) {
         </div>
         
         <div class="reviews-carousel-wrapper">
+            <!-- Nếu chưa có ai review -->
             <?php if (empty($reviews)): ?>
                 <div class="no-reviews">
                     <p>No reviews yet. Be the first to leave one!</p>
@@ -76,6 +77,7 @@ if ($stmt) {
                         <p class="review-content">"<?= $content ?>"</p>
                         <div class="review-meta">
                             <a href="?page=public_profile&email=<?= $email ?>" class="review-avatar">
+                                <!-- lấy ảnh avatar của người dùng -->
                                 <img src="get_image.php?email=<?= $email ?>&v=<?= time() ?>" alt="<?= $name ?>">
                             </a>
                             <div class="review-author">
@@ -86,14 +88,14 @@ if ($stmt) {
                     </div>
                     <?php endforeach; ?>
                 </div>
-                <!-- Controls -->
+                <!-- bảng điều khiển review -->
                 <div class="carousel-controls">
                     <button id="prev-review" aria-label="Previous review">←</button>
                     <button id="next-review" aria-label="Next review">→</button>
                 </div>
             <?php endif; ?>
         </div>
-        
+        <!-- Tương tự như file header nếu vai trò người dùng là admin, sẽ ẩn đi chức năng Review, vì admin không nên tự review trang web của chính mình :v  -->
         <?php if (!$isAdmin): ?>
         <div class="leave-review-cta">
             <button class="btn-primary" id="about-leave-review-btn">Leave a Review</button>

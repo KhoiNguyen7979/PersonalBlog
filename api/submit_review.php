@@ -1,11 +1,10 @@
 <?php
 /**
- * api/submit_review.php
  * Lưu review vào database
  */
-// === API: Gửi review/đánh giá ===
-// Lưu review từ form modal vào bảng Reviews
+// Lưu review từ pop-up reviews vào bảng Reviews
 session_start();
+//thiêt lập kết nối CSDL
 require_once __DIR__ . '/../php/mySQLconnect.php';
 
 header('Content-Type: application/json; charset=utf-8');
@@ -15,12 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
     exit;
 }
-
+//Trim các trường tên, tin nhắn
 $full_name = trim($_POST['full_name'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
-if (empty($full_name) || empty($email) || empty($message)) {
+if (empty($full_name) || empty($email)) {
+    echo json_encode(['success' => false, 'message' => 'You have not signed in yet, please sign in to submit review']);
+    exit;
+}
+
+if (empty($message)) {
     echo json_encode(['success' => false, 'message' => 'Please fill in all fields.']);
     exit;
 }

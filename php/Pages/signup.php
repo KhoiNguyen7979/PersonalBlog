@@ -1,6 +1,7 @@
 <?php 
 // === TRANG ĐĂNG KÝ ===
-// Xử lý đăng ký (POST) + Giao diện 2 panel (logo trái, form phải) + Modal thành công/lỗi
+// Xử lý đăng ký (phương thức POST)
+    // Thiết lập kết nối CSDL
     require_once(__DIR__ . '/../mySQLconnect.php');
     $show_modal = false;
     $modal_title = "";
@@ -20,7 +21,7 @@
         if ($stmt) {
             $stmt->bind_param("ssss", $email, $ho_ten, $user_name, $matkhau_dabam);
             
-            // Wrap execution in try...catch to intercept the duplicate entry exception
+            // để trong vòng try catch để bắt lỗi ngoại lệ
             try {
                 if ($stmt->execute()) {
                     $show_modal = true;
@@ -28,7 +29,7 @@
                         $modal_message = "Account " . htmlspecialchars($user_name) . " has been created. You can sign in now.";
                 }
             } catch (mysqli_sql_exception $e) {
-                // Check if the error code is 1062 (MySQL's code for Duplicate Entry)
+                // Nếu đã có tài khoản với email đó trong hệ thống, thông báo đến người dùng là không đăng ký được
                 if ($e->getCode() === 1062) {
                     $show_modal = true;
                         $modal_title = "Oops! Registration Error";
@@ -46,13 +47,13 @@
 
 <div class="container">
 
-    <!-- LEFT -->
+    <!-- Hình bên trái -->
     <div class="left-panel">
         <h1>Welcome to</h1>
         <a href="index.php"><img src="public/images/bloggerZ.png" class="logo" alt="BloggerZ Logo"></a>
     </div>
 
-    <!-- RIGHT -->
+    <!-- Form đăng ký bên phải -->
     <div class="right-panel">
 
         <h3>Sign Up</h3>
@@ -103,6 +104,7 @@
         <h2><?= $modal_title ?></h2>
         <p><?= $modal_message ?></p>
         <div class="modal-actions">
+            <!-- hiên thị các nội dung pop - up (đăng ký thành công/không thành công) -->
             <?php if($modal_title != "Đăng ký thành công!" && $modal_title != "Registration successful!"):?>
                 <button class="ok-btn" onclick="document.getElementById('resultModal').style.display='none'">OK</button>
             <?php endif; ?>

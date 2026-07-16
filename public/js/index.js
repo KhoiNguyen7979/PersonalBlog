@@ -1,5 +1,4 @@
 // === index.js - JS toàn cục (chạy trên mọi trang) ===
-
 // --- Toast notification: đọc ?toast= từ URL và hiển thị thông báo ---
 (function() {
     var toast = document.getElementById('global-toast');

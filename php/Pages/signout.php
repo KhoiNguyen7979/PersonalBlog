@@ -1,6 +1,6 @@
 <?php
 // === TRANG ĐĂNG XUẤT ===
-// Xoá session và chuyển về trang chủ với toast thông báo
+// Xoá session và chuyển về trang chủ với toast thông báo đã đăng xuất thành công
 session_start();
 session_unset();
 session_destroy();

@@ -1,6 +1,6 @@
 <?php
 // === TRANG ĐĂNG NHẬP ===
-// Xử lý đăng nhập (POST) + Giao diện 2 panel (logo trái, form phải) + Modal lỗi
+// Xử lý đăng nhập (POST)
 $show_modal = false;
 $modal_title = "";
 $modal_message = "";
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
         
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
-            
+            // kiểm tra email, mật khẩu, vai trò của tài khoản
             if (password_verify($matkhau, $user['MatKhau'])) {
                 $_SESSION['email'] = $user['Email'];
                 $_SESSION['hoten'] = $user['TenDangNhap'];
@@ -60,13 +60,13 @@ $connect->close();
 
 <div class="container">
 
-    <!-- LEFT -->
+    <!-- ảnh bên trái -->
     <div class="left-panel">
         <h1>Welcome back to</h1>
         <a href="index.php"><img src="public/images/bloggerZ.png" class="logo" alt="BloggerZ Logo"></a>
     </div>
 
-    <!-- RIGHT -->
+    <!-- form đăng nhập ở bên phải -->
     <div class="right-panel">
 
         <h2>Sign In</h2>
@@ -103,6 +103,7 @@ $connect->close();
 
 </div>
 <?php if($show_modal): ?>
+<!-- hiên thị các nội dung pop - up (đăng nhập thành công/không thành công) -->
 <div class="modal-overlay" id="resultModal">
     <div class="modal-box">
         <span class="close-btn" onclick="document.getElementById('resultModal').style.display='none'">&times;</span>

@@ -19,8 +19,9 @@ if (!isset($_SESSION['email'])) {
 $email  = $_SESSION['email'];
 $action = $_POST['action'] ?? '';
 $isAdmin = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
-
+// Cập nhật mô tả
 if ($action === 'update_bio') {
+    // nếu là admin thì ko được phép chỉnh sửa mô tả
     if ($isAdmin) {
         echo json_encode(['success' => false, 'message' => 'Admin account cannot edit this information.']);
         exit;
@@ -34,7 +35,7 @@ if ($action === 'update_bio') {
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to update description.']);
     }
-
+// Cập nhật ảnh avatar
 } elseif ($action === 'update_avatar') {
     // Admin không được đổi avatar
     $vaitro = $_SESSION['vaitro'] ?? 'user';
@@ -42,7 +43,7 @@ if ($action === 'update_bio') {
         echo json_encode(['success' => false, 'message' => 'Admin account cannot change avatar.']);
         exit;
     }
-
+    
     // Upload avatar mới
     if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
         echo json_encode(['success' => false, 'message' => 'File upload error.']);

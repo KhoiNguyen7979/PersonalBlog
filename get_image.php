@@ -1,16 +1,15 @@
 <?php
 /**
  * get_image.php
- * Serve ảnh bài viết hoặc avatar người dùng trực tiếp từ database.
+ * Xuất ảnh bài viết hoặc avatar người dùng trực tiếp từ database.
  * 
  * Cách dùng:
- *   Ảnh bài viết : get_image.php?id=1        (ảnh đầu tiên / thumb)
- *                   get_image.php?id=1&idx=0  (ảnh đầu tiên)
- *                   get_image.php?id=1&idx=1  (ảnh thứ hai)
+ *   Ảnh bài viết : get_image.php?id=1        (ảnh đầu tiên / thumbnail)
  *   Avatar user  : get_image.php?email=domixi@gmail.com
  */
+// thiết lập kết nối CSDL
 require_once __DIR__ . '/php/mySQLconnect.php';
-
+//Lấy ảnh của bài viết dựa vào ID Bài Viết
 if (isset($_GET['id'])) {
     $id  = intval($_GET['id']);
     $idx = max(0, intval($_GET['idx'] ?? 0));
@@ -19,7 +18,7 @@ if (isset($_GET['id'])) {
     $stmt->bind_param("ii", $id, $idx);
     $stmt->execute();
     $stmt->store_result();
-
+    // Nếu ko lấy ảnh được thì để auto avatar người dùng xám sẵn
     if ($stmt->num_rows === 0) {
         header("Content-Type: image/svg+xml");
         echo '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250">
@@ -39,14 +38,14 @@ if (isset($_GET['id'])) {
     header("Cache-Control: public, max-age=86400");
     echo $data;
 
-// --- PHẦN 2: Lấy ảnh avatar theo email ---
+//Lấy ảnh avatar theo email
 } elseif (isset($_GET['email'])) {
     $email = $_GET['email'];
     $stmt = $connect->prepare("SELECT Avatar, DuoiAnhAvatar FROM NguoiDung WHERE Email = ? LIMIT 1");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
-
+    // Nếu ko lấy ảnh được thì để auto avatar người dùng xám sẵn
     if ($stmt->num_rows === 0) {
         header("Content-Type: image/svg+xml");
         echo '<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150">
@@ -59,7 +58,7 @@ if (isset($_GET['id'])) {
 
     $stmt->bind_result($data, $ext);
     $stmt->fetch();
-
+    // Nếu ko có dữ liệu thì lấy ảnh account.jpg mặc định
     if (empty($data)) {
         header("Location: public/images/account.jpg");
         exit;
@@ -71,6 +70,7 @@ if (isset($_GET['id'])) {
     header("Content-Type: $mime");
     echo $data;
 
+//Nếu không lấy ảnh nào được sẽ in ra màn hình thiếu id hoặc email
 } else {
     http_response_code(400);
     echo "Bad request: Missing parameter ?id=... or ?email=...";

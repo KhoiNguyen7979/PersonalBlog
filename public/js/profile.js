@@ -4,6 +4,7 @@
  * 2. Chỉnh sửa bio/mô tả (hiện/ẩn textarea, gửi qua fetch)
  * 3. Chỉnh sửa thông tin cá nhân (tên, username, mật khẩu)
  */
+// Chỉnh sửa ảnh Avatar
 document.addEventListener('DOMContentLoaded', () => {
 
     // ── Avatar Crop ───────────────────────────────────────────────────────────
@@ -97,8 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 'image/jpeg', 0.92);
         });
     }
-
-    // ── Edit Bio ──────────────────────────────────────────────────────────────
+// Chỉnh sửa Mô tả
     const editBioBtn   = document.getElementById('edit-bio-btn');
     const bioDisplay   = document.getElementById('bio-display');
     const bioEdit      = document.getElementById('bio-edit');
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bioTextarea  = document.getElementById('bio-textarea');
     const saveBioBtn   = document.getElementById('save-bio-btn');
     const cancelBioBtn = document.getElementById('cancel-bio-btn');
-
+    //hiện textarea khi click vào nút edit, đồng thời ẩn display mô tả hiện tại 
     if (editBioBtn) {
         editBioBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -115,14 +115,14 @@ document.addEventListener('DOMContentLoaded', () => {
             bioTextarea.focus();
         });
     }
-
+    //đóng textarea khi click vào nút cancel, đồng thời hiện lại display mô tả hiện tại 
     if (cancelBioBtn) {
         cancelBioBtn.addEventListener('click', () => {
             bioDisplay.style.display = 'block';
             bioEdit.style.display    = 'none';
         });
     }
-
+    //Nếu bấm nút Save thì sẽ nộp nội dung trong textarea lên CSDL
     if (saveBioBtn) {
         saveBioBtn.addEventListener('click', () => {
             const newBio = bioTextarea.value.trim();
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('action', 'update_bio');
             formData.append('mota', newBio);
-
+            // xuất dữ liệu qua file update_profile.php để cập nhật
             fetch('api/update_profile.php', { method: 'POST', body: formData })
                 .then(r => r.json())
                 .then(data => {
@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         bioText.innerHTML = newBio.replace(/\n/g, '<br>') || '<em>No description.</em>';
                         bioDisplay.style.display = 'block';
                         bioEdit.style.display    = 'none';
+                        // hiển thị toast đăng ký thành công
                         showToast('✅ Description updated!');
                     } else {
                         showToast('❌ ' + data.message);
@@ -147,13 +148,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── Edit Info ─────────────────────────────────────────────────────────────
+    // Chỉnh sửa thông tin cá nhân
     const editInfoBtn     = document.getElementById('edit-info-btn');
     const infoEditSection = document.getElementById('info-edit-section');
     const cancelInfoBtn   = document.getElementById('cancel-info-btn');
     const updateInfoForm  = document.getElementById('update-info-form');
     const updateMsg       = document.getElementById('update-msg');
-
+    //hiện form khi click vào nút edit, đồng thời ẩn nút edit
     if (editInfoBtn) {
         editInfoBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -161,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             editInfoBtn.style.display = 'none';
         });
     }
-
+    //ẩn form khi click vào nút cancel, đồng thời hiện lại nút edit  
     if (cancelInfoBtn) {
         cancelInfoBtn.addEventListener('click', () => {
             infoEditSection.style.display = 'none';
@@ -169,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateMsg.innerText = '';
         });
     }
-
+    // cập nhật dữ liệu của form lên CSDL
     if (updateInfoForm) {
         updateInfoForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -189,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('username', username);
             formData.append('fullname', fullname);
             if (newPassword !== '') formData.append('password', newPassword);
-
+            // xuất dữ liệu qua file update_info.php
             fetch('api/update_info.php', { method: 'POST', body: formData })
                 .then(r => r.json())
                 .then(data => {
@@ -214,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── Toast ─────────────────────────────────────────────────────────────────
+    // hiển thị toast khi cập nhật thông tin, mô tả thành công
     function showToast(message) {
         let toast = document.querySelector('.profile-toast');
         if (!toast) {

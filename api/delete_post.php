@@ -2,10 +2,11 @@
 // === API: Xóa bài viết ===
 // Xóa bài viết kèm ảnh và lượt thích liên quan. Chỉ chủ bài viết hoặc admin mới được xóa.
 session_start();
+//thiết lập kết nối CSDL
 require_once __DIR__ . '/../php/mySQLconnect.php';
 header('Content-Type: application/json; charset=utf-8');
 
-// Only accept POST (fetch uses method: 'POST')
+//Chỉ chấp nhận phương thức POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Invalid method']);
     exit;
@@ -15,7 +16,7 @@ if (!isset($_SESSION['email'])) {
     echo json_encode(['success' => false, 'message' => 'Not authenticated']);
     exit;
 }
-
+//lấy ID bài viết cần xóa
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id <= 0) {
     echo json_encode(['success' => false, 'message' => 'Invalid id']);
@@ -25,7 +26,7 @@ if ($id <= 0) {
 $userEmail = $_SESSION['email'];
 $isAdmin = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
 
-// Verify ownership
+//xác thực chủ bài viết
 $stmt = $connect->prepare('SELECT ID_NguoiDung FROM BaiViet WHERE ID_BaiViet = ?');
 $stmt->bind_param('i', $id);
 $stmt->execute();
@@ -39,17 +40,17 @@ if ($owner['ID_NguoiDung'] !== $userEmail && !$isAdmin) {
     exit;
 }
 
-// Delete related likes
+// Xóa các lượt like của bài viết
 $stmt = $connect->prepare('DELETE FROM ThichBaiViet WHERE ID_BaiViet = ?');
 $stmt->bind_param('i', $id);
 $stmt->execute();
 
-// Delete related pics
+//Xóa ảnh của bài viết
 $stmt = $connect->prepare('DELETE FROM Pics WHERE ID_BaiViet = ?');
 $stmt->bind_param('i', $id);
 $stmt->execute();
 
-// Delete the post
+//Xóa bài viết
 if ($isAdmin) {
     $stmt = $connect->prepare('DELETE FROM BaiViet WHERE ID_BaiViet = ?');
     $stmt->bind_param('i', $id);

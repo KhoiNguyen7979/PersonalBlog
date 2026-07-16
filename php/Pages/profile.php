@@ -1,13 +1,12 @@
 <?php
 // === TRANG HỒ SƠ CÁ NHÂN ===
-// Các block: Profile Header Card (avatar + tên + stats) | Bio Section (xem/sửa) | Personal Info Section (xem/sửa) | Avatar Crop Modal
+//Nếu chưa đăng nhập thì tự động chuyển hướng qua trang đăng nhập
 if (!isset($_SESSION['email'])) {
     header("Location: index.php?page=signin");
     exit;
 }
 
-// Header đã require_once mySQLconnect rồi, nên $connect đã có sẵn.
-// Gọi lại phòng trường hợp vào trực tiếp.
+//THiết lập kết nối với CSDL
 if (!isset($connect) || $connect->connect_error) {
     require_once __DIR__ . '/../mySQLconnect.php';
 }
@@ -15,13 +14,9 @@ if (!isset($connect) || $connect->connect_error) {
 $email = $_SESSION['email'];
 $isAdmin = isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin';
 
-// Tự động thêm các cột mới nếu chưa tồn tại (tránh lỗi DB)
-$connect->query("ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS MoTa TEXT DEFAULT NULL");
-$connect->query("ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS Avatar MEDIUMBLOB DEFAULT NULL");
-$connect->query("ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS DuoiAnhAvatar VARCHAR(10) DEFAULT 'jpg'");
-
 // Lấy thông tin người dùng
 $stmt = $connect->prepare("SELECT HoTenNguoiDung, TenDangNhap, Email, MoTa FROM NguoiDung WHERE Email = ?");
+//Nếu lấy dữ liệu không được thông báo lỗi
 if (!$stmt) {
     echo '<p style="color:red; padding:40px;">DB Error: ' . htmlspecialchars($connect->error) . '</p>';
     return;
@@ -29,19 +24,19 @@ if (!$stmt) {
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
-
+//Nếu không có dữ liệu từ người dùng, thông báo lỗi
 if (!$user) {
     echo '<p style="color:red; padding:40px;">User information not found.</p>';
     return;
 }
 
-// Thống kê
+// Thống kê tổng số bài viết đã đăng của người dùng
 $stmtStats = $connect->prepare("SELECT COUNT(*) as total_posts FROM BaiViet WHERE ID_NguoiDung = ?");
 $stmtStats->bind_param("s", $email);
 $stmtStats->execute();
 $stats = $stmtStats->get_result()->fetch_assoc();
 
-// Tổng lượt likes cho tất cả bài viết của user
+// Thống kê tổng lượt likes cho tất cả bài viết của người dùng
 $stmtLikes = $connect->prepare(
     "SELECT COUNT(*) AS total_likes
      FROM ThichBaiViet t
@@ -58,10 +53,11 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
 
 <div class="profile-page">
 
-    <!-- Profile Header Card -->
+    <!--Thẻ Header -->
     <div class="profile-header-card">
         <div class="profile-avatar-section">
             <div class="avatar-wrapper">
+                <!-- Lấy ảnh từ CSDL, nếu ko có ảnh mặc định để ảnh account.jpg -->
                 <img
                     id="profile-avatar"
                     src="get_image.php?email=<?= urlencode($email) ?>&v=<?= time() ?>"
@@ -69,6 +65,7 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
                     class="profile-avatar"
                     onerror="this.src='public/images/account.jpg'"
                 >
+                <!-- Nếu vai trò không phải là admin thì sẽ được đổi ảnh avatar -->
                 <?php if (!$isAdmin): ?>
                 <label for="avatar-upload" class="avatar-overlay" title="Change avatar">
                     <span>📷</span>
@@ -77,7 +74,7 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
                 <?php endif; ?>
             </div>
         </div>
-        
+        <!-- Phần hiển thị thông tin người dùng: họ tên người dùng, tên đăng nhập, email tài khoản, tổng số bài viết và tổng số lượt thích -->
         <div class="profile-info-section">
             <h1 class="profile-display-name"><?= htmlspecialchars($user['HoTenNguoiDung']) ?></h1>
             <p class="profile-username">@<?= htmlspecialchars($user['TenDangNhap']) ?></p>
@@ -96,16 +93,18 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
         </div>
     </div>
 
-    <!-- Bio Section -->
+    <!--Phần chỉnh sửa mô tả của người dùng-->
     <div class="profile-section">
         <div class="section-header">
             <h3>About</h3>
+            <!-- Nếu vai trò không phải là admin thì sẽ được cập nhật mô tả của mình lên -->
             <?php if (!$isAdmin): ?>
             <a href="#" class="edit-link" id="edit-bio-btn">Edit</a>
             <?php endif; ?>
         </div>
         <div class="profile-bio" id="bio-display">
             <p id="bio-text">
+                <!-- Nếu người dùng chưa có mô tả -->
                 <?= nl2br(htmlspecialchars($user['MoTa'] ?? 'No description yet. Click Edit to add one.')) ?>
             </p>
         </div>
@@ -118,10 +117,11 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
         </div>
     </div>
 
-    <!-- Info Edit Section -->
+    <!--Phần chỉnh sửa thông tin chi tiết của người dùng-->
     <div class="profile-section">
         <div class="section-header">
             <h3>Personal Information</h3>
+            <!-- Nếu vai trò không phải là admin thì sẽ được cập nhật thông tin chi tiết của mình lên -->
             <?php if (!$isAdmin): ?>
             <button id="edit-info-btn" class="edit-link">Edit</button>
             <?php endif; ?>
@@ -141,7 +141,7 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
                 <span class="info-value"><?= htmlspecialchars($user['Email']) ?></span>
             </div>
         </div>
-
+        <!-- form chỉnh sửa thông tin chi tiết cá nhân -->
         <div class="profile-info-edit" id="info-edit-section" style="display:none;">
             <form id="update-info-form">
                 <div class="form-field">
@@ -196,7 +196,7 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 <script src="public/js/profile.js"></script>
 
-<!-- ── Crop Modal Avatar ── -->
+<!-- ── Chỉnh sửa ảnh Avatar khi up ảnh lên ── -->
 <div id="avatar-crop-modal" class="av-crop-overlay" style="display:none;">
     <div class="av-crop-box">
         <div class="av-crop-header">

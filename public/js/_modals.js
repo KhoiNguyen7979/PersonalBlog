@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 // === _modals.js - Quản lý modal Review và Subscribe ===
-// Mở/đóng modal, gửi form review qua fetch, form subscribe (client-side only)
+// Mở/đóng modal, gửi form review qua fetch, form subscribe
    
     const reviewModal = document.getElementById('review-modal');
     const subscribeModal = document.getElementById('subscribe-modal');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //------------Event Listeners------------
     
-    // Open Review Modal
+    // Mở pop-up review khi click vào ô review (header + footer)
     if (reviewNavBtn) {
         reviewNavBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Open Subscribe Modal
+    // Mở pop-up subscribe khi click vào ô subscribe (header + footer)
     if (subscribeBtn) {
         subscribeBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -63,21 +63,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close Review Modal
+    // Đóng pop-up subscribe, review khi click vào dấu X
     if (closeReviewBtn) {
         closeReviewBtn.addEventListener('click', () => {
             closeModal(reviewModal);
         });
     }
 
-    // Close Subscribe Modal
     if (closeSubscribeBtn) {
         closeSubscribeBtn.addEventListener('click', () => {
             closeModal(subscribeModal);
         });
     }
 
-    // Close on clicking outside modal content
+    // Đóng pop-up subscribe, review khi click vào content ngoài pop-up
     window.addEventListener('click', (e) => {
         if (e.target === reviewModal) {
             closeModal(reviewModal);
@@ -87,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Close on pressing Escape key
+    // Đóng pop-up subscribe, review khi nhấn nút ESC trên bàn phím
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeModal(reviewModal);
@@ -95,8 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Submit form ---
-    
+    // --- Nộp dữ liệu form ---
+    // Form review
     if (reviewForm) {
         reviewForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -125,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } else {
                     if (window.showToast) {
-                        showToast('Lỗi: ' + data.message, 'error');
+                        showToast(data.message, 'error');
                     }
                 }
             })
@@ -140,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
+    // Form subscribe (để đó không nộp dữ liệu form:/)
     if (subscribeForm) {
         subscribeForm.addEventListener('submit', (e) => {
             e.preventDefault();

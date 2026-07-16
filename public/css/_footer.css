@@ -1,7 +1,3 @@
-/* =========================================
-   _footer.css - Modern Footer Design
-   ========================================= */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 .modern-footer {
@@ -75,7 +71,7 @@
     color: #999;
 }
 
-/* Cột 2 & 3: Links & Contact */
+
 .footer_nav, .footer_contact {
     list-style: none;
     padding: 0;

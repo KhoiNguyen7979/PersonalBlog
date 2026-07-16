@@ -151,15 +151,23 @@ document.addEventListener('DOMContentLoaded', function() {
             cropImage.onload = function() {
                 cropModal.classList.add('active');
                 document.body.style.overflow = 'hidden';
+                
                 if (cropper) cropper.destroy();
-                var maxDim = Math.max(cropImage.naturalWidth, cropImage.naturalHeight);
+                
+                // Đã cập nhật cấu hình CropperJS giống create_blog
                 cropper = new Cropper(cropImage, {
                     aspectRatio: NaN,
                     viewMode: 1,
-                    autoCropArea: 1,
+                    dragMode: 'move', // Cho phép cuộn chuột để zoom và kéo ảnh
+                    autoCropArea: 1,  // Tự động bao trọn toàn bộ ảnh khi vừa mở lên
                     responsive: true,
-                    minCanvasWidth: maxDim,
-                    minCanvasHeight: maxDim,
+                    restore: false,
+                    guides: true,
+                    center: true,
+                    highlight: false,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: false,
                 });
             };
         };
@@ -180,26 +188,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     cropConfirm.addEventListener('click', function() {
         if (!cropper) return;
-        var canvas = cropper.getCroppedCanvas();
+        
+        // Cập nhật xuất ảnh độ phân giải cao
+        var canvas = cropper.getCroppedCanvas({
+            maxWidth: 1920,
+            maxHeight: 1920,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high',
+        });
+        
         if (!canvas) return;
 
         canvas.toBlob(function(blob) {
-    // Đổi tên đuôi file thành .webp cho khớp định dạng mới
-    var originalName = newImageInput.files[0].name;
-    var newFileName = originalName.substring(0, originalName.lastIndexOf('.')) + '.webp';
-    
-    // Ghi đè file với Blob đã nén
-    croppedFile = new File([blob], newFileName, { type: 'image/webp' });
-    
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        newPreview.src = e.target.result;
-        newPreview.style.display = 'block';
-        uploadPlaceholder.style.display = 'none';
-    };
-    reader.readAsDataURL(blob);
-    closeCrop();
-}, 'image/webp', 0.7);
+            // Đổi tên đuôi file thành .webp cho khớp định dạng mới
+            var originalName = newImageInput.files[0].name;
+            var newFileName = originalName.substring(0, originalName.lastIndexOf('.')) + '.webp';
+            
+            // Ghi đè file với Blob đã nén
+            croppedFile = new File([blob], newFileName, { type: 'image/webp' });
+            
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                newPreview.src = e.target.result;
+                newPreview.style.display = 'block';
+                uploadPlaceholder.style.display = 'none';
+            };
+            reader.readAsDataURL(blob);
+            closeCrop();
+        }, 'image/webp', 0.8); // Mức chất lượng nén (0.8 để ảnh được nét)
     });
 
     // Chọn ảnh mới với crop

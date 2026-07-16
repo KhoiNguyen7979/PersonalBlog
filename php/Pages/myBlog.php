@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="public/css/blog.css">
 
 <div class="blog-page">
-
+    <!-- Nếu người dùng ĐÃ ĐĂNG NHẬP -->
     <?php if (isset($_SESSION['email'])): ?>
     <!-- ── SECTION 1: MY POSTS ── -->
     <section class="blog-section" id="my-posts-section">
@@ -46,9 +46,9 @@
         </div>
     </section>
     <?php endif; ?>
-
+<!-- Nếu người dùng CHƯA ĐĂNG NHẬP -->
     <?php if (!isset($_SESSION['email'])): ?>
-    <!-- ── CTA: Sign in prompt ── -->
+    <!-- Hiển thị ra đề xuất đăng ký/đăng nhập -->
     <section class="blog-section">
         <div class="login-cta">
             <h3 class="login-cta-title">Start blogging today!</h3>

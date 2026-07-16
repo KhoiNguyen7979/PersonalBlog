@@ -1,4 +1,3 @@
-<!-- === FOOTER: Brand | Quick Links | Contact | Newsletter + Bottom bar === -->
 <link rel="stylesheet" href="public/css/_footer.css">
 <footer class="modern-footer">
     <div class="footer_container">
@@ -19,6 +18,7 @@
                 <li><a href="index.php">Home</a></li>
                 <li><a href="?page=blog">My Blog</a></li>
                 <li><a href="?page=about">About</a></li>
+                <!-- Tương tự như file header nếu vai trò người dùng là admin, sẽ ẩn đi chức năng Review, vì admin không nên tự review trang web của chính mình :v  -->
                 <?php if (!isset($_SESSION['vaitro']) || $_SESSION['vaitro'] !== 'admin'): ?>
                 <li><a href="#" id="contact-footer-btn">Review</a></li>
                 <?php endif;?>
@@ -35,7 +35,7 @@
             </ul>
         </div>
 
-        <!-- Cột Newsletter -->
+        <!-- Cột Newsletter-Subscribe -->
         <?php if (!isset($_SESSION['vaitro']) || $_SESSION['vaitro'] !== 'admin'): ?>
         <div class="footer_col newsletter_col">
             <h3 class="col_title">Newsletter</h3>
@@ -48,7 +48,7 @@
 
     </div>
 
-    <!-- Phần Dưới Cùng (Bottom Bar) -->
+    <!-- Phần Dưới Cùng (Copyright) -->
     <div class="footer_bottom">
         <div class="footer_bottom_left">
             <p>&copy; <?php echo date("Y"); ?> bloggerZ. All rights reserved.</p>
@@ -62,6 +62,5 @@
         </div>
     </div>
 </footer>
-
-<!-- Include modals -->
+<!-- Thêm các đường dẫn Pop - ups -->
 <?php if (file_exists(__DIR__ . '/_modals.php')) { include __DIR__ . '/_modals.php'; } ?>

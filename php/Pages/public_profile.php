@@ -1,10 +1,10 @@
 <?php
 // === TRANG HỒ SƠ CÔNG KHAI ===
-// Các block: Profile Header (avatar + tên + stats) | Bio | Danh sách bài viết của user đó
+//thiết lập kết nối CSDL
 require_once __DIR__ . '/../mySQLconnect.php';
 
 $email = isset($_GET['email']) ? trim($_GET['email']) : '';
-
+//Nếu tài khoản ko có email thì báo lỗi
 if (empty($email)) {
     echo '<p style="color:red; padding:40px; text-align:center;">Missing user information.</p>';
     $connect->close();
@@ -21,20 +21,20 @@ if (!$stmt) {
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
-
+//Nếu ko có dữ liệu người dùng thì báo lỗi
 if (!$user) {
     echo '<p style="color:red; padding:40px; text-align:center;">User not found.</p>';
     $connect->close();
     exit;
 }
 
-// Thống kê
+// Thống kê tổng bài viết
 $stmtStats = $connect->prepare("SELECT COUNT(*) as total_posts FROM BaiViet WHERE ID_NguoiDung = ?");
 $stmtStats->bind_param("s", $email);
 $stmtStats->execute();
 $stats = $stmtStats->get_result()->fetch_assoc();
 
-// Tổng lượt likes
+// Thống kê tổng lượt likes
 $stmtLikes = $connect->prepare(
     "SELECT COUNT(*) AS total_likes
      FROM ThichBaiViet t
@@ -46,9 +46,9 @@ $stmtLikes->execute();
 $likesStat = $stmtLikes->get_result()->fetch_assoc();
 $totalLikes = intval($likesStat['total_likes'] ?? 0);
 
-// Lấy bài viết của user này
+// Lấy các bài viết đã đăng của user này
 $stmtPosts = $connect->prepare("
-    SELECT b.ID_BaiViet, b.TieuDe, b.TomTat, b.NgayDang, b.LuotXem,
+    SELECT b.ID_BaiViet, b.TieuDe, b.TomTat, b.NgayDang,
            (SELECT COUNT(*) FROM ThichBaiViet t WHERE t.ID_BaiViet = b.ID_BaiViet) AS LuotThich,
            (SELECT COUNT(*) FROM Pics p WHERE p.ID_BaiViet = b.ID_BaiViet) AS PicCount
     FROM BaiViet b
@@ -77,7 +77,7 @@ if (!empty($postIds)) {
 }
 
 $connect->close();
-
+//chức năng format lại ngày tháng đăng bài viết
 function formatPostDate($dateStr) {
     $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -90,7 +90,7 @@ function formatPostDate($dateStr) {
 
 <div class="pub-profile-page">
 
-    <!-- Profile Header -->
+    <!-- Header Hồ Sơ-->
     <div class="pub-profile-card">
         <div class="pub-avatar-wrap">
             <img
@@ -116,7 +116,7 @@ function formatPostDate($dateStr) {
         </div>
     </div>
 
-    <!-- Bio Section -->
+    <!-- Phần mô tả -->
     <?php if (!empty($user['MoTa'])): ?>
     <div class="pub-section">
         <h3 class="pub-section-title">About</h3>
@@ -124,7 +124,7 @@ function formatPostDate($dateStr) {
     </div>
     <?php endif; ?>
 
-    <!-- User's Posts -->
+    <!-- Bài đăng của người dùng -->
     <div class="pub-section">
         <h3 class="pub-section-title">Posts by <?= htmlspecialchars($user['HoTenNguoiDung']) ?></h3>
 

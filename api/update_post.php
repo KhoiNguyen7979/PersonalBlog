@@ -2,6 +2,7 @@
 // === API: Cập nhật bài viết ===
 // Sửa tiêu đề, tóm tắt, nội dung, thể loại và (tuỳ chọn) thay ảnh mới
 session_start();
+//thiết lập kết nối CSDL
 require_once __DIR__ . '/../php/mySQLconnect.php';
 header('Content-Type: application/json; charset=utf-8');
 
@@ -52,24 +53,23 @@ if (isset($_FILES['new_image']) && $_FILES['new_image']['error'] === UPLOAD_ERR_
 }
 finfo_close($finfo);
 
-// Cập nhật bài viết
+// Cập nhật các thông tin của bài viết
 $wordCount = str_word_count(strip_tags($content));
-$readTime = max(1, ceil($wordCount / 200));
 
 if ($isAdmin) {
     $stmt = $connect->prepare("
         UPDATE BaiViet 
-        SET TieuDe=?, NoiDung=?, TomTat=?, ThoiGianDoc=?, ID_The_Loai=? 
+        SET TieuDe=?, NoiDung=?, TomTat=?, ID_The_Loai=? 
         WHERE ID_BaiViet=?
     ");
-    $stmt->bind_param("sssisi", $title, $content, $summary, $readTime, $category, $id);
+    $stmt->bind_param("ssssi", $title, $content, $summary, $category, $id);
 } else {
     $stmt = $connect->prepare("
         UPDATE BaiViet 
-        SET TieuDe=?, NoiDung=?, TomTat=?, ThoiGianDoc=?, ID_The_Loai=? 
+        SET TieuDe=?, NoiDung=?, TomTat=?, ID_The_Loai=? 
         WHERE ID_BaiViet=? AND ID_NguoiDung=?
     ");
-    $stmt->bind_param("sssisis", $title, $content, $summary, $readTime, $category, $id, $email);
+    $stmt->bind_param("ssssis", $title, $content, $summary, $category, $id, $email);
 }
 
 if ($stmt->execute()) {

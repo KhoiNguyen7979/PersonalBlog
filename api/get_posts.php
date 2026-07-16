@@ -78,7 +78,7 @@ $totalPages = ceil($total / $perPage);
 $sql = "
     SELECT
         b.ID_BaiViet, b.TieuDe, b.TomTat, b.NgayDang,
-        b.ThoiGianDoc, b.ID_NguoiDung, b.ID_The_Loai,
+        b.ID_NguoiDung, b.ID_The_Loai,
         n.HoTenNguoiDung,
         (SELECT COUNT(*) FROM Pics p WHERE p.ID_BaiViet = b.ID_BaiViet) AS PicCount,
         (SELECT COUNT(*) FROM ThichBaiViet t WHERE t.ID_BaiViet = b.ID_BaiViet) AS LuotThich

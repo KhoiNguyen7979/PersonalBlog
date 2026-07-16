@@ -1,9 +1,9 @@
 <?php
 // === TRANG ĐỌC BÀI VIẾT ===
-// Các block: Tiêu đề + Tác giả | Ảnh bìa (carousel nếu nhiều ảnh) | Tóm tắt | Nội dung | Nút Like | Menu Edit/Delete
-// Script inline: Carousel, Menu toggle, Delete, Like
+// Các block: Tiêu đề + Tác giả | Ảnh bìa| Tóm tắt | Nội dung | Nút Like | Menu Edit/Delete
+//thiết lập kết nối CSDL
 require_once __DIR__ . '/../mySQLconnect.php';
-
+// lấy id của bài viết + email của người dùng đăng nhập
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $email = $_SESSION['email'] ?? null;
 
@@ -19,7 +19,7 @@ $stmt = $connect->prepare("
 $stmt->bind_param("si", $email, $id);
 $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
-
+//Nếu ko có dữ liệu của bài viết, báo lỗi
 if (!$post) {
     echo "<h1 style='text-align:center; margin-top:50px;'>Post not found.</h1>";
     exit;
@@ -27,7 +27,7 @@ if (!$post) {
 
 $isLikedClass = $post['IsLiked'] > 0 ? 'liked' : '';
 
-// Lấy tất cả ảnh của bài viết
+// Lấy ảnh của bài viết
 $imgStmt = $connect->prepare("SELECT ID_Anh FROM Pics WHERE ID_BaiViet = ? ORDER BY IsThumb DESC, ID_Anh ASC");
 $imgStmt->bind_param("i", $id);
 $imgStmt->execute();
@@ -77,7 +77,7 @@ $connect->close();
             <img src="<?= !empty($images) ? $images[0] : 'public/images/account.jpg' ?>" alt="<?= htmlspecialchars($post['TieuDe']) ?>" class="read-thumbnail">
         </div>
         <?php endif; ?>
-
+            <!-- Nếu là email của người chính chủ đăng bài viết hoặc admin thì có thể chỉnh sửa được bài viết -->
         <?php if (isset($email) && ($email === $post['ID_NguoiDung'] || (isset($_SESSION['vaitro']) && $_SESSION['vaitro'] === 'admin'))): ?>
             <div class="post-menu">
                 <button class="post-menu-btn" title="Options">⋮</button>
@@ -153,7 +153,7 @@ $connect->close();
     });
 })();
 
-// --- Menu 3 chấm: mở/đóng dropdown edit/delete ---
+// Menu 3 chấm: Chỉnh sửa hoặc xóa bài viết
 document.querySelectorAll('.read-blog-container .post-menu-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -195,7 +195,7 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// --- Xóa bài viết: gọi API xóa, chuyển về trang blog ---
+//Xóa bài viết: gọi API xóa, chuyển về trang blog
 document.querySelectorAll('.delete-post-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -220,7 +220,7 @@ document.querySelectorAll('.delete-post-btn').forEach(btn => {
     });
 });
 
-// --- Nút Like: gọi API like/unlike, cập nhật số like và giao diện ---
+//Nút Like: gọi API like/unlike, cập nhật số like và giao diện ---
 document.getElementById('like-btn').addEventListener('click', function() {
     const btn = this;
     const postId = btn.dataset.id;

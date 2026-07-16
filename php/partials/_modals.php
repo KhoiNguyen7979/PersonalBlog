@@ -1,7 +1,6 @@
-<!-- === MODALS: Modal Review (viết đánh giá) + Modal Subscribe (đăng ký nhận tin) === -->
+<!--Pop-up Review (viết đánh giá) + Pop-up Subscribe (đăng ký nhận tin) === -->
 <link rel="stylesheet" href="public/css/_modals.css">
-
-
+<!-- Pop-up review -->
 <div id="review-modal" class="modal-overlay">
     <div class="modal-container review-container">
         <button class="modal-close-btn" id="close-review-modal" aria-label="Close modal">&times;</button>
@@ -9,6 +8,7 @@
             <h2 class="modal-title">Leave a Review</h2>
             <p class="modal-subtitle" style="text-align: center; color: #666; margin-bottom: 20px;">We'd love to hear your thoughts!</p>
             <form id="review-form" class="modal-form">
+                <!-- lấy sẵn dữ liệu email và họ tên người dùng trong biến SESSION -->
                 <input type="hidden" name="full_name" value="<?= htmlspecialchars($_SESSION['hoten'] ?? '') ?>">
                 <input type="hidden" name="email" value="<?= htmlspecialchars($_SESSION['email'] ?? '') ?>">
                 <div class="form-group full-width">
@@ -20,8 +20,7 @@
         </div>
     </div>
 </div>
-
-
+<!-- Pop-up subscribe -->
 <div id="subscribe-modal" class="modal-overlay">
     <div class="modal-container subscribe-container">
         <button class="modal-close-btn" id="close-subscribe-modal" aria-label="Close modal">&times;</button>
