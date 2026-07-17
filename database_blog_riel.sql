@@ -83,8 +83,6 @@ CREATE TABLE `Reviews` (
 INSERT INTO `NguoiDung` (`Email`, `HoTenNguoiDung`, `TenDangNhap`, `MatKhau`, `MoTa`, `VaiTro`) VALUES
 ('admin@admin.com', 'Admin', 'admin', '$2y$10$Ng0z5p2i.y/e7Pz3PJ3pMOVQN4z//4C3w/T.Dj.4SJO7vwiYlX4ya', 'Quản trị viên hệ thống.', 'admin'),
 ('domixi@gmail.com', 'Độ Mixi', 'domixi', '$2y$10$Ng0z5p2i.y/e7Pz3PJ3pMOVQN4z//4C3w/T.Dj.4SJO7vwiYlX4ya', 'Được biết đến với danh hiệu "Chủ tịch Bộ tộc MixiGaming", Độ Mixi là một trong những streamer có sức ảnh hưởng lớn nhất Việt Nam.', 'user'),
-('nguyen.abc@gmail.com', 'Nguyễn Văn A', 'nguyenvana', '$2y$10$Ng0z5p2i.y/e7Pz3PJ3pMOVQN4z//4C3w/T.Dj.4SJO7vwiYlX4ya', 'Blogger công nghệ từ Hà Nội.', 'user'),
-('tran.xyz@gmail.com', 'Trần Thị B', 'tranthib', '$2y$10$Ng0z5p2i.y/e7Pz3PJ3pMOVQN4z//4C3w/T.Dj.4SJO7vwiYlX4ya', 'Yêu thích âm nhạc và chia sẻ câu chuyện cuộc sống.', 'user'),
 ('sarah@gmail.com', 'Sarah Johnson', 'sarahj', '$2y$10$Ng0z5p2i.y/e7Pz3PJ3pMOVQN4z//4C3w/T.Dj.4SJO7vwiYlX4ya', 'Travel enthusiast and tech writer.', 'user'),
 ('mike@gmail.com', 'Mike Chen', 'mikechen', '$2y$10$Ng0z5p2i.y/e7Pz3PJ3pMOVQN4z//4C3w/T.Dj.4SJO7vwiYlX4ya', 'Software developer by day, musician by night.', 'user'),
 ('emma@gmail.com', 'Emma Wilson', 'emmaw', '$2y$10$Ng0z5p2i.y/e7Pz3PJ3pMOVQN4z//4C3w/T.Dj.4SJO7vwiYlX4ya', 'Digital nomad and lifestyle blogger.', 'user'),
