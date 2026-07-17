@@ -100,9 +100,6 @@ INSERT INTO `TheLoai` (`ID_TheLoai`, `Ten_TheLoai`) VALUES
 
 -- Dữ liệu mẫu: Reviews
 INSERT INTO `Reviews` (`HoTen`, `Email`, `NoiDung`) VALUES
-('Vinh Phan', 'vinh@gmail.com', 'Blog rất tuyệt vời, giao diện đẹp và hiện đại!'),
-('Lan Anh', 'lananh@gmail.com', 'Rất thích những bài viết chia sẻ về công nghệ của bạn.'),
-('Đức Minh', 'minh@example.com', 'Thiết kế đẹp mắt, trải nghiệm người dùng tốt.'),
 ('Sarah Johnson', 'sarah@gmail.com', 'I absolutely love this platform!'),
 ('Mike Chen', 'mike@gmail.com', 'BloggerZ has been a fantastic platform.'),
 ('Emma Wilson', 'emma@gmail.com', 'As a digital nomad, this is by far the best platform.'),
