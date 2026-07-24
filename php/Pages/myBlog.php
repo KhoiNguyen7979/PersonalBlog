@@ -1,5 +1,5 @@
 <?php
-// === TRANG BLOG ===
+// === TRANG MYBLOG ===
 // Các block: My Posts (có khi đăng nhập) | Sign-in CTA (khi chưa đăng nhập) | Posts from the other (chỉ ở trang Home)
 ?>
 <link rel="stylesheet" href="public/css/blog.css">

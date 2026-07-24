@@ -1,8 +1,4 @@
 <?php
-/**
- * api/update_profile.php
- * Cập nhật thông tin hồ sơ người dùng (avatar, mô tả).
- */
 // === API: Cập nhật hồ sơ (avatar hoặc bio) ===
 // Nhận action='update_avatar' hoặc action='update_bio'
 session_start();

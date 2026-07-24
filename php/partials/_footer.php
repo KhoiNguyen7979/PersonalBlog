@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="public/css/_footer.css">
 <footer class="modern-footer">
     <div class="footer_container">
-        
         <!-- Cột Logo và Giới thiệu -->
         <div class="footer_col brand_col">
             <a href="index.php" class="footer_brand">

@@ -41,6 +41,4 @@
         </div>
     </div>
 </div>
-
-
 <script src="public/js/_modals.js"></script>

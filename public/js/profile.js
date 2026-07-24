@@ -85,20 +85,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('action', 'update_avatar');
                 formData.append('avatar', blob, 'avatar.jpg');
 
-                fetch('api/update_profile.php', { method: 'POST', body: formData })
-                    .then(r => r.json())
-                    .then(data => {
-                        showToast(data.success ? '✅ Avatar updated!' : '❌ ' + data.message);
-                    })
-                    .catch(() => showToast('❌ Server connection error.'));
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'api/update_profile.php', true);
 
-                cropConfirm.textContent = 'Confirm';
-                cropConfirm.disabled = false;
-                closeCropModal();
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            const data = JSON.parse(xhr.responseText);
+                            showToast(data.success ? '✅ Avatar updated!' : '❌ ' + data.message);
+                        } catch (e) {
+                            console.error('Lỗi parse JSON:', e);
+                            showToast('❌ Server data error.');
+                        }
+                    } else {
+                        showToast('❌ Server connection error.');
+                    }
+                    
+                    cropConfirm.textContent = 'Confirm';
+                    cropConfirm.disabled = false;
+                    closeCropModal();
+                };
+
+                xhr.onerror = function() {
+                    showToast('❌ Server connection error.');
+                    cropConfirm.textContent = 'Confirm';
+                    cropConfirm.disabled = false;
+                    closeCropModal();
+                };
+
+                xhr.send(formData);
+                
             }, 'image/jpeg', 0.92);
         });
     }
-// Chỉnh sửa Mô tả
+
+    // Chỉnh sửa Mô tả
     const editBioBtn   = document.getElementById('edit-bio-btn');
     const bioDisplay   = document.getElementById('bio-display');
     const bioEdit      = document.getElementById('bio-edit');
@@ -106,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bioTextarea  = document.getElementById('bio-textarea');
     const saveBioBtn   = document.getElementById('save-bio-btn');
     const cancelBioBtn = document.getElementById('cancel-bio-btn');
+    
     //hiện textarea khi click vào nút edit, đồng thời ẩn display mô tả hiện tại 
     if (editBioBtn) {
         editBioBtn.addEventListener('click', (e) => {
@@ -115,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bioTextarea.focus();
         });
     }
+    
     //đóng textarea khi click vào nút cancel, đồng thời hiện lại display mô tả hiện tại 
     if (cancelBioBtn) {
         cancelBioBtn.addEventListener('click', () => {
@@ -122,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bioEdit.style.display    = 'none';
         });
     }
+    
     //Nếu bấm nút Save thì sẽ nộp nội dung trong textarea lên CSDL
     if (saveBioBtn) {
         saveBioBtn.addEventListener('click', () => {
@@ -130,21 +154,38 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('action', 'update_bio');
             formData.append('mota', newBio);
+            
             // xuất dữ liệu qua file update_profile.php để cập nhật
-            fetch('api/update_profile.php', { method: 'POST', body: formData })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.success) {
-                        bioText.innerHTML = newBio.replace(/\n/g, '<br>') || '<em>No description.</em>';
-                        bioDisplay.style.display = 'block';
-                        bioEdit.style.display    = 'none';
-                        // hiển thị toast đăng ký thành công
-                        showToast('✅ Description updated!');
-                    } else {
-                        showToast('❌ ' + data.message);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'api/update_profile.php', true);
+
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        if (data.success) {
+                            bioText.innerHTML = newBio.replace(/\n/g, '<br>') || '<em>No description.</em>';
+                            bioDisplay.style.display = 'block';
+                            bioEdit.style.display    = 'none';
+                            // hiển thị toast đăng ký thành công
+                            showToast('✅ Description updated!');
+                        } else {
+                            showToast('❌ ' + data.message);
+                        }
+                    } catch (e) {
+                        console.error('Lỗi parse JSON:', e);
+                        showToast('❌ Server data error.');
                     }
-                })
-                .catch(() => showToast('❌ Server connection error.'));
+                } else {
+                    showToast('❌ Server connection error.');
+                }
+            };
+
+            xhr.onerror = function() {
+                showToast('❌ Server connection error.');
+            };
+
+            xhr.send(formData);
         });
     }
 
@@ -154,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelInfoBtn   = document.getElementById('cancel-info-btn');
     const updateInfoForm  = document.getElementById('update-info-form');
     const updateMsg       = document.getElementById('update-msg');
+    
     //hiện form khi click vào nút edit, đồng thời ẩn nút edit
     if (editInfoBtn) {
         editInfoBtn.addEventListener('click', (e) => {
@@ -162,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
             editInfoBtn.style.display = 'none';
         });
     }
+    
     //ẩn form khi click vào nút cancel, đồng thời hiện lại nút edit  
     if (cancelInfoBtn) {
         cancelInfoBtn.addEventListener('click', () => {
@@ -170,6 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateMsg.innerText = '';
         });
     }
+    
     // cập nhật dữ liệu của form lên CSDL
     if (updateInfoForm) {
         updateInfoForm.addEventListener('submit', (e) => {
@@ -190,28 +234,45 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('username', username);
             formData.append('fullname', fullname);
             if (newPassword !== '') formData.append('password', newPassword);
+            
             // xuất dữ liệu qua file update_info.php
-            fetch('api/update_info.php', { method: 'POST', body: formData })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        if (window.showToast) {
-                            showToast('Update successful!');
-                            setTimeout(() => window.location.reload(), 2000);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'api/update_info.php', true);
+
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        if (data.status === 'success') {
+                            if (window.showToast) {
+                                showToast('Update successful!');
+                                setTimeout(() => window.location.reload(), 2000);
+                            } else {
+                                updateMsg.style.color = 'green';
+                                updateMsg.innerText = 'Update successful! Reloading...';
+                                setTimeout(() => window.location.reload(), 1500);
+                            }
                         } else {
-                            updateMsg.style.color = 'green';
-                            updateMsg.innerText = 'Update successful! Reloading...';
-                            setTimeout(() => window.location.reload(), 1500);
+                            updateMsg.style.color = 'red';
+                            updateMsg.innerText = data.message || 'An error occurred!';
                         }
-                    } else {
+                    } catch (e) {
+                        console.error('Lỗi parse JSON:', e);
                         updateMsg.style.color = 'red';
-                        updateMsg.innerText = data.message || 'An error occurred!';
+                        updateMsg.innerText = 'Server data error!';
                     }
-                })
-                .catch(() => {
+                } else {
                     updateMsg.style.color = 'red';
                     updateMsg.innerText = 'Server connection error!';
-                });
+                }
+            };
+
+            xhr.onerror = function() {
+                updateMsg.style.color = 'red';
+                updateMsg.innerText = 'Server connection error!';
+            };
+
+            xhr.send(formData);
         });
     }
 

@@ -10,15 +10,14 @@
  */
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ── State ─────────────────────────────────────────────────────────────────
+    // State
     const state = {
         my:    { page: 1, category: 'all', sort: 'newest', totalPages: 1 },
         other: { page: 1, category: 'all', sort: 'newest', totalPages: 1 },
     };
-    // Ensure menu click handlers are initialized only once to avoid duplicate bindings when content reloads
     let postMenuInit = false;
 
-    // ── Load bài viết qua AJAX ────────────────────────────────────────────────
+    // ── Load bài viết qua AJAX XMLHttpRequest
     function loadPosts(type) {
         const s = state[type];
         const container = document.getElementById(`${type}-posts-container`);
@@ -33,35 +32,49 @@ document.addEventListener('DOMContentLoaded', () => {
             page:     s.page,
         });
 
-        fetch(`api/get_posts.php?${params}`)
-            .then(r => r.json())
-            .then(data => {
-                container.innerHTML = data.html || '<div class="no-posts">No posts yet.</div>';
-                s.totalPages = data.totalPages || 1;
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `api/get_posts.php?${params}`, true);
 
-                if (type === 'other') {
-                    renderPagination(data.page, data.totalPages);
-                }
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    const data = JSON.parse(xhr.responseText);
+                    container.innerHTML = data.html || '<div class="no-posts">No posts yet.</div>';
+                    s.totalPages = data.totalPages || 1;
 
-                // Read more button cho My Posts
-                if (type === 'my') {
-                    const readMoreBtn = document.getElementById('my-read-more');
-                    if (readMoreBtn) {
-                        readMoreBtn.style.display = (data.totalPages > 1) ? 'inline-block' : 'none';
-                        readMoreBtn.dataset.page = 1;
+                    if (type === 'other') {
+                        renderPagination(data.page, data.totalPages);
                     }
-                }
 
-                // ── Gắn event cho nút menu 3 chấm
-                bindPostMenus();
-                initCarousels();
-            })
-            .catch(() => {
+                    // Read more button cho My Posts
+                    if (type === 'my') {
+                        const readMoreBtn = document.getElementById('my-read-more');
+                        if (readMoreBtn) {
+                            readMoreBtn.style.display = (data.totalPages > 1) ? 'inline-block' : 'none';
+                            readMoreBtn.dataset.page = 1;
+                        }
+                    }
+
+                    // ── Gắn event cho nút menu 3 chấm
+                    bindPostMenus();
+                    initCarousels();
+                } catch (e) {
+                    console.error('Lỗi parse JSON:', e);
+                    container.innerHTML = '<div class="no-posts">Failed to load posts. Please try again.</div>';
+                }
+            } else {
                 container.innerHTML = '<div class="no-posts">Failed to load posts. Please try again.</div>';
-            });
+            }
+        };
+
+        xhr.onerror = function() {
+            container.innerHTML = '<div class="no-posts">Failed to load posts. Please try again.</div>';
+        };
+
+        xhr.send();
     }
 
-    // ── Phân trang (Posts from the other) ────────────────────────────────────
+    // ── Phân trang (Posts from the other)
     function renderPagination(currentPage, totalPages) {
         const wrap = document.getElementById('other-pagination');
         if (!wrap) return;
@@ -126,32 +139,49 @@ document.addEventListener('DOMContentLoaded', () => {
             state.my.page += 1;
             const container = document.getElementById('my-posts-container');
 
-            fetch(`api/get_posts.php?type=my&category=${state.my.category}&sort=${state.my.sort}&page=${state.my.page}`)
-                .then(r => r.json())
-                .then(data => {
-                    // Append HTML
-                    const temp = document.createElement('div');
-                    temp.innerHTML = data.html;
-                    // Lấy các posts-col và gộp vào container hiện có
-                    const existingGrid = container.querySelector('.posts-grid');
-                    const newGrid = temp.querySelector('.posts-grid');
-                    if (existingGrid && newGrid) {
-                        const cols = existingGrid.querySelectorAll('.posts-col');
-                        const newCols = newGrid.querySelectorAll('.posts-col');
-                        cols.forEach((col, i) => {
-                            if (newCols[i]) col.append(...newCols[i].children);
-                        });
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `api/get_posts.php?type=my&category=${state.my.category}&sort=${state.my.sort}&page=${state.my.page}`, true);
+
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        
+                        // Append HTML
+                        const temp = document.createElement('div');
+                        temp.innerHTML = data.html;
+                        
+                        // Lấy các posts-col và gộp vào container hiện có
+                        const existingGrid = container.querySelector('.posts-grid');
+                        const newGrid = temp.querySelector('.posts-grid');
+                        if (existingGrid && newGrid) {
+                            const cols = existingGrid.querySelectorAll('.posts-col');
+                            const newCols = newGrid.querySelectorAll('.posts-col');
+                            cols.forEach((col, i) => {
+                                if (newCols[i]) col.append(...newCols[i].children);
+                            });
+                        }
+                        
+                        if (state.my.page >= data.totalPages) {
+                            myReadMore.style.display = 'none';
+                        }
+                        bindPostMenus();
+                        initCarousels();
+                    } catch (e) {
+                        console.error('Lỗi parse JSON:', e);
                     }
-                    if (state.my.page >= data.totalPages) {
-                        myReadMore.style.display = 'none';
-                    }
-                    bindPostMenus();
-                    initCarousels();
-                });
+                }
+            };
+            
+            xhr.onerror = function() {
+                console.error('Network error khi tải thêm bài viết.');
+            };
+
+            xhr.send();
         });
     }
 
-    // ── Category Tabs ─────────────────────────────────────────────────────────
+    // ── Thể loại ─────────────────────────────────────────────────────────
     document.querySelectorAll('.category-tabs').forEach(tabGroup => {
         const type = tabGroup.dataset.target;
         tabGroup.querySelectorAll('.cat-btn').forEach(btn => {
@@ -175,9 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Post menu 3 chấm (click-to-toggle, robust against hover gaps) ─────────────────
+    // ── Post menu 3 chấm
     function bindPostMenus() {
-        // Attach delete handlers to delete buttons (idempotent: mark buttons once bound)
         document.querySelectorAll('.delete-post-btn').forEach(btn => {
             if (btn.dataset.bound === '1') return;
             btn.dataset.bound = '1';
@@ -186,59 +215,81 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.stopPropagation();
                 if (confirm('Are you sure you want to delete this post?')) {
                     const id = btn.dataset.id;
-                    fetch(`api/delete_post.php?id=${id}`, { method: 'POST' })
-                        .then(r => r.json())
-                        .then(data => {
-                            if (data.success) {
-                                const card = btn.closest('.post-card');
-                                if (card) {
-                                    card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                                    card.style.opacity = '0';
-                                    card.style.transform = 'scale(0.95)';
-                                    setTimeout(() => {
-                                        const type = card.closest('#my-posts-container') ? 'my' : 'other';
-                                        loadPosts(type);
-                                    }, 300);
+                    
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', `api/delete_post.php?id=${id}`, true);
+
+                    xhr.onload = function() {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            try {
+                                const data = JSON.parse(xhr.responseText);
+                                if (data.success) {
+                                    const card = btn.closest('.post-card');
+                                    if (card) {
+                                        card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                                        card.style.opacity = '0';
+                                        card.style.transform = 'scale(0.95)';
+                                        setTimeout(() => {
+                                            const type = card.closest('#my-posts-container') ? 'my' : 'other';
+                                            loadPosts(type);
+                                        }, 300);
+                                    } else {
+                                        // Nếu đang ở trang đọc bài viết, chuyển hướng về trang blog/profile sau khi xoá
+                                        if (document.querySelector('.read-blog-container')) {
+                                            window.location.href = '?page=blog';
+                                            return;
+                                        }
+                                    }
+
+                                    // Cập nhật số lượng bài viết trên UI
+                                    try {
+                                        document.querySelectorAll('.profile-stats-row .stat-badge').forEach(b => {
+                                            const txt = b.querySelector('.stat-txt')?.textContent?.trim();
+                                            if (txt === 'Bài viết') {
+                                                const numEl = b.querySelector('.stat-num');
+                                                if (numEl) {
+                                                    let n = parseInt(numEl.textContent) || 0;
+                                                    if (n > 0) numEl.textContent = n - 1;
+                                                }
+                                            }
+                                        });
+                                    } catch (err) {
+                                        // ignore if profile elements not present
+                                    }
                                 } else {
-                                    // Nếu đang ở trang đọc bài viết, chuyển hướng về trang blog/profile sau khi xoá
-                                    if (document.querySelector('.read-blog-container')) {
-                                        window.location.href = '?page=blog';
-                                        return;
+                                    if (window.showToast) {
+                                        showToast('Failed to delete post.', 'error');
+                                    } else {
+                                        alert('Failed to delete post.');
                                     }
                                 }
-
-                                // Nếu đang hiển thị trang profile, giảm số lượng bài viết trên UI
-                                try {
-                                    document.querySelectorAll('.profile-stats-row .stat-badge').forEach(b => {
-                                        const txt = b.querySelector('.stat-txt')?.textContent?.trim();
-                                        if (txt === 'Bài viết') {
-                                            const numEl = b.querySelector('.stat-num');
-                                            if (numEl) {
-                                                let n = parseInt(numEl.textContent) || 0;
-                                                if (n > 0) numEl.textContent = n - 1;
-                                            }
-                                        }
-                                    });
-                                } catch (err) {
-                                    // ignore if profile elements not present
-                                }
-                            } else {
-                                if (window.showToast) {
-                                    showToast('Failed to delete post.', 'error');
-                                } else {
-                                    alert('Failed to delete post.');
-                                }
+                            } catch (e) {
+                                console.error('Lỗi parse JSON:', e);
                             }
-                        });
+                        } else {
+                            if (window.showToast) {
+                                showToast('Failed to delete post.', 'error');
+                            } else {
+                                alert('Failed to delete post.');
+                            }
+                        }
+                    };
+
+                    xhr.onerror = function() {
+                        if (window.showToast) {
+                            showToast('Failed to delete post.', 'error');
+                        } else {
+                            alert('Failed to delete post.');
+                        }
+                    };
+
+                    xhr.send();
                 }
             });
         });
 
-        // Initialize menu toggle behavior once (delegated)
         if (!postMenuInit) {
             postMenuInit = true;
-
-            // Ensure menus don't appear from pure hover by forcing hidden on mouseenter when not open
             document.querySelectorAll('.post-menu').forEach(menu => {
                     if (menu.dataset.mouseBound === '1') return;
                     menu.dataset.mouseBound = '1';
@@ -268,7 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         const dropdown = menu.querySelector('.post-menu-dropdown');
                         if (!dropdown) return;
 
-                        // Toggle via inline style to prevent CSS :hover showing the menu in some browsers
                         const isOpen = menu.classList.contains('open');
                         if (isOpen) {
                             menu.classList.remove('open');
@@ -280,7 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
 
-                    // Clicking outside closes any open menus and hide dropdowns
                     if (!ev.target.closest('.post-menu')) {
                         document.querySelectorAll('.post-menu').forEach(m => {
                             m.classList.remove('open');
@@ -290,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
             });
 
-            // Also close menus on Escape key
             document.addEventListener('keydown', (ev) => {
                     if (ev.key === 'Escape') {
                         document.querySelectorAll('.post-menu').forEach(m => {
@@ -303,7 +351,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ── Smooth Scroll: "Read the Blog" button ────────────────────────────────
     const readBlogBtn = document.getElementById('read');
     if (readBlogBtn) {
         readBlogBtn.addEventListener('click', () => {
@@ -314,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── Subscribe button (Hero Home) ──────────────────────────────────────────
+    // ── Nút subscribe ──────────────────────────────────────────
     const subBtn = document.getElementById('sub');
     if (subBtn) {
         subBtn.addEventListener('click', (e) => {
@@ -327,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── Carousel cho blog cards ──────────────────────────────────────────────────
+
     function initCarousels() {
         document.querySelectorAll('.post-img-wrap[data-total]').forEach(wrap => {
             if (wrap.dataset.carouselInit === '1') return;
@@ -407,7 +454,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Load lần đầu ─────────────────────────────────────────────────────────
     loadPosts('my');
     loadPosts('other');
-
-    // Ensure menu handlers are available on pages that don't call loadPosts (e.g., read_blog)
     bindPostMenus();
 });

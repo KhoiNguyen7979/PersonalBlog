@@ -6,7 +6,7 @@ if (!isset($_SESSION['email'])) {
     exit;
 }
 
-//THiết lập kết nối với CSDL
+//Thiết lập kết nối với CSDL
 if (!isset($connect) || $connect->connect_error) {
     require_once __DIR__ . '/../mySQLconnect.php';
 }
@@ -193,9 +193,6 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
-<script src="public/js/profile.js"></script>
-
 <!-- ── Chỉnh sửa ảnh Avatar khi up ảnh lên ── -->
 <div id="avatar-crop-modal" class="av-crop-overlay" style="display:none;">
     <div class="av-crop-box">
@@ -217,3 +214,5 @@ $totalLikes = intval($likesStat['total_likes'] ?? 0);
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+<script src="public/js/profile.js"></script>

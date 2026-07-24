@@ -29,8 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (cropper) cropper.destroy();
                 
                 cropper = new Cropper(cropImage, {
-                    // Để NaN để có thể kéo khung cắt lấy toàn bộ ảnh 1920x1280
-                    // Hoặc nếu muốn khóa đúng tỷ lệ của ảnh này thì dùng: 1920 / 1280
                     aspectRatio: NaN, 
                     viewMode: 1,
                     dragMode: 'move',
@@ -65,11 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
    cropConfirm.addEventListener('click', () => {
         if (!cropper || !currentFile) return; 
         
-        // SỬA LẠI PHẦN XUẤT ẢNH
         const canvas = cropper.getCroppedCanvas({
-            // Xóa bỏ width và height cố định
-            // Dùng maxWidth và maxHeight để giữ độ phân giải cao nhất là 1920x1920
-            // Ảnh gốc bao nhiêu thì sẽ crop ra bấy nhiêu (tối đa đến giới hạn này)
             maxWidth: 1920,
             maxHeight: 1920,
             imageSmoothingEnabled: true,
@@ -90,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             showPreview(newFile); 
             closeCrop(); 
-        }, 'image/webp', 0.8); // Có thể tăng chất lượng lên 0.8 hoặc 0.9 để ảnh 1920x1280 nét hơn
+        }, 'image/webp', 0.8);
     });
 
     fileInput.addEventListener('change', () => {
@@ -135,31 +129,53 @@ document.addEventListener('DOMContentLoaded', () => {
         publishBtn.classList.add('loading');
         publishBtn.disabled = true;
 
-        fetch('api/create_post.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                showToast('Published successfully! Redirecting...');
-                setTimeout(() => {
-                    var overlay = document.getElementById('page-transition');
-                    if (overlay) overlay.classList.add('active');
-                    setTimeout(() => {
-                        window.location.href = 'index.php?page=blog';
-                    }, 400);
-                }, 1000);
+
+        const xhr = new XMLHttpRequest();
+        
+        // Khởi tạo request POST tới API
+        xhr.open('POST', 'api/create_post.php', true);
+
+        // Xử lý khi nhận được phản hồi từ server
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                   
+                    const data = JSON.parse(xhr.responseText); 
+                    
+                    if (data.success) {
+                        showToast('Published successfully! Redirecting...');
+                        setTimeout(() => {
+                            var overlay = document.getElementById('page-transition');
+                            if (overlay) overlay.classList.add('active');
+                            setTimeout(() => {
+                                window.location.href = 'index.php?page=blog';
+                            }, 400);
+                        }, 1000);
+                    } else {
+                        showToast('Lỗi: ' + data.message);
+                        resetButton();
+                    }
+                } catch (e) {
+                    console.error("Lỗi parse JSON:", e);
+                    showToast('Lỗi dữ liệu phản hồi từ server.');
+                    resetButton();
+                }
             } else {
-                showToast('Lỗi: ' + data.message);
+                console.error("Lỗi HTTP:", xhr.status);
+                showToast('Lỗi kết nối máy chủ.');
                 resetButton();
             }
-        })
-        .catch(err => {
-            console.error(err);
+        };
+
+        // Xử lý khi có lỗi mạng
+        xhr.onerror = function() {
+            console.error("Lỗi mạng (Network Error)");
             showToast('Server connection error.');
             resetButton();
-        });
+        };
+
+        // Gửi dữ liệu đi
+        xhr.send(formData);
 
         function resetButton() {
             publishBtn.innerText = originalText;

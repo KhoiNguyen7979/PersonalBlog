@@ -62,7 +62,7 @@ if (!isset($_SESSION['email'])) {
             <textarea id="content" name="content" class="form-control editor-content" rows="15" placeholder="What's on your mind? Write it here..." required></textarea>
         </div>
 
-        <!-- Nút hành động -->
+        <!-- Nút hủy và đăng bài viết -->
         <div class="form-actions">
             <button type="button" class="btn-cancel" onclick="window.history.back()">Cancel</button>
             <button type="submit" class="btn-publish" id="publish-btn">Publish</button>
@@ -70,10 +70,10 @@ if (!isset($_SESSION['email'])) {
     </form>
 </div>
 
-<!-- Toast notification -->
+<!-- Thông báo -->
 <div id="create-toast" class="create-toast"></div>
 
-<!-- Crop Modal -->
+<!-- Crop hình ảnh -->
 <div class="crop-modal-overlay" id="crop-modal">
     <div class="crop-modal-box">
         <div class="crop-modal-header">

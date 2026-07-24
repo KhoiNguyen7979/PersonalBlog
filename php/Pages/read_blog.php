@@ -43,7 +43,6 @@ $hasMultiple = $imgCount > 1;
 
 $connect->close();
 ?>
-<link rel="stylesheet" href="public/css/read_blog.css">
 <link rel="stylesheet" href="public/css/blog.css">
 
 <div class="read-blog-container">
@@ -103,151 +102,9 @@ $connect->close();
         </button>
     </div>
 </div>
-
-<script>
-// === Inline JS của trang đọc bài viết ===
-
-// --- Carousel ảnh bìa: prev/next/dots/keyboard arrows ---
-(function() {
-    const track = document.getElementById('carousel-track');
-    if (!track) return;
-    const slides = track.querySelectorAll('.carousel-slide');
-    const dots = document.querySelectorAll('#carousel-dots .carousel-dot');
-    const prevBtn = document.getElementById('carousel-prev');
-    const nextBtn = document.getElementById('carousel-next');
-    let current = 0;
-    let transitioning = false;
-
-    function goTo(idx) {
-        if (transitioning) return;
-        if (idx < 0) idx = slides.length - 1;
-        if (idx >= slides.length) idx = 0;
-        if (idx === current) return;
-        transitioning = true;
-
-        var nextSlide = slides[idx];
-        nextSlide.style.opacity = '0';
-        nextSlide.classList.add('active');
-        nextSlide.offsetHeight;
-        nextSlide.style.opacity = '1';
-
-        setTimeout(function() {
-            slides[current].classList.remove('active');
-            slides[current].style.opacity = '';
-            current = idx;
-            transitioning = false;
-        }, 500);
-
-        dots.forEach(function(d, i) {
-            d.classList.toggle('active', i === idx);
-        });
-    }
-
-    if (prevBtn) prevBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(current - 1); });
-    if (nextBtn) nextBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(current + 1); });
-    dots.forEach(function(d) { d.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(parseInt(d.dataset.idx)); }); });
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'ArrowLeft') goTo(current - 1);
-        if (e.key === 'ArrowRight') goTo(current + 1);
-    });
-})();
-
-// Menu 3 chấm: Chỉnh sửa hoặc xóa bài viết
-document.querySelectorAll('.read-blog-container .post-menu-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const menu = this.closest('.post-menu');
-        document.querySelectorAll('.post-menu').forEach(m => {
-            if (m !== menu) {
-                m.classList.remove('open');
-                const dd = m.querySelector('.post-menu-dropdown');
-                if (dd) dd.style.display = 'none';
-            }
-        });
-        const dd = menu.querySelector('.post-menu-dropdown');
-        if (!dd) return;
-        if (menu.classList.contains('open')) {
-            menu.classList.remove('open');
-            dd.style.display = 'none';
-        } else {
-            menu.classList.add('open');
-            dd.style.display = 'block';
-        }
-    });
-});
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('.post-menu')) {
-        document.querySelectorAll('.post-menu').forEach(m => {
-            m.classList.remove('open');
-            const dd = m.querySelector('.post-menu-dropdown');
-            if (dd) dd.style.display = 'none';
-        });
-    }
-});
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        document.querySelectorAll('.post-menu').forEach(m => {
-            m.classList.remove('open');
-            const dd = m.querySelector('.post-menu-dropdown');
-            if (dd) dd.style.display = 'none';
-        });
-    }
-});
-
-//Xóa bài viết: gọi API xóa, chuyển về trang blog
-document.querySelectorAll('.delete-post-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (confirm('Are you sure you want to delete this post?')) {
-            fetch(`api/delete_post.php?id=${btn.dataset.id}`, { method: 'POST' })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.success) {
-                        var overlay = document.getElementById('page-transition');
-                        if (overlay) overlay.classList.add('active');
-                        window.location.href = '?page=blog';
-                    } else {
-                        if (window.showToast) {
-                            showToast('Failed to delete post.', 'error');
-                        } else {
-                            alert('Failed to delete post.');
-                        }
-                    }
-                });
-        }
-    });
-});
-
-//Nút Like: gọi API like/unlike, cập nhật số like và giao diện ---
-document.getElementById('like-btn').addEventListener('click', function() {
-    const btn = this;
-    const postId = btn.dataset.id;
-    
-    fetch(`api/like_post.php?id=${postId}`, { method: 'POST' })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById('like-count').innerText = data.likes;
-            if (data.status === 'liked') {
-                btn.classList.add('liked');
-            } else {
-                btn.classList.remove('liked');
-            }
-        } else {
-            if (window.showToast) {
-                showToast(data.message, 'error');
-            } else {
-                alert(data.message);
-            }
-        }
-    });
-});
-</script>
-
+<script src="public/js/read_blog.js"></script>
 <style>
-.read-blog-container {
+    .read-blog-container {
     max-width: 800px;
     margin: 40px auto;
     padding: 0 20px;
@@ -280,7 +137,6 @@ document.getElementById('like-btn').addEventListener('click', function() {
 }
 
 /* === CSS của trang đọc bài viết ===
-
 /* Khung bọc ảnh bìa */
 .read-thumbnail-area {
     position: relative;
