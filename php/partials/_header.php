@@ -1,7 +1,7 @@
 <?php
-    // nếu người dùng đã đăng nhập, tạo 1 biến email để lấy email của người dùng đã đăng nhập
     // thiết lập kết nối CSDL
     require_once __DIR__ . '/../mySQLconnect.php';
+    // nếu người dùng đã đăng nhập, tạo 1 biến email để lấy email của người dùng đã đăng nhập
     if(isset($_SESSION['email'])){
         $email = $_SESSION['email'];
     }

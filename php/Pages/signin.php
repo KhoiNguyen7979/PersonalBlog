@@ -92,7 +92,7 @@ $connect->close();
                 <button type="submit" class="signin-btn" name="signin">Sign In</button>
                 <a href="?page=signup" class="signup">Sign Up →</a>
             </div>
-
+            <!-- Quên mật khẩu (chưa có tính năng) -->
             <div class="forgot-password">
                 <a href="#">Forgot Password?</a>
             </div>

@@ -107,36 +107,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(reviewForm);
 
-            fetch('api/submit_review.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    reviewForm.reset();
-                    closeModal(reviewModal);
-                    if (window.showToast) {
-                        showToast('Your review has been posted. Thank you!');
-                    }
-                    if (window.location.search.includes('page=about')) {
-                        setTimeout(() => window.location.reload(), 3000);
+            // --- BẮT ĐẦU ĐOẠN XHR THAY THẾ FETCH ---
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'api/submit_review.php', true);
+
+            // Xử lý khi nhận được phản hồi từ server (tương đương .then)
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        
+                        if (data.success) {
+                            reviewForm.reset();
+                            closeModal(reviewModal);
+                            if (window.showToast) {
+                                showToast('Your review has been posted. Thank you!');
+                            }
+                            if (window.location.search.includes('page=about')) {
+                                setTimeout(() => window.location.reload(), 3000);
+                            }
+                        } else {
+                            if (window.showToast) {
+                                showToast(data.message, 'error');
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Lỗi parse JSON:', err);
+                        if (window.showToast) {
+                            showToast('An error occurred. Please try again later.', 'error');
+                        }
                     }
                 } else {
                     if (window.showToast) {
-                        showToast(data.message, 'error');
+                        showToast('An error occurred. Please try again later.', 'error');
                     }
                 }
-            })
-            .catch(err => {
+            };
+
+            // Xử lý khi có lỗi mạng (tương đương .catch)
+            xhr.onerror = function() {
                 if (window.showToast) {
                     showToast('An error occurred. Please try again later.', 'error');
                 }
-            })
-            .finally(() => {
+            };
+
+            // Luôn chạy sau khi request kết thúc dù thành công hay thất bại (tương đương .finally)
+            xhr.onloadend = function() {
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
-            });
+            };
+
+            // Gửi dữ liệu form đi
+            xhr.send(formData);
+            // --- KẾT THÚC ĐOẠN XHR ---
         });
     }
     // Form subscribe (để đó không nộp dữ liệu form:/)

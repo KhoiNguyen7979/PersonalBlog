@@ -1,7 +1,7 @@
 <?php
 // === TRANG CHỈNH SỬA BÀI VIẾT ===
 // Các block: Form sửa bài (ảnh hiện tại + ảnh thay thế + tiêu đề + tóm tắt + thể loại + nội dung) | Crop Modal
-// Script inline: CropperJS, submit form qua fetch API
+// Script inline: CropperJS, submit form qua  API
 if (!isset($_SESSION['email'])) {
     header("Location: index.php?page=signin");
     exit;
@@ -32,6 +32,10 @@ $imgStmt = $connect->prepare("SELECT ID_Anh, Ten_File_Anh, IsThumb FROM Pics WHE
 $imgStmt->bind_param("i", $id);
 $imgStmt->execute();
 $images = $imgStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$checkimgempty=false;
+if(empty($images)){
+    $checkimgempty=true;
+}
 $imgStmt->close();
 $connect->close();
 ?>
@@ -50,9 +54,18 @@ $connect->close();
         <div class="form-group">
             <label>Current images</label>
             <div class="edit-images-grid" id="edit-images-grid">
+                <?php if($checkimgempty):?>
+                     <div class="edit-img-item">
+                        <img src="public/images/account.jpg">
+                    </div>
+                <?php endif; ?>
                 <?php foreach ($images as $img): ?>
                     <div class="edit-img-item" data-id="<?= $img['ID_Anh'] ?>">
-                        <img src="get_image.php?id=<?= $id ?>&idx=<?= array_search($img, $images) ?>&v=<?= time() ?>" alt="<?= htmlspecialchars($img['Ten_File_Anh']) ?>">
+                        <img 
+                        src="get_image.php?id=<?= $id ?>&idx=<?= array_search($img, $images) ?>&v=<?= time() ?>" 
+                        alt="<?= htmlspecialchars($img['Ten_File_Anh']) ?>"
+                        onerror="src='public/images/account.jpg'"
+                        >
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -106,7 +119,7 @@ $connect->close();
 
 <div id="create-toast" class="create-toast"></div>
 
-<!-- Crop Modal -->
+<!-- Crop Hình Ảnh -->
 <div class="crop-modal-overlay" id="crop-modal">
     <div class="crop-modal-box">
         <div class="crop-modal-header">
@@ -129,140 +142,7 @@ $connect->close();
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const newImageInput = document.getElementById('edit-new-image');
-    const newPreview = document.getElementById('edit-new-preview');
-    const uploadPlaceholder = document.getElementById('edit-upload-placeholder');
-
-    let cropper = null;
-    let croppedFile = null;
-
-    const cropModal = document.getElementById('crop-modal');
-    const cropImage = document.getElementById('crop-image');
-    const cropClose = document.getElementById('crop-close');
-    const cropCancel = document.getElementById('crop-cancel');
-    const cropConfirm = document.getElementById('crop-confirm');
-
-    function openCrop(file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            cropImage.src = e.target.result;
-            cropImage.onload = function() {
-                cropModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                
-                if (cropper) cropper.destroy();
-                
-                // Đã cập nhật cấu hình CropperJS giống create_blog
-                cropper = new Cropper(cropImage, {
-                    aspectRatio: NaN,
-                    viewMode: 1,
-                    dragMode: 'move', // Cho phép cuộn chuột để zoom và kéo ảnh
-                    autoCropArea: 1,  // Tự động bao trọn toàn bộ ảnh khi vừa mở lên
-                    responsive: true,
-                    restore: false,
-                    guides: true,
-                    center: true,
-                    highlight: false,
-                    cropBoxMovable: true,
-                    cropBoxResizable: true,
-                    toggleDragModeOnDblclick: false,
-                });
-            };
-        };
-        reader.readAsDataURL(file);
-    }
-
-    function closeCrop() {
-        cropModal.classList.remove('active');
-        document.body.style.overflow = '';
-        if (cropper) { cropper.destroy(); cropper = null; }
-    }
-
-    cropClose.addEventListener('click', closeCrop);
-    cropCancel.addEventListener('click', closeCrop);
-    cropModal.addEventListener('click', function(e) {
-        if (e.target === cropModal) closeCrop();
-    });
-
-    cropConfirm.addEventListener('click', function() {
-        if (!cropper) return;
-        
-        // Cập nhật xuất ảnh độ phân giải cao
-        var canvas = cropper.getCroppedCanvas({
-            maxWidth: 1920,
-            maxHeight: 1920,
-            imageSmoothingEnabled: true,
-            imageSmoothingQuality: 'high',
-        });
-        
-        if (!canvas) return;
-
-        canvas.toBlob(function(blob) {
-            // Đổi tên đuôi file thành .webp cho khớp định dạng mới
-            var originalName = newImageInput.files[0].name;
-            var newFileName = originalName.substring(0, originalName.lastIndexOf('.')) + '.webp';
-            
-            // Ghi đè file với Blob đã nén
-            croppedFile = new File([blob], newFileName, { type: 'image/webp' });
-            
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                newPreview.src = e.target.result;
-                newPreview.style.display = 'block';
-                uploadPlaceholder.style.display = 'none';
-            };
-            reader.readAsDataURL(blob);
-            closeCrop();
-        }, 'image/webp', 0.8); // Mức chất lượng nén (0.8 để ảnh được nét)
-    });
-
-    // Chọn ảnh mới với crop
-    newImageInput.addEventListener('change', function() {
-        var file = this.files[0];
-        if (file) openCrop(file);
-    });
-
-    // Submit form
-    document.getElementById('edit-blog-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        var btn = document.getElementById('update-btn');
-        btn.innerText = 'Updating...';
-        btn.disabled = true;
-
-        if (croppedFile) {
-            formData.set('new_image', croppedFile);
-        }
-
-        fetch('api/update_post.php', { method: 'POST', body: formData })
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-            if (data.success) {
-                var overlay = document.getElementById('page-transition');
-                if (window.showToast) {
-                    showToast('Updated successfully!');
-                    if (overlay) overlay.classList.add('active');
-                    setTimeout(function() { window.location.href = '?page=blog'; }, 800);
-                } else {
-                    if (overlay) overlay.classList.add('active');
-                    window.location.href = '?page=blog&toast=' + encodeURIComponent('Updated successfully!');
-                }
-            } else {
-                if (window.showToast) {
-                    showToast('Error: ' + data.message, 'error');
-                } else {
-                    alert('Error: ' + data.message);
-                }
-                btn.innerText = 'Update';
-                btn.disabled = false;
-            }
-        });
-    });
-});
-</script>
-
+<script src="public/js/edit_post.js"> </script>
 <style>
 .edit-images-grid {
     display: flex;

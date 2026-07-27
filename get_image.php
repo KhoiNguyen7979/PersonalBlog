@@ -2,7 +2,6 @@
 /**
  * get_image.php
  * Xuất ảnh bài viết hoặc avatar người dùng trực tiếp từ database.
- * 
  * Cách dùng:
  *   Ảnh bài viết : get_image.php?id=1        (ảnh đầu tiên / thumbnail)
  *   Avatar user  : get_image.php?email=domixi@gmail.com
