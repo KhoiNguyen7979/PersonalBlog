@@ -28,9 +28,9 @@
         <div class="footer_col contact_col">
             <h3 class="col_title">Get in Touch</h3>
             <ul class="footer_contact">
-                <li><span>📞</span> <a href="tel:03636363363">123 456 789</a></li>
-                <li><span>✉️</span> <a href="mailto:bloggerZ@gmail.com">bloggerZ@gmail.com</a></li>
-                <li><span>📍</span> 36, 30/4 Street, Thanh Hoa</li>
+                <li><span>📞</span> <a href="#">123 456 789</a></li>
+                <li><span>✉️</span> <a href="#">bloggerZ@gmail.com</a></li>
+                <li><span>📍</span> <a href="#">36, 30/4 Street, Thanh Hoa</li>
             </ul>
         </div>
 
@@ -40,7 +40,7 @@
             <h3 class="col_title">Newsletter</h3>
             <p>Subscribe to get our latest content delivered to your inbox.</p>
             <div class="footer_subscribe">
-                <button id="footer-subscribe-btn">Subscribe ↗</button>
+                <button id="footer-subscribe-btn">Subscribe</button>
             </div>
         </div>
         <?php endif; ?>
